@@ -1,13 +1,14 @@
 package spring
 
 type Spring struct {
+	instanceMap map[string]interface{}
 }
 
 func (s *Spring) Reg(i interface{}) interface{} {
 	return i
 }
 
-func (*Spring) Get(name string) {
+func (*Spring) Get(i interface{}) {
 
 }
 

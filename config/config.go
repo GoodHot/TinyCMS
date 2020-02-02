@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+	"github.com/GoodHot/TinyCMS/common/strs"
 	"time"
 )
 
@@ -25,14 +27,26 @@ type cache struct {
 type log struct {
 }
 
+type controller struct {
+	AdminPrefix string `json:"admin_prefix"`
+	WebPrefix   string `json:"web_prefix"`
+	APIPrefix   string `json:"api_prefix"`
+}
+
 type Config struct {
-	Env    string `json:"env"`     // application run environment. [prod, test, dev]
-	AppDir string `json:"app_dir"` // application in system directory path
-	DB     *db    `json:"db"`      // database config
-	Cache  *cache `json:"cache"`   // cache config
-	Log    *log   `json:"log"`     // system logger cconfig
+	Env        string      `json:"env"`        // application run environment. [prod, test, dev]
+	AppDir     string      `json:"app_dir"`    // application in system directory path
+	ConfigDir  string      `json:"config_dir"` // application config directory
+	DB         *db         `json:"db"`         // database config
+	Cache      *cache      `json:"cache"`      // cache config
+	Log        *log        `json:"log"`        // system logger cconfig
+	Controller *controller `json:"controller"`
 }
 
 func (s *Config) GetDirPath(path string) string {
 	return s.AppDir + path
+}
+
+func (s *Config) Load() {
+	fmt.Println("load config " + s.GetDirPath(strs.Fmt("%s/config_%s.json", s.ConfigDir, s.Env)))
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/config"
+	"github.com/GoodHot/TinyCMS/controller"
 	"github.com/GoodHot/TinyCMS/service/install"
 	"github.com/GoodHot/TinyCMS/spring"
 	"os"
@@ -12,12 +13,15 @@ import (
 func run(cfg *config.Config) {
 	// checking installed
 	install := &install.InstallService{}
-	if !install.CheckInstalled(cfg.GetDirPath("/app_config/lock/install.lock")) {
+	if !install.CheckInstalled(cfg.GetDirPath(cfg.ConfigDir + "/lock/install.lock")) {
 		fmt.Println("application not install, waiting init install process")
 		// TODO init install process
 		return
 	}
-
+	cfg.Load()
+	spring := spring.AppCtx()
+	ctrl := spring.Reg(&controller.Controller{}).(*controller.Controller)
+	ctrl.StartUp()
 }
 
 func main() {
@@ -40,7 +44,7 @@ func main() {
 		return
 	}
 	cfg.AppDir = dir
-
+	cfg.ConfigDir = "/app_config"
 	// run
 	run(cfg)
 }
