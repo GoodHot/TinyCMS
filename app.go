@@ -1,42 +1,46 @@
 package main
 
 import (
-	"github.com/GoodHot/TinyCMS/model"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"fmt"
+	"github.com/GoodHot/TinyCMS/common/strs"
+	"github.com/GoodHot/TinyCMS/config"
+	"github.com/GoodHot/TinyCMS/service/install"
+	"github.com/GoodHot/TinyCMS/spring"
+	"os"
 )
 
-type Product struct {
-	gorm.Model
-	Code  string
-	Price uint
+func run(cfg *config.Config) {
+	// checking installed
+	install := &install.InstallService{}
+	if !install.CheckInstalled(cfg.GetDirPath("/app_config/lock/install.lock")) {
+		fmt.Println("application not install, waiting init install process")
+		// TODO init install process
+		return
+	}
+
 }
 
 func main() {
-	db, err := gorm.Open("sqlite3", "test.db")
-	if err != nil {
-		panic("failed to connect database")
+	// init configuration
+	spring := spring.AppCtx()
+	cfg := spring.Reg(&config.Config{}).(*config.Config)
+
+	// get env
+	cfg.Env = "prod"
+	if len(os.Args) > 1 {
+		cfg.Env = os.Args[1]
 	}
-	defer db.Close()
+	fmt.Println(strs.Fmt("application running with '%s'", cfg.Env))
 
-	// Migrate the schema
-	db.AutoMigrate(&Product{})
+	// get application directory
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Errorf("Unable to get execute directory")
+		os.Exit(0)
+		return
+	}
+	cfg.AppDir = dir
 
-	// Create
-	db.Create(&Product{Code: "L1212", Price: 1000})
-
-	// Read
-	var product Product
-	db.First(&product, 1)                   // find product with id 1
-	db.First(&product, "code = ?", "L1212") // find product with code l1212
-
-	// Update - update product's price to 2000
-	db.Model(&product).Update("Price", 2000)
-
-	// Delete - delete product
-	db.Delete(&product)
-
-	cfg := &model.Dict{Name: "ddd", Description: "fff", Type: model.DictTypeSelect}
-	db.AutoMigrate(cfg)
-	db.Create(cfg)
+	// run
+	run(cfg)
 }

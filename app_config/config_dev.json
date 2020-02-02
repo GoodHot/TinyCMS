@@ -1,0 +1,14 @@
+{
+  "db": {
+    "table_prefix": "t_",
+    "dialect": "",
+    "url": "",
+    "user": "",
+    "passwd": ""
+  },
+  "cache": {
+    "type": "redis",
+    "url": "127.0.0.1",
+    "db_index": 1
+  }
+}
