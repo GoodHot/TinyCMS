@@ -14,5 +14,10 @@
   },
   "log": {
     "level": "debug"
+  },
+  "server": {
+    "port": 9000,
+    "static": "static",
+    "template": "template"
   }
 }

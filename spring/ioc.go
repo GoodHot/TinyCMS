@@ -6,6 +6,7 @@ import (
 	"github.com/wang22/easyjson"
 	"reflect"
 	"regexp"
+	"strconv"
 )
 
 type SpringIOC struct {
@@ -58,7 +59,10 @@ func (ioc *SpringIOC) createIns(x interface{}) interface{} {
 		value := refVal.Elem().FieldByName(field.Name)
 		valTag := field.Tag.Get("val")
 		if valTag != "" {
-			ioc.injectValue(valTag, value)
+			err := ioc.injectValue(valTag, value)
+			if err != nil {
+				panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + "." + field.Name + " [" + err.Error() + "]"))
+			}
 			continue
 		}
 		iocTag := field.Tag.Get("ioc")
@@ -82,6 +86,18 @@ func (ioc *SpringIOC) createIns(x interface{}) interface{} {
 func (ioc *SpringIOC) injectValue(key string, value reflect.Value) error {
 	compile := regexp.MustCompile("^\\$\\{(.+?)\\}$")
 	if !compile.MatchString(key) {
+		switch value.Kind() {
+		case reflect.String:
+			value.SetString(key)
+		case reflect.Int:
+			if v, e := strconv.Atoi(key); e != nil {
+				return e
+			} else {
+				value.SetInt(int64(v))
+			}
+		case reflect.Bool:
+			value.SetBool(key == "true")
+		}
 		return nil
 	}
 	chain := compile.FindAllStringSubmatch(key, -1)[0][1]

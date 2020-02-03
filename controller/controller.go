@@ -1,19 +1,21 @@
 package controller
 
 import (
-	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/controller/admin"
+	"github.com/labstack/echo"
+	"strconv"
 )
 
 type Controller struct {
 	AdminChannelCtrl *admin.AdminChannelCtrl `ioc:"auto"`
-	Config           *config.Config          `ioc:"auto"`
-	Name             string                  `val:"${cache.type}"`
-	In               int                     `val:"${cache.db_index}"`
-	Bo               bool                    `val:"${cache.enable}"`
+	Port             int                     `val:"${server.port}"`
 }
 
 func (c *Controller) StartUp() {
+	e := echo.New()
+	e.HideBanner = true
+
+	e.Logger.Fatal(e.Start(":" + strconv.Itoa(c.Port)))
 	//e := echo.New()
 	//e.Group(c.config.Controller.AdminPrefix, func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
 	//	return nil
