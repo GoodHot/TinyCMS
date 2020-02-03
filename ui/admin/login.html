@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="css/oneui.css" rel="stylesheet">
+  <title>Hello, world!</title>
+</head>
+
+<body>
+  <div class="content">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 col-xl-4">
+        <div class="block block-themed block-fx-shadow mb-0">
+          <div class="block-header">
+            <h3 class="block-title">Sign In</h3>
+          </div>
+          <div class="block-content">
+            <div class="p-sm-3 px-lg-4 py-lg-5">
+              <h1 class="mb-2">TinyCMS</h1>
+              <p>Welcome, please login.</p>
+              <form class="js-validation-signin" action="be_pages_auth_all.html" method="POST" novalidate="novalidate">
+                <div class="py-3">
+                  <div class="form-group">
+                    <input type="text" class="form-control form-control-alt form-control-lg valid" id="login-username"
+                      name="login-username" placeholder="Username" aria-describedby="login-username-error"
+                      aria-invalid="false">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" class="form-control form-control-alt form-control-lg valid"
+                      id="login-password" name="login-password" placeholder="Password"
+                      aria-describedby="login-password-error" aria-invalid="false">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-6 col-xl-5">
+                    <button type="submit" class="btn btn-block btn-primary">
+                      <i class="fa fa-fw fa-sign-in-alt mr-1"></i> Sign In
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content content-full font-size-sm text-muted text-center">
+    <strong>TinyCMS 1.0</strong> &copy; <span data-toggle="year-copy" class="js-year-copy-enabled">2020</span>
+  </div>
+</body>
+
+</html>
