@@ -8,7 +8,9 @@ import (
 type Controller struct {
 	AdminChannelCtrl *admin.AdminChannelCtrl `ioc:"auto"`
 	Config           *config.Config          `ioc:"auto"`
-	Name             string                  `val:"${aaa.bbb.cc}"`
+	Name             string                  `val:"${cache.type}"`
+	In               int                     `val:"${cache.db_index}"`
+	Bo               bool                    `val:"${cache.enable}"`
 }
 
 func (c *Controller) StartUp() {

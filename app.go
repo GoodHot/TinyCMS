@@ -1,11 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/spring"
-	"os"
 )
 
 func run(cfg *config.Config) {
@@ -23,8 +20,13 @@ func run(cfg *config.Config) {
 }
 
 func main() {
-	// init configuration
+	err := spring.Load("app_config/app_dev.json")
+	if err != nil {
+		panic(err)
+	}
 	spring := spring.AppCtx()
+	// init configuration
+	//spring := spring.AppCtx()
 
 	//cfg := spring.Reg(&config.Config{}).(*config.Config)
 	//

@@ -3,11 +3,14 @@ package spring
 import (
 	"errors"
 	"fmt"
+	"github.com/wang22/easyjson"
 	"reflect"
+	"regexp"
 )
 
 type SpringIOC struct {
 	instanceMap map[string]interface{}
+	config      *easyjson.EasyJSON
 }
 
 func (ioc *SpringIOC) Reg(x interface{}) (ins interface{}, err error) {
@@ -55,10 +58,7 @@ func (ioc *SpringIOC) createIns(x interface{}) interface{} {
 		value := refVal.Elem().FieldByName(field.Name)
 		valTag := field.Tag.Get("val")
 		if valTag != "" {
-			switch value.Kind() {
-			case reflect.String:
-				value.SetString("fffffffffff")
-			}
+			ioc.injectValue(valTag, value)
 			continue
 		}
 		iocTag := field.Tag.Get("ioc")
@@ -77,4 +77,28 @@ func (ioc *SpringIOC) createIns(x interface{}) interface{} {
 		}
 	}
 	return x
+}
+
+func (ioc *SpringIOC) injectValue(key string, value reflect.Value) error {
+	compile := regexp.MustCompile("^\\$\\{(.+?)\\}$")
+	if !compile.MatchString(key) {
+		return nil
+	}
+	chain := compile.FindAllStringSubmatch(key, -1)[0][1]
+	data, err := ioc.config.ChainCall(chain)
+	if err != nil {
+		return err
+	}
+	if data == nil {
+		return errors.New("inject value fail, " + key + " is not found")
+	}
+	switch value.Kind() {
+	case reflect.String:
+		value.SetString(data.(string))
+	case reflect.Int:
+		value.SetInt(int64(data.(float64)))
+	case reflect.Bool:
+		value.SetBool(data.(bool))
+	}
+	return nil
 }

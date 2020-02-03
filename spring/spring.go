@@ -1,5 +1,10 @@
 package spring
 
+import (
+	"github.com/wang22/easyjson"
+	"io/ioutil"
+)
+
 type Spring struct {
 	ioc *SpringIOC
 }
@@ -19,10 +24,17 @@ func AppCtx() *Spring {
 	return ctx
 }
 
-func init() {
+func Load(cfgFile string) error {
+	fileData, err := ioutil.ReadFile(cfgFile)
+	if err != nil {
+		return err
+	}
+	ej := easyjson.ParseJSON(fileData)
 	ctx = &Spring{
 		ioc: &SpringIOC{
 			instanceMap: make(map[string]interface{}),
+			config:      ej,
 		},
 	}
+	return nil
 }
