@@ -1,11 +1,12 @@
 package spring
 
 type Spring struct {
-	instanceMap map[string]interface{}
+	ioc *SpringIOC
 }
 
 func (s *Spring) Reg(i interface{}) interface{} {
-	return i
+	ins, _ := s.ioc.Reg(i)
+	return ins
 }
 
 func (*Spring) Get(i interface{}) {
@@ -19,5 +20,9 @@ func AppCtx() *Spring {
 }
 
 func init() {
-	ctx = &Spring{}
+	ctx = &Spring{
+		ioc: &SpringIOC{
+			instanceMap: make(map[string]interface{}),
+		},
+	}
 }

@@ -6,8 +6,9 @@ import (
 )
 
 type Controller struct {
-	adminChannelCtrl *admin.AdminChannelCtrl `ioc:auto`
-	config           *config.Config          `ioc:"auto"`
+	AdminChannelCtrl *admin.AdminChannelCtrl `ioc:"auto"`
+	Config           *config.Config          `ioc:"auto"`
+	Name             string                  `val:"${aaa.bbb.cc}"`
 }
 
 func (c *Controller) StartUp() {

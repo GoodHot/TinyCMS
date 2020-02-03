@@ -3,5 +3,6 @@ package admin
 import "github.com/GoodHot/TinyCMS/service"
 
 type AdminChannelCtrl struct {
-	channelService *service.ChannelService `ioc:"auto"`
+	ChannelService *service.ChannelService `ioc:"auto"`
+	Age            string                  `val:"${fff}"`
 }
