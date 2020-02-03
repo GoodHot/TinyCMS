@@ -18,6 +18,9 @@
   "server": {
     "port": 9000,
     "static": "static",
-    "template": "template"
+    "template": "template",
+    "admin_prefix": "/admin",
+    "web_prefix": "/",
+    "api_prefix": "/api"
   }
 }
