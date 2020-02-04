@@ -22,6 +22,8 @@
     "admin_prefix": "/admin",
     "web_prefix": "/",
     "api_prefix": "/api",
-    "html_compress": false
+    "html_compress": false,
+    "admin_template_dir": "resource/admin",
+    "skin_template_dir": "resource/skin"
   }
 }

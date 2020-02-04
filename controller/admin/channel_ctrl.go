@@ -10,5 +10,5 @@ type AdminChannelCtrl struct {
 }
 
 func (*AdminChannelCtrl) List(ctx *ctrl.HTTPContext) error {
-	return ctx.ResultOK()
+	return ctx.HTML("channel")
 }

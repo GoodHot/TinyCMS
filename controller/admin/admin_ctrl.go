@@ -6,5 +6,5 @@ type AdminAuthCtrl struct {
 }
 
 func (*AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
-	return ctx.HTML("")
+	return ctx.HTML("login")
 }
