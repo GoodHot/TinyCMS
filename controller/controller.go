@@ -3,9 +3,10 @@ package controller
 import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common/ctrl"
+	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/controller/admin"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"io"
 	"net/http"
 	"strconv"
 )
@@ -17,6 +18,9 @@ type Controller struct {
 	WebPrefix        string                  `val:"${server.web_prefix}"`
 	APIPrefix        string                  `val:"${server.api_prefix}"`
 	Static           string                  `val:"${server.static}"`
+	HTMLCompress     bool                    `val:"${server.html_compress}"`
+	adminRender      *render.HTMLRenderer
+	webRender        *render.HTMLRenderer
 }
 
 func (c *Controller) StartUp() {
@@ -24,8 +28,8 @@ func (c *Controller) StartUp() {
 	e.HideBanner = true
 
 	e.Static(c.Static, c.Static)
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	//e.Use(middleware.Logger())
+	//e.Use(middleware.Recover())
 
 	c.registerAdmin(e.Group(c.AdminPrefix), c.AdminPrefix)
 	c.registerWeb(e.Group(c.WebPrefix), c.WebPrefix)
@@ -35,6 +39,28 @@ func (c *Controller) StartUp() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+//func (s *Controller) initRender() {
+//	s.adminRender = &render.HTMLRenderer{
+//		LayoutDir:    "layout",
+//		ComponentDir: "component",
+//		TemplateDir:  "resource/admin",
+//		Suffix:       ".html",
+//		Compress:     s.HTMLCompress,
+//	}
+//	s.webRender = &render.HTMLRenderer{
+//		LayoutDir:    "layout",
+//		ComponentDir: "component",
+//		TemplateDir:  "resource/skin/default",
+//		Suffix:       ".html",
+//		Compress:     s.HTMLCompress,
+//	}
+//}
+
+func (s *Controller) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+
+	return s.adminRender.Render(w, name, data)
 }
 
 func (c *Controller) registerAdmin(group *echo.Group, prefix string) {

@@ -12,7 +12,7 @@ func TestIOC(t *testing.T) {
 	ctx := spring.AppCtx()
 	ctrl := &controller.Controller{}
 	ctx.Reg(ctrl)
-	fmt.Println(ctrl.AdminChannelCtrl.Age)
+	//fmt.Println(ctrl.AdminChannelCtrl.Age)
 }
 
 
@@ -24,9 +24,9 @@ func TestIOC2(t *testing.T){
 	spring := spring.AppCtx()
 	ctrl := &controller.Controller{}
 	spring.Reg(ctrl)
-	fmt.Println(ctrl.Name)
-	fmt.Println(ctrl.In)
-	fmt.Println(ctrl.Bo)
+	//fmt.Println(ctrl.Name)
+	//fmt.Println(ctrl.In)
+	//fmt.Println(ctrl.Bo)
 }
 
 func TestInject(t *testing.T){

@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"github.com/GoodHot/TinyCMS/controller"
 	"reflect"
 	"testing"
@@ -43,5 +42,5 @@ func TestNewStruct(t *testing.T) {
 		////fmt.Println(vv.Elem().Kind())
 		val.Set(ins)
 	}
-	fmt.Println(i.Config.Env)
+	//fmt.Println(i.Config.Env)
 }

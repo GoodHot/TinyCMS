@@ -21,6 +21,7 @@
     "template": "template",
     "admin_prefix": "/admin",
     "web_prefix": "/",
-    "api_prefix": "/api"
+    "api_prefix": "/api",
+    "html_compress": false
   }
 }
