@@ -14,7 +14,7 @@ func main() {
 		env = os.Args[1]
 	}
 	fmt.Println(strs.Fmt("application running with '%s'", env))
-	err := spring.Load(strs.Fmt("app_config/config_%s.json", env))
+	err := spring.Load(strs.Fmt("resource/config/config_%s.json", env))
 	if err != nil {
 		panic(err)
 	}

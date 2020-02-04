@@ -5,6 +5,7 @@ import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/controller/admin"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"net/http"
 	"strconv"
 )
@@ -15,15 +16,25 @@ type Controller struct {
 	AdminPrefix      string                  `val:"${server.admin_prefix}"`
 	WebPrefix        string                  `val:"${server.web_prefix}"`
 	APIPrefix        string                  `val:"${server.api_prefix}"`
+	Static           string                  `val:"${server.static}"`
 }
 
 func (c *Controller) StartUp() {
 	e := echo.New()
 	e.HideBanner = true
+
+	e.Static(c.Static, c.Static)
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
 	c.registerAdmin(e.Group(c.AdminPrefix), c.AdminPrefix)
 	c.registerWeb(e.Group(c.WebPrefix), c.WebPrefix)
 	c.registerAPI(e.Group(c.APIPrefix), c.APIPrefix)
-	e.Logger.Fatal(e.Start(":" + strconv.Itoa(c.Port)))
+
+	err := e.Start(":" + strconv.Itoa(c.Port))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
