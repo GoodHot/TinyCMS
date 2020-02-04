@@ -29,20 +29,57 @@ type Controller struct {
 func (c *Controller) StartUp() {
 	e := echo.New()
 	e.HideBanner = true
-
-	e.Static(c.Static, c.Static)
-	//e.Use(middleware.Logger())
-	//e.Use(middleware.Recover())
-	c.initRender()
 	e.Renderer = c
+	e.Static(c.Static, c.Static)
+
+	c.initRender()
 	c.registerAdmin(e.Group(c.AdminPrefix), c.AdminPrefix)
 	c.registerWeb(e.Group(c.WebPrefix), c.WebPrefix)
 	c.registerAPI(e.Group(c.APIPrefix), c.APIPrefix)
 
-	err := e.Start(":" + strconv.Itoa(c.Port))
-	if err != nil {
-		panic(err)
+	e.Logger.Fatal(e.Start(":" + strconv.Itoa(c.Port)))
+	//if err != nil {
+	//	panic(err)
+	//}
+}
+
+func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
+
+	whiteList := []string{"/to/login", "/login"}
+
+	group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			url := c.Request().URL.String()
+			for _, v := range whiteList {
+				if prefix+v == url {
+					return next(c)
+				}
+			}
+			cookie, err := c.Cookie("ACCESSTK")
+			if err != nil || cookie.Value == "" {
+				return c.Redirect(http.StatusFound, "/")
+			}
+			return next(c)
+		}
+	})
+	router := &RouterRegister{
+		group:        group,
+		prefix:       prefix,
+		buildOption:  false,
+		renderSource: "admin",
 	}
+	router.GET("/to/:page", func(ctx *ctrl.HTTPContext) error {
+		return ctx.HTML(ctx.Param("page"))
+	})
+	router.POST("/login", c.AdminAuthCtrl.Login)
+}
+
+func (c *Controller) registerWeb(group *echo.Group, prefix string) {
+
+}
+
+func (c *Controller) registerAPI(group *echo.Group, prefix string) {
+
 }
 
 func (s *Controller) initRender() {
@@ -68,25 +105,6 @@ func (s *Controller) Render(w io.Writer, name string, data interface{}, c echo.C
 		s.SkinCtrl.Render(w, name, tmpData)
 	}
 	return s.adminRender.Render(w, name, tmpData)
-}
-
-func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
-	router := &RouterRegister{
-		group:        group,
-		prefix:       prefix,
-		buildOption:  false,
-		renderSource: "admin",
-	}
-	router.GET("/hello", c.AdminChannelCtrl.List)
-	router.GET("/login", c.AdminAuthCtrl.Login)
-}
-
-func (c *Controller) registerWeb(group *echo.Group, prefix string) {
-
-}
-
-func (c *Controller) registerAPI(group *echo.Group, prefix string) {
-
 }
 
 type ControllerFunc func(ctx *ctrl.HTTPContext) error
