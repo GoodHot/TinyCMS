@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/controller"
+	"github.com/GoodHot/TinyCMS/model"
+	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/spring"
 	"os"
 )
@@ -19,6 +21,11 @@ func main() {
 		panic(err)
 	}
 	spring := spring.AppCtx()
+
+	orm := &orm.ORM{}
+	spring.Reg(orm)
+	orm.Init(&model.Admin{})
+
 	ctrl := &controller.Controller{}
 	spring.Reg(ctrl)
 	ctrl.StartUp()

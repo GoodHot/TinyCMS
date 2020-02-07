@@ -6,8 +6,9 @@ import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const requestConfig = {
-  baseURL: '/admin',
-  assetsURL: '/'
+  // baseURL: 'http://dev.jiemen.fun/api/admin',
+  baseURL: 'http://localhost:9000/admin',
+  assetsURL: 'http://assets0.jiemen.fun'
 }
 
 // 创建 axios 实例

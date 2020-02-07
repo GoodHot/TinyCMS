@@ -13,12 +13,3 @@ type Article struct {
 func (Article) TableName() string {
 	return "t_article"
 }
-
-//type ArticleData struct {
-//	gorm.Model
-//	ArticleID uint
-//}
-//
-//func (ad ArticleData) TableName() string {
-//	return "t_article_" + strconv.Itoa(int(ad.ChannelID))
-//}

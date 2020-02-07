@@ -4,12 +4,12 @@ import "github.com/jinzhu/gorm"
 
 type Channel struct {
 	gorm.Model
-	Name         string
-	Title        string
-	Desccription string
-	ParentId     uint
-}
-
-func (Channel) TableName() string {
-	return "t_channel"
+	Name         string `json:"name"`
+	Title        string `json:"title"`
+	SEOTitle     string `json:"seo_title"`
+	Desccription string `json:"desccription"`
+	Keyword      string `json:"keyword"`
+	Remark       string `json:"remark"`
+	Icon         string `json:"icon"`
+	ParentId     uint `json:"parent_id"`
 }

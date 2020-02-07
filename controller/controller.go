@@ -3,10 +3,10 @@ package controller
 import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common/ctrl"
-	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/controller/admin"
 	"github.com/GoodHot/TinyCMS/controller/web"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"io"
 	"net/http"
 	"strconv"
@@ -23,7 +23,6 @@ type Controller struct {
 	Static           string                  `val:"${server.static}"`
 	HTMLCompress     bool                    `val:"${server.html_compress}"`
 	AdminTemplateDir string                  `val:"${server.admin_template_dir}"`
-	adminRender      *render.HTMLRenderer
 }
 
 func (c *Controller) StartUp() {
@@ -32,7 +31,6 @@ func (c *Controller) StartUp() {
 	e.Renderer = c
 	e.Static(c.Static, c.Static)
 
-	c.initRender()
 	c.registerAdmin(e.Group(c.AdminPrefix), c.AdminPrefix)
 	c.registerWeb(e.Group(c.WebPrefix), c.WebPrefix)
 	c.registerAPI(e.Group(c.APIPrefix), c.APIPrefix)
@@ -44,8 +42,13 @@ func (c *Controller) StartUp() {
 }
 
 func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
+	group.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{"*"},
+		AllowMethods: []string{"*"},
+	}))
 
-	whiteList := []string{"/to/login", "/login"}
+	whiteList := []string{"/auth/login"}
 
 	group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -55,23 +58,23 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 					return next(c)
 				}
 			}
-			cookie, err := c.Cookie("ACCESSTK")
-			if err != nil || cookie.Value == "" {
+			token := c.Request().Header.Get("Access-Token")
+			if token == "" {
 				return c.Redirect(http.StatusFound, "/")
 			}
 			return next(c)
 		}
 	})
+
 	router := &RouterRegister{
-		group:        group,
-		prefix:       prefix,
-		buildOption:  false,
-		renderSource: "admin",
+		group:       group,
+		prefix:      prefix,
+		buildOption: true,
 	}
-	router.GET("/to/:page", func(ctx *ctrl.HTTPContext) error {
-		return ctx.HTML(ctx.Param("page"))
-	})
-	router.POST("/login", c.AdminAuthCtrl.Login)
+	router.POST("/auth/login", c.AdminAuthCtrl.Login)
+	router.Any("/auth/info", c.AdminAuthCtrl.Info)
+
+	router.POST("/channel/:page", c.AdminChannelCtrl.List)
 }
 
 func (c *Controller) registerWeb(group *echo.Group, prefix string) {
@@ -82,17 +85,6 @@ func (c *Controller) registerAPI(group *echo.Group, prefix string) {
 
 }
 
-func (s *Controller) initRender() {
-	s.adminRender = &render.HTMLRenderer{
-		LayoutDir:    "layout",
-		ComponentDir: "component",
-		TemplateDir:  s.AdminTemplateDir,
-		Suffix:       ".html",
-		Compress:     s.HTMLCompress,
-	}
-	s.adminRender.Init(nil)
-}
-
 func (s *Controller) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
 	var tmpData map[string]interface{}
 	if data == nil {
@@ -100,11 +92,7 @@ func (s *Controller) Render(w io.Writer, name string, data interface{}, c echo.C
 	} else {
 		tmpData = data.(map[string]interface{})
 	}
-	renderSource := tmpData["#render_source#"]
-	if renderSource == nil {
-		s.SkinCtrl.Render(w, name, tmpData)
-	}
-	return s.adminRender.Render(w, name, tmpData)
+	return s.SkinCtrl.Render(w, name, tmpData)
 }
 
 type ControllerFunc func(ctx *ctrl.HTTPContext) error
