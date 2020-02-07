@@ -7,7 +7,15 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"time"
 )
+
+type Model struct {
+	ID        uint       `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
+}
 
 type ORM struct {
 	Dialect          string `val:"${db.dialect}"`
@@ -45,4 +53,64 @@ func (s *ORM) Tx(callback func(db *gorm.DB) error) error {
 		tx.Commit()
 	}
 	return nil
+}
+
+type Page struct {
+	List       interface{} `json:"list"`
+	PageNum    int         `json:"page_num"`
+	PageSize   int         `json:"page_size"`
+	TotalPage  int         `json:"total_page"`
+	TotalCount int         `json:"total_count"`
+}
+
+type ORMPage struct {
+	PageNum  int
+	PageSize int
+	OrderBy  string
+	Where    ORMWhere
+	Result   interface{}
+}
+
+func (s *ORM) Page(page ORMPage) *Page {
+	// set page skip and limit
+	offset := (page.PageNum - 1) * page.PageSize
+	db := s.DB.Offset(offset).Limit(page.PageSize)
+	// set sql where
+	if page.Where.Has {
+		db.Where(page.Where.Cond, page.Where.Param...)
+	}
+	// set order by
+	if page.OrderBy != "" {
+		db.Order(page.OrderBy)
+	}
+	count := 0
+	// find result and count
+	db.Find(page.Result).Count(&count)
+	// get total page
+	totalPage := count / page.PageSize
+	if (count % page.PageSize) > 0 {
+		totalPage++
+	}
+	// result
+	return &Page{
+		List:       page.Result,
+		PageNum:    page.PageNum,
+		PageSize:   page.PageSize,
+		TotalPage:  totalPage,
+		TotalCount: count,
+	}
+}
+
+type ORMWhere struct {
+	Has   bool
+	Cond  string
+	Param []interface{}
+}
+
+func Where(where string, params ...interface{}) ORMWhere {
+	return ORMWhere{
+		Has:   true,
+		Cond:  where,
+		Param: params,
+	}
 }

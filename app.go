@@ -24,7 +24,7 @@ func main() {
 
 	orm := &orm.ORM{}
 	spring.Reg(orm)
-	orm.Init(&model.Admin{})
+	orm.Init(&model.Admin{}, &model.Channel{})
 
 	ctrl := &controller.Controller{}
 	spring.Reg(ctrl)

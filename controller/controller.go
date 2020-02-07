@@ -48,23 +48,23 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 		AllowMethods: []string{"*"},
 	}))
 
-	whiteList := []string{"/auth/login"}
+	//whiteList := []string{"/auth/login"}
 
-	group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			url := c.Request().URL.String()
-			for _, v := range whiteList {
-				if prefix+v == url {
-					return next(c)
-				}
-			}
-			token := c.Request().Header.Get("Access-Token")
-			if token == "" {
-				return c.Redirect(http.StatusFound, "/")
-			}
-			return next(c)
-		}
-	})
+	//group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+	//	return func(c echo.Context) error {
+	//		url := c.Request().URL.String()
+	//		for _, v := range whiteList {
+	//			if prefix+v == url {
+	//				return next(c)
+	//			}
+	//		}
+	//		token := c.Request().Header.Get("Access-Token")
+	//		if token == "" {
+	//			return c.Redirect(http.StatusFound, "/")
+	//		}
+	//		return next(c)
+	//	}
+	//})
 
 	router := &RouterRegister{
 		group:       group,
@@ -74,7 +74,7 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.POST("/auth/login", c.AdminAuthCtrl.Login)
 	router.Any("/auth/info", c.AdminAuthCtrl.Info)
 
-	router.POST("/channel/:page", c.AdminChannelCtrl.List)
+	router.GET("/channel/:page", c.AdminChannelCtrl.Page)
 }
 
 func (c *Controller) registerWeb(group *echo.Group, prefix string) {

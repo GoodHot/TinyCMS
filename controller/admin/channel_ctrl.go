@@ -9,8 +9,8 @@ type AdminChannelCtrl struct {
 	ChannelService *service.ChannelService `ioc:"auto"`
 }
 
-func (s *AdminChannelCtrl) List(ctx *ctrl.HTTPContext) error {
+func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {
 	page := ctx.ParamInt("page")
-	s.ChannelService.List(page)
-	return ctx.HTML("channel")
+	ctx.Put("page", s.ChannelService.Page(page))
+	return ctx.ResultOK()
 }
