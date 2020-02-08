@@ -11,13 +11,27 @@ type ChannelService struct {
 }
 
 func (s *ChannelService) Page(page, parentId int) *orm.Page {
+	return s.FindChild(page, parentId)
+}
+
+func (s *ChannelService) FindChild(page, parentId int) *orm.Page {
+	channels := []*model.Channel{}
 	result := s.ORM.Page(orm.ORMPage{
 		PageNum:  page,
 		PageSize: s.PageSize,
-		Result:   &[]*model.Channel{},
+		Result:   &channels,
 		Where:    orm.Where("parent_id = ?", parentId),
 		OrderBy:  "sort desc",
 	})
+	if len(channels) == 0 {
+		return result
+	}
+	for _, c := range channels {
+		if c.HasChild {
+			rst := s.FindChild(1, int(c.ID))
+			c.Children = rst.List
+		}
+	}
 	return result
 }
 

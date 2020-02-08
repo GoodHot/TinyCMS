@@ -49,6 +49,16 @@
           v-decorator="['remark', {rules:[{required: false, message: '请输入备注'}]}]"
         />
       </a-form-item>
+      <a-form-item
+        label="图标"
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+      >
+        <a-textarea
+          :autosize="{ minRows: 2, maxRows: 6 }"
+          v-decorator="['icon', {rules:[{required: false, message: '请输入svg图标'}]}]"
+        />
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -71,16 +81,18 @@ export default {
       form: this.$form.createForm(this),
       channelParentId: '',
       reqData: {
-        id: 0
+        id: 0,
+        parentId: 0
       }
     }
   },
   methods: {
-    loadAdd () {
+    loadAdd (parentId) {
       this.formReset()
       this.visible = true
       this.title = '新建频道'
       this.reqData.id = 0
+      this.reqData.parentId = parentId
     },
     loadEdit (id) {
       this.formReset()
@@ -99,6 +111,9 @@ export default {
         if (!errors) {
           if (this.reqData.id !== 0) {
             values.id = this.reqData.id
+          }
+          if (this.reqData.parentId !== 0) {
+            values.parent_id = this.reqData.parentId
           }
           saveChannel(values).then(res => {
             this.$message.success(`操作成功`)

@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false">
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.editChannel.loadAdd()" >新建频道</a-button>
+      <a-button type="primary" icon="plus" @click="$refs.editChannel.loadAdd(0)" >新建频道</a-button>
     </div>
     <a-divider />
     <a-table
@@ -13,9 +13,9 @@
       @change="handleTableChange"
     >
       <template slot="action" slot-scope="text, record">
-        <a href="sfasdf">查看子频道</a>
+        <a @click="loadChildData(record)">查看子频道</a>
         <a-divider type="vertical" />
-        <a href="sfasdf">创建子频道</a>
+        <a @click="$refs.editChannel.loadAdd(record.id)">创建子频道</a>
         <a-divider type="vertical" />
         <a @click="handlerEdit(record)">编辑</a>
         <a-divider type="vertical" />
@@ -26,6 +26,9 @@
           <a-button type="dashed" icon="up" />
           <a-button type="dashed" icon="down" />
         </a-button-group>
+      </template>
+      <template slot="icon" slot-scope="text, record">
+        <span v-html="record.icon"></span>
       </template>
     </a-table>
     <edit-channel ref="editChannel" @commitHandler="commitHandler"></edit-channel>
@@ -43,8 +46,13 @@ export default {
       columns: [
         {
           title: '#',
-          width: 20,
+          width: 120,
           dataIndex: 'id'
+        },
+        {
+          title: '图标',
+          width: 100,
+          scopedSlots: { customRender: 'icon' }
         },
         {
           title: '频道名称',
@@ -78,7 +86,6 @@ export default {
         page: 1,
         parentId: 0
       }
-
     }
   },
   mounted () {
@@ -87,6 +94,14 @@ export default {
   methods: {
     commitHandler () {
       this.loadData()
+    },
+    loadChildData (record) {
+      getChannelPage({
+        parentId: record.id,
+        page: 1
+      }).then(res => {
+        record.children = res.page.list
+      })
     },
     loadData () {
       this.loading = true

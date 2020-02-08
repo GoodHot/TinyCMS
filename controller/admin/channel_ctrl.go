@@ -11,8 +11,8 @@ type AdminChannelCtrl struct {
 }
 
 func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {
-	parentId := ctx.ParamInt("parentId")
-	page := ctx.QueryParamInt("page")
+	parentId := ctx.QueryParamInt("parentId")
+	page := ctx.ParamInt("page")
 	ctx.Put("page", s.ChannelService.Page(page, parentId))
 	return ctx.ResultOK()
 }
