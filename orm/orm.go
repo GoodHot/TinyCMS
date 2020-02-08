@@ -34,6 +34,7 @@ func (s *ORM) Init(model ...interface{}) error {
 	if err != nil {
 		return err
 	}
+	s.DB.LogMode(true)
 	s.DB.SingularTable(true)
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return s.TablePrefix + defaultTableName;
@@ -72,20 +73,25 @@ type ORMPage struct {
 }
 
 func (s *ORM) Page(page ORMPage) *Page {
+	// set order by
+	var db *gorm.DB
+	if page.OrderBy != "" {
+		db = s.DB.Order(page.OrderBy)
+	} else {
+		db = s.DB.Order("id desc")
+	}
+	// find count
+	count := 0
+	db.Model(page.Result).Count(&count)
 	// set page skip and limit
 	offset := (page.PageNum - 1) * page.PageSize
-	db := s.DB.Offset(offset).Limit(page.PageSize)
+	db = db.Limit(page.PageSize).Offset(offset)
 	// set sql where
 	if page.Where.Has {
-		db.Where(page.Where.Cond, page.Where.Param...)
+		db = db.Where(page.Where.Cond, page.Where.Param...)
 	}
-	// set order by
-	if page.OrderBy != "" {
-		db.Order(page.OrderBy)
-	}
-	count := 0
-	// find result and count
-	db.Find(page.Result).Count(&count)
+	// find result
+	db.Find(page.Result)
 	// get total page
 	totalPage := count / page.PageSize
 	if (count % page.PageSize) > 0 {

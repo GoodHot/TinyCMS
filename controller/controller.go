@@ -74,7 +74,10 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.POST("/auth/login", c.AdminAuthCtrl.Login)
 	router.Any("/auth/info", c.AdminAuthCtrl.Info)
 
-	router.GET("/channel/:page", c.AdminChannelCtrl.Page)
+	router.GET("/channel/page_:page", c.AdminChannelCtrl.Page)
+	router.POST("/channel", c.AdminChannelCtrl.Save)
+	router.DELETE("/channel/:id", c.AdminChannelCtrl.Delete)
+	router.GET("/channel/:id", c.AdminChannelCtrl.Get)
 }
 
 func (c *Controller) registerWeb(group *echo.Group, prefix string) {
