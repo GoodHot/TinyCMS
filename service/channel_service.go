@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	"strconv"
 )
 
 type ChannelService struct {
@@ -39,10 +40,8 @@ func (s *ChannelService) Save(channel *model.Channel) error {
 		return s.ORM.DB.Create(channel).Error
 	}
 	tmp, _ := s.Get(int(channel.ID))
-	channel.Icon = tmp.Icon
 	channel.Sort = tmp.Sort
 	channel.ParentId = tmp.ParentId
-	channel.HasChild = tmp.HasChild
 	return s.ORM.DB.Save(channel).Error
 }
 
@@ -58,11 +57,33 @@ func (s *ChannelService) Get(id int) (*model.Channel, error) {
 	return model, err
 }
 
-//func (s *ChannelService) findChild(channels []*model.Channel) {
-//	for _, v := range channels {
-//		if !v.HasChild {
-//			continue
-//		}
-//		s.ORM.DB.Where("parent_id = ?", v.ID).Find()
-//	}
-//}
+type ChannelTree struct {
+	Title    string         `json:"title"`
+	Value    string         `json:"value"`
+	Key      string         `json:"key"`
+	Children []*ChannelTree `json:"children"`
+}
+
+func (s *ChannelService) Tree() []*ChannelTree {
+	return s.tree(0)
+}
+
+func (s *ChannelService) tree(parentId uint) []*ChannelTree {
+	var channels []*model.Channel
+	s.ORM.DB.Where("parent_id = ?", parentId).Find(&channels)
+	if len(channels) == 0 {
+		return nil
+	}
+	var trees []*ChannelTree
+	for _, v := range channels {
+		child := s.tree(v.ID)
+		tmp := &ChannelTree{
+			Title:    v.Name,
+			Value:    strconv.Itoa(int(v.ID)),
+			Key:      strconv.Itoa(int(v.ID)),
+			Children: child,
+		}
+		trees = append(trees, tmp)
+	}
+	return trees
+}

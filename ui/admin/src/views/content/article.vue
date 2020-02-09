@@ -6,7 +6,6 @@
         <div ref="editorSection"></div>
       </a-col>
       <a-col :span="7">
-        <a-input placeholder="选择频道" class="form-item" />
         <a-upload
           name="avatar"
           listType="picture-card"
@@ -16,18 +15,41 @@
           :beforeUpload="beforeUpload"
           @change="handleChange"
         >
-          <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+          <img v-if="coverUrl" :src="coverUrl" alt="avatar" />
           <div v-else>
-            <a-icon :type="loading ? 'loading' : 'plus'" />
+            <a-icon :type="coverLoading ? 'loading' : 'plus'" />
             <div class="ant-upload-text">封面图片</div>
           </div>
         </a-upload>
+        <a-tree-select
+          class="form-item"
+          style="width:100%"
+          :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+          :treeData="channelData"
+          placeholder="选择频道"
+          treeDefaultExpandAll
+        >
+          <span style="color: #08c" slot="title" slot-scope="{key, value}" v-if="key='0-0-1'">
+            Child Node1 {{ value }}
+          </span>
+        </a-tree-select>
         <a-textarea
           class="form-item"
           placeholder="简介摘要"
-          :autosize="{ minRows: 2, maxRows: 6 }"
+          :autosize="{ minRows: 4, maxRows: 6 }"
         />
-        <a-button type="primary" class="btn-right">发布</a-button>
+        <div class="form-item">
+          <a-date-picker
+            showTime
+            placeholder="定时发布"
+            style="width: 100%"
+            format="YYYY-MM-DD HH:mm:ss"
+          />
+        </div>
+        <div class="form-item">
+          <a-select mode="tags" :tokenSeparators="[',']" style="width:100%;" placeholder="文章标签"></a-select>
+        </div>
+        <a-button type="primary" class="btn-right" @click="publish">发布</a-button>
         <a-button type="dashed">保存草稿</a-button>
       </a-col>
     </a-row>
@@ -40,11 +62,15 @@ import 'tui-editor/dist/tui-editor.css'
 import 'tui-editor/dist/tui-editor-contents.css'
 import 'highlight.js/styles/github.css'
 import Editor from 'tui-editor'
+import { getChannelTree } from '@/api/channel'
 
 export default {
   data () {
     return {
-      markdown: null
+      markdown: null,
+      coverUrl: null,
+      coverLoading: false,
+      channelData: []
     }
   },
   mounted () {
@@ -53,8 +79,22 @@ export default {
       el: this.$refs.editorSection,
       initialEditType: 'markdown',
       previewStyle: 'vertical',
-      height: '700px'
+      height: '700px',
+      exts: ['scrollSync']
     })
+    this.loadChannelTree()
+  },
+  methods: {
+    publish () {
+      console.log(this.markdown.getMarkdown())
+    },
+    beforeUpload () {},
+    handleChange () {},
+    loadChannelTree () {
+      getChannelTree().then(res => {
+        this.channelData = res.tree
+      })
+    }
   }
 }
 </script>

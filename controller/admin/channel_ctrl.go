@@ -17,6 +17,11 @@ func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminChannelCtrl) Tree(ctx *ctrl.HTTPContext) error {
+	ctx.Put("tree", s.ChannelService.Tree())
+	return ctx.ResultOK()
+}
+
 func (s *AdminChannelCtrl) Save(ctx *ctrl.HTTPContext) error {
 	channel := new(model.Channel)
 	if err := ctx.Bind(channel); err != nil {

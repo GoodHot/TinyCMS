@@ -12,7 +12,6 @@ type Channel struct {
 	Remark       string      `json:"remark"`
 	Icon         string      `json:"icon"`
 	ParentId     uint        `json:"parent_id"`
-	HasChild     bool        `json:"has_child"`
 	Sort         int         `json:"sort"`
 	Children     interface{} `gorm:"-" json:"children"`
 }

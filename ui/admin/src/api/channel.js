@@ -18,6 +18,13 @@ export function getChannelPage (parameter) {
   })
 }
 
+export function getChannelTree () {
+  return axios({
+    url: `/channel/tree`,
+    method: 'get'
+  })
+}
+
 export function saveChannel (param) {
   return axios({
     url: `/channel`,
