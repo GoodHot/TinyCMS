@@ -6,10 +6,10 @@ import (
 
 type Article struct {
 	gorm.Model
-	Title     string
-	ChannelID uint
-}
-
-func (Article) TableName() string {
-	return "t_article"
+	Title        string
+	ChannelID    uint
+	Description  string
+	Cover        string
+	ContentTable string
+	ContentID    uint
 }

@@ -24,13 +24,12 @@ func (s *ChannelService) FindChild(page, parentId int) *orm.Page {
 		OrderBy:  "sort desc",
 	})
 	if len(channels) == 0 {
+		result.List = nil
 		return result
 	}
 	for _, c := range channels {
-		if c.HasChild {
-			rst := s.FindChild(1, int(c.ID))
-			c.Children = rst.List
-		}
+		rst := s.FindChild(1, int(c.ID))
+		c.Children = rst.List
 	}
 	return result
 }

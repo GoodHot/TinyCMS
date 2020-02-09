@@ -13,8 +13,6 @@
       @change="handleTableChange"
     >
       <template slot="action" slot-scope="text, record">
-        <a @click="loadChildData(record)">查看子频道</a>
-        <a-divider type="vertical" />
         <a @click="$refs.editChannel.loadAdd(record.id)">创建子频道</a>
         <a-divider type="vertical" />
         <a @click="handlerEdit(record)">编辑</a>
@@ -75,7 +73,7 @@ export default {
         },
         {
           title: '操作',
-          width: 280,
+          width: 200,
           scopedSlots: { customRender: 'action' }
         }
       ],
