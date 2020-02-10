@@ -15,6 +15,8 @@ import (
 type Controller struct {
 	AdminChannelCtrl *admin.AdminChannelCtrl `ioc:"auto"`
 	AdminAuthCtrl    *admin.AdminAuthCtrl    `ioc:"auto"`
+	AdminArticleCtrl *admin.AdminArticleCtrl `ioc:"auto"`
+	AdminUploadCtrl  *admin.AdminUploadCtrl  `ioc:"auto"`
 	SkinCtrl         *web.SkinCtrl           `ioc:"auto"`
 	Port             int                     `val:"${server.port}"`
 	AdminPrefix      string                  `val:"${server.admin_prefix}"`
@@ -71,14 +73,20 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 		prefix:      prefix,
 		buildOption: true,
 	}
+	// auth
 	router.POST("/auth/login", c.AdminAuthCtrl.Login)
 	router.Any("/auth/info", c.AdminAuthCtrl.Info)
-
+	// channel
 	router.GET("/channel/page_:page", c.AdminChannelCtrl.Page)
 	router.GET("/channel/tree", c.AdminChannelCtrl.Tree)
 	router.POST("/channel", c.AdminChannelCtrl.Save)
 	router.DELETE("/channel/:id", c.AdminChannelCtrl.Delete)
 	router.GET("/channel/:id", c.AdminChannelCtrl.Get)
+	// articcle
+	router.POST("/article/publish", c.AdminArticleCtrl.Publish)
+	// upload
+	router.POST("/upload", c.AdminUploadCtrl.Upload)
+	router.POST("/upload/base64", c.AdminUploadCtrl.UploadBase64)
 }
 
 func (c *Controller) registerWeb(group *echo.Group, prefix string) {

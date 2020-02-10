@@ -39,8 +39,7 @@ func (s *ORM) Init(model ...interface{}) error {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return s.TablePrefix + defaultTableName;
 	}
-	s.DB.AutoMigrate(model...)
-	return nil
+	return s.DB.AutoMigrate(model...).Error
 }
 
 // Transaction

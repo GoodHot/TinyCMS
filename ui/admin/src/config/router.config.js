@@ -53,10 +53,16 @@ export const asyncRouterMap = [
             meta: { title: '频道管理', keepAlive: true }
           },
           {
+            path: '/config/publish',
+            name: 'publish',
+            component: () => import('@/views/content/publish'),
+            meta: { title: '发布文章', keepAlive: true }
+          },
+          {
             path: '/config/article',
             name: 'article',
             component: () => import('@/views/content/article'),
-            meta: { title: '文章', keepAlive: true }
+            meta: { title: '文章列表', keepAlive: true }
           }
         ]
       }

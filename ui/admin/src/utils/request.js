@@ -8,7 +8,7 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 const requestConfig = {
   // baseURL: 'http://dev.jiemen.fun/api/admin',
   baseURL: 'http://localhost:9000/admin',
-  assetsURL: 'http://assets0.jiemen.fun'
+  assetsURL: 'http://localhost:9000'
 }
 
 // 创建 axios 实例

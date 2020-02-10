@@ -14,6 +14,11 @@
   "log": {
     "level": "debug"
   },
+  "upload": {
+    "type": "local",
+    "max_size": 102400,
+    "local_dir": "upload"
+  },
   "server": {
     "port": 9000,
     "static": "static",
