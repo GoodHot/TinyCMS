@@ -29,7 +29,7 @@
           :treeData="channelData"
           placeholder="选择频道"
           treeDefaultExpandAll
-          v-model="publishData.channelId"
+          v-model="publishData.channel_id"
         >
         </a-tree-select>
         <a-textarea
@@ -65,6 +65,7 @@ import 'highlight.js/styles/github.css'
 import Editor from 'tui-editor'
 import { getChannelTree } from '@/api/channel'
 import { uploadBase64 } from '@/api/upload'
+import { publishArticle } from '@/api/article'
 
 export default {
   data () {
@@ -79,11 +80,11 @@ export default {
         markdown: '',
         cover: '',
         coverView: '',
-        channelId: '',
+        channel_id: '',
         description: '',
-        publishTime: '',
+        publish_time: '',
         tags: [],
-        status: null
+        type: 'publish'
       }
     }
   },
@@ -121,7 +122,12 @@ export default {
     publish () {
       this.publishData.markdown = this.markdown.getMarkdown()
       this.publishData.html = this.markdown.getHtml()
-      console.log(this.publishData)
+      this.publishData.type = 'publish'
+      publishArticle(this.publishData).then(res => {
+        this.$message.success(`保存成功，3秒后跳转`, 3).then(() => {
+          this.$router.push('/content/article')
+        })
+      })
     },
     uploadHandleChange (info) {
       const status = info.file.status
@@ -143,7 +149,7 @@ export default {
       })
     },
     publishTimeChange (value) {
-      this.publishData.publishTime = value.format(this.dateFormat)
+      this.publishData.publish_time = value.format(this.dateFormat)
     }
   }
 }

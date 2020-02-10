@@ -22,22 +22,28 @@ type Article struct {
 	ContentID    uint          // content id
 	PublishTime  *time.Time    // timing publish
 	Status       ArticleStatus // status
+	Views        int           // page view count
 }
 
 type ArticleContent struct {
 	orm.Model
-	ArticleID uint
 	Markdown  string `gorm:"type:text"`
 	Html      string `gorm:"type:text"`
 }
 
 type Tag struct {
 	orm.Model
-	Name         string
+	Name         string `gorm:"unique_index"`
 	ArticleCount int
 }
 
 type RelTagArticle struct {
 	TagID     uint
 	ArticleID uint
+}
+
+type ArticlePublish struct {
+	Article *Article
+	Tags    []*Tag
+	Content *ArticleContent
 }
