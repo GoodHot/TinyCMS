@@ -1,11 +1,35 @@
 .article-card {
   display: flex;
+  border:1px solid #fff;
+}
+.article-card:hover {
+  border:1px solid #e7e7e7;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.05);
 }
 .article-card .article-card-body {
-  display: flex;
+  position: relative;
   width: 55%;
   background: #f7f7f7;
-  padding: 30px;
+  padding: 25px;
+}
+.article-card .article-card-body h2 {
+  font-size: 1.25rem;
+}
+.article-card .article-card-body h2 a {
+  color: #000;
+}
+.article-card .article-card-body h2 a:hover {
+  color: #0168fa;
+}
+.article-card .article-card-body .article-card-tags {
+  position: absolute;
+  bottom: 30px;
+}
+.article-card .article-card-body .article-card-time {
+  color: #7987a1 !important;
+  font-size: .8rem;
+  position: absolute;
+  bottom: calc(30px + 1.75rem);
 }
 .article-card .article-card-img {
   display: flex;
@@ -15,11 +39,16 @@
   position:relative;
 }
 .article-card .article-card-img img {
+  min-height: 200px;
   width: 100%;
   height: auto;
   position: absolute;
-  top: -50%;
+  top: 0;
   left: 0;
+}
+.icon {
+  fill: currentColor;
+  overflow: hidden;
 }
 /* ############### BOOTSTRAP FRAMEWORK ############### */
 /*!

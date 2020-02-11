@@ -7,11 +7,17 @@
         <ul class="list-unstyled">
             {{range $i, $article := .list.List}}
             <li class="article-card mg-b-20">
-                <div class="article-card-img">
-                    <img src="http://localhost:9000{{$article.Cover}}">
-                </div>
+                <a class="article-card-img" href="#">
+                    <img src="{{$article.Cover}}">
+                </a>
                 <div class="article-card-body">
-                    <h3 class="mg-b-10 tx-inverse">{{$article.Title}}</h3>
+                    <h2><a href="#">{{$article.Title}}</a></h2>
+                    <time class="article-card-time" datetime="2019-09-11T03:08:01+08:00">2019-01-01 15:33</time>
+                    <div class="article-card-tags">
+                        <a href="#"><span class="badge badge-pill badge-secondary">Secondary</span></a>
+                        <a href="#"><span class="badge badge-pill badge-light">#aaa</span></a>
+                        <a href="#"><span class="badge badge-pill badge-light">#dfd</span></a>
+                    </div>
                 </div>
             </li>
             {{end}}
