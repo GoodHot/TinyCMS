@@ -79,16 +79,16 @@ func (s *ORM) Page(page ORMPage) *Page {
 	} else {
 		db = s.DB.Order("id desc")
 	}
+	// set sql where
+	if page.Where.Has {
+		db = db.Where(page.Where.Cond, page.Where.Param...)
+	}
 	// find count
 	count := 0
 	db.Model(page.Result).Count(&count)
 	// set page skip and limit
 	offset := (page.PageNum - 1) * page.PageSize
 	db = db.Limit(page.PageSize).Offset(offset)
-	// set sql where
-	if page.Where.Has {
-		db = db.Where(page.Where.Cond, page.Where.Param...)
-	}
 	// find result
 	db.Find(page.Result)
 	// get total page

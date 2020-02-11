@@ -16,7 +16,7 @@
           :action="actionURL('/upload')"
           @change="uploadHandleChange"
         >
-          <img class="upload-cover" v-if="publishData.coverView" :src="publishData.coverView" alt="avatar" />
+          <img class="upload-cover" v-if="publishData.cover" :src="assetsURL(publishData.cover)" alt="avatar" />
           <div v-else>
             <a-icon :type="coverLoading ? 'loading' : 'plus'" />
             <div class="ant-upload-text">封面图片</div>
@@ -65,7 +65,7 @@ import 'highlight.js/styles/github.css'
 import Editor from 'tui-editor'
 import { getChannelTree } from '@/api/channel'
 import { uploadBase64 } from '@/api/upload'
-import { publishArticle } from '@/api/article'
+import { publishArticle, getArticle } from '@/api/article'
 
 export default {
   data () {
@@ -75,11 +75,11 @@ export default {
       channelData: [],
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       publishData: {
+        id: 0,
         title: '',
         html: '',
         markdown: '',
         cover: '',
-        coverView: '',
         channel_id: '',
         description: '',
         publish_time: '',
@@ -89,23 +89,35 @@ export default {
     }
   },
   mounted () {
-    /* eslint-disable no-new */
-    const _this = this
-    this.markdown = new Editor({
-      el: this.$refs.editorSection,
-      initialEditType: 'markdown',
-      previewStyle: 'vertical',
-      height: '700px',
-      exts: ['scrollSync'],
-      hooks: {
-        addImageBlobHook (blob, callback) {
-          _this.imageUpload(blob, callback)
-        }
-      }
-    })
+    const articleId = this.$route.query.article
+    if (articleId) {
+      getArticle(articleId).then(res => {
+        this.publishData = res.publish
+        this.initMarkdown(res.publish.markdown)
+      })
+    } else {
+      this.initMarkdown('')
+    }
     this.loadChannelTree()
   },
   methods: {
+    initMarkdown (initValue) {
+      /* eslint-disable no-new */
+      const _this = this
+      this.markdown = new Editor({
+        el: this.$refs.editorSection,
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        height: '700px',
+        exts: ['scrollSync'],
+        initialValue: initValue,
+        hooks: {
+          addImageBlobHook (blob, callback) {
+            _this.imageUpload(blob, callback)
+          }
+        }
+      })
+    },
     imageUpload (blob, mdCall) {
       const _this = this
       const reader = new FileReader()
@@ -137,7 +149,6 @@ export default {
           return
         }
         this.publishData.cover = info.file.response.data.path
-        this.publishData.coverView = this.assetsURL(info.file.response.data.path)
         this.$message.success(`${info.file.name} file uploaded successfully.`)
       } else if (status === 'error') {
         this.$message.error(`${info.file.name} file upload failed.`)

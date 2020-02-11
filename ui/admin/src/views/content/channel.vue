@@ -17,7 +17,14 @@
         <a-divider type="vertical" />
         <a @click="handlerEdit(record)">编辑</a>
         <a-divider type="vertical" />
-        <a @click="handleDelete(record)">删除</a>
+        <a-popconfirm
+          title="确定要删除这个频道?"
+          @confirm="handleDelete(record)"
+          okText="删除"
+          cancelText="取消"
+        >
+          <a href="#">删除</a>
+        </a-popconfirm>
       </template>
       <template slot="sort">
         <a-button-group size="small">

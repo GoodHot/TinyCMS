@@ -14,21 +14,21 @@ const (
 
 type Article struct {
 	orm.Model
-	Title        string
-	ChannelID    uint
-	Description  string        // article description
-	Cover        string        // conver image
-	ContentTable string        // content table
-	ContentID    uint          // content id
-	PublishTime  *time.Time    // timing publish
-	Status       ArticleStatus // status
-	Views        int           // page view count
+	Title        string        `json:"title"`
+	ChannelID    uint          `json:"channel_id"`
+	Description  string        `json:"description"`   // article description
+	Cover        string        `json:"cover"`         // conver image
+	ContentTable string        `json:"content_table"` // content table
+	ContentID    uint          `json:"content_id"`    // content id
+	PublishTime  *time.Time    `json:"publish_time"`  // timing publish
+	Status       ArticleStatus `json:"status"`        // status
+	Views        int           `json:"views"`         // page view count
 }
 
 type ArticleContent struct {
 	orm.Model
-	Markdown  string `gorm:"type:text"`
-	Html      string `gorm:"type:text"`
+	Markdown string `gorm:"type:text"`
+	Html     string `gorm:"type:text"`
 }
 
 type Tag struct {

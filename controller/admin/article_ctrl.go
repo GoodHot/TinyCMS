@@ -12,9 +12,11 @@ import (
 
 type AdminArticleCtrl struct {
 	ArticleService *service.ArticleService `ioc:"auto"`
+	TagService     *service.TagService     `ioc:"auto"`
 }
 
 type PublishForm struct {
+	ID          int      `json:"id"`
 	Title       string   `json:"title"`
 	Markdown    string   `json:"markdown"`
 	Html        string   `json:"html"`
@@ -75,17 +77,55 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 			Html:     publish.Html,
 		},
 	}
-	err = s.ArticleService.Publish(articlePublish)
-	if err != nil {
-		return ctx.ResultErr(err.Error())
+	if publish.ID == 0 {
+		if err = s.ArticleService.Publish(articlePublish); err != nil {
+			return ctx.ResultErr(err.Error())
+		}
+	} else {
+		articlePublish.Article.ID = uint(publish.ID)
+		s.ArticleService.Edit(articlePublish)
 	}
 	return ctx.ResultOK()
 }
 
 func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
-	return nil
+	page := ctx.ParamInt("page")
+	ctx.Put("page", s.ArticleService.Page(page, service.ArticlePageQuery{}))
+	return ctx.ResultOK()
+}
+
+func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	article := s.ArticleService.GetById(id)
+	if article == nil || article.Title == "" {
+		return ctx.ResultErr("article not exists")
+	}
+	tags := s.TagService.GetByArticleID(id)
+	tagsName := []string{}
+	if tags != nil && len(tags) > 0 {
+		for _, v := range tags {
+			tagsName = append(tagsName, v.Name)
+		}
+	}
+	content := s.ArticleService.GetContent(article.ContentTable, int(article.ContentID))
+	publish := &PublishForm{
+		ID:          int(article.ID),
+		Title:       article.Title,
+		Markdown:    content.Markdown,
+		Html:        content.Html,
+		Cover:       article.Cover,
+		ChannelID:   strconv.Itoa(int(article.ChannelID)),
+		Description: article.Description,
+		Tags:        tagsName,
+	}
+	ctx.Put("publish", publish)
+	return ctx.ResultOK()
 }
 
 func (s *AdminArticleCtrl) Delete(ctx *ctrl.HTTPContext) error {
-	return nil
+	id := ctx.ParamInt("id")
+	if err := s.ArticleService.Delete(id); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	return ctx.ResultOK()
 }

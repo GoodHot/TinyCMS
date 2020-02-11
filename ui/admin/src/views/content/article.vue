@@ -1,9 +1,5 @@
 <template>
   <a-card :bordered="false">
-    <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="$refs.editChannel.loadAdd(0)" >新建频道</a-button>
-    </div>
-    <a-divider />
     <a-table
       :columns="columns"
       :dataSource="data"
@@ -13,32 +9,30 @@
       @change="handleTableChange"
     >
       <template slot="action" slot-scope="text, record">
-        <a @click="$refs.editChannel.loadAdd(record.id)">创建子频道</a>
+        <a href="" v-if="record.status == 2">发布</a>
+        <a href="" v-if="record.status == 1">下架</a>
         <a-divider type="vertical" />
         <a @click="handlerEdit(record)">编辑</a>
         <a-divider type="vertical" />
-        <a @click="handleDelete(record)">删除</a>
+        <a-popconfirm
+          title="确定要删除这篇文章?"
+          @confirm="handleDelete(record)"
+          okText="删除"
+          cancelText="取消"
+        >
+          <a href="#">删除</a>
+        </a-popconfirm>
       </template>
-      <template slot="sort">
-        <a-button-group size="small">
-          <a-button type="dashed" icon="up" />
-          <a-button type="dashed" icon="down" />
-        </a-button-group>
-      </template>
-      <template slot="icon" slot-scope="text, record">
-        <span v-html="record.icon"></span>
+      <template slot="status" slot-scope="text, record">
+        <a-tag color="#87d068" v-if="record.status == 1">发布</a-tag>
+        <a-tag color="#2db7f5" v-if="record.status == 2">下架</a-tag>
       </template>
     </a-table>
-    <edit-channel ref="editChannel" @commitHandler="commitHandler"></edit-channel>
   </a-card>
 </template>
 <script>
-import EditChannel from './module/EditChannel'
-import { getChannelPage, deleteChannel } from '@/api/channel'
+import { getArticlePage, deleteArticle } from '@/api/article'
 export default {
-  components: {
-    EditChannel
-  },
   data () {
     return {
       columns: [
@@ -49,27 +43,27 @@ export default {
         },
         {
           title: '标题',
-          width: 100,
+          width: 200,
           dataIndex: 'title'
         },
         {
           title: '频道名称',
-          width: 230,
+          width: 150,
           dataIndex: 'channel_id'
         },
         {
+          title: '状态',
+          width: 50,
+          scopedSlots: { customRender: 'status' }
+        },
+        {
           title: '描述',
-          width: 230,
           dataIndex: 'description'
         },
         {
           title: '浏览数',
-          width: 130,
+          width: 100,
           dataIndex: 'views'
-        },
-        {
-          title: '状态',
-          dataIndex: 'status'
         },
         {
           title: '操作',
@@ -81,8 +75,7 @@ export default {
       loading: false,
       pagination: {},
       param: {
-        page: 1,
-        parentId: 0
+        page: 1
       }
     }
   },
@@ -90,20 +83,9 @@ export default {
     this.loadData()
   },
   methods: {
-    commitHandler () {
-      this.loadData()
-    },
-    loadChildData (record) {
-      getChannelPage({
-        parentId: record.id,
-        page: 1
-      }).then(res => {
-        record.children = res.page.list
-      })
-    },
     loadData () {
       this.loading = true
-      getChannelPage(this.param).then(res => {
+      getArticlePage(this.param).then(res => {
         const result = res.page
         const pagination = { ...this.pagination }
         pagination.total = result.total_count
@@ -119,13 +101,13 @@ export default {
       this.loadData()
     },
     handleDelete (data) {
-      deleteChannel(data.id).then(res => {
+      deleteArticle(data.id).then(res => {
         this.$message.success(`操作成功`)
         this.loadData()
       })
     },
     handlerEdit (data) {
-      this.$refs.editChannel.loadEdit(data.id)
+      this.$router.push(`/content/publish?article=${data.id}`)
     }
   }
 }

@@ -1,14 +1,16 @@
 package service
 
 import (
+	"errors"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"strconv"
 )
 
 type ChannelService struct {
-	PageSize int      `val:"${website.page_size}"`
-	ORM      *orm.ORM `ioc:"auto"`
+	ArticleService *ArticleService `ioc:"auto"`
+	PageSize       int             `val:"${website.page_size}"`
+	ORM            *orm.ORM        `ioc:"auto"`
 }
 
 func (s *ChannelService) Page(page, parentId int) *orm.Page {
@@ -46,6 +48,23 @@ func (s *ChannelService) Save(channel *model.Channel) error {
 }
 
 func (s *ChannelService) Delete(id int) error {
+	channel, err := s.Get(id)
+	if err != nil {
+		return err
+	}
+	if channel == nil {
+		return errors.New("channel is not exists")
+	}
+	childs := s.FindChild(1, int(channel.ID))
+	if childs.TotalCount > 0 {
+		return errors.New("this channel has child channel, please delete child channel first")
+	}
+	articles := s.ArticleService.Page(1, ArticlePageQuery{
+		ChannelID: id,
+	})
+	if articles.TotalCount > 0 {
+		return errors.New("find " + strconv.Itoa(articles.TotalCount) + " article in this channel, please delete article first")
+	}
 	model := &model.Channel{}
 	model.ID = uint(id)
 	return s.ORM.DB.Delete(model).Error
