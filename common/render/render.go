@@ -2,6 +2,7 @@ package render
 
 import (
 	"errors"
+	"fmt"
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"html/template"
 	"io"
@@ -26,7 +27,11 @@ func (s *HTMLRenderer) Render(w io.Writer, name string, data interface{}) error 
 	if tmplName == "" {
 		return errors.New("can't found template file：" + name)
 	}
-	return s.executeTmpl(w, tmplName, data)
+	err := s.executeTmpl(w, tmplName, data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
 }
 
 func (s *HTMLRenderer) executeTmpl(writer io.Writer, name string, data interface{}) error {
@@ -40,7 +45,7 @@ func (s *HTMLRenderer) loadComponent() error {
 	if s.ComponentDir == "" {
 		return nil
 	}
-	dirs, _ := ioutil.ReadDir(s.TemplateDir + s.ComponentDir)
+	dirs, _ := ioutil.ReadDir(s.TemplateDir + "/" + s.ComponentDir)
 	if dirs == nil || len(dirs) == 0 {
 		return nil
 	}
@@ -56,7 +61,7 @@ func (s *HTMLRenderer) loadComponent() error {
 		return nil
 	}
 	for _, v := range fileNames {
-		bt, err := ioutil.ReadFile(s.ComponentDir + v + s.Suffix)
+		bt, err := ioutil.ReadFile(s.TemplateDir + "/" + s.ComponentDir + "/" + v + s.Suffix)
 		if err != nil {
 			return err
 		}
@@ -128,9 +133,9 @@ func (s *HTMLRenderer) loadPage() error {
 
 func (s *HTMLRenderer) readLayoutFile(layout, page string) (string, error) {
 	layoutFile := strs.Fmt("%s/%s/%s%s", s.TemplateDir, s.LayoutDir, layout, s.Suffix)
-	layoutHTML, err := ioutil.ReadFile(layoutFile)
-	if err != nil {
-		return "", err
+	layoutHTML, _ := ioutil.ReadFile(layoutFile)
+	if layoutHTML == nil {
+		layoutHTML = []byte("##content##")
 	}
 	pageFile := strs.Fmt("%s/%s%s",s.TemplateDir, page, s.Suffix)
 	pageHTML, err := ioutil.ReadFile(pageFile)
@@ -149,7 +154,7 @@ func (*HTMLRenderer) templateName(layout, page string) string {
 }
 
 func (s *HTMLRenderer) Init(funcMap template.FuncMap) {
-	s.tmpl = template.New("TinyCMS").Funcs(s.funcMap)
+	s.tmpl = template.New("TinyCMS").Funcs(funcMap)
 	s.tmplCacheMap = make(map[string]string)
 	s.loadComponent()
 	s.loadPage()

@@ -18,6 +18,7 @@ type Controller struct {
 	AdminArticleCtrl *admin.AdminArticleCtrl `ioc:"auto"`
 	AdminUploadCtrl  *admin.AdminUploadCtrl  `ioc:"auto"`
 	SkinCtrl         *web.SkinCtrl           `ioc:"auto"`
+	IndexCtrl        *web.IndexCtrl          `ioc:"auto"`
 	Port             int                     `val:"${server.port}"`
 	AdminPrefix      string                  `val:"${server.admin_prefix}"`
 	WebPrefix        string                  `val:"${server.web_prefix}"`
@@ -34,7 +35,7 @@ func (c *Controller) StartUp() {
 	e.Static(c.Static, c.Static)
 
 	c.registerAdmin(e.Group(c.AdminPrefix), c.AdminPrefix)
-	c.registerWeb(e.Group(c.WebPrefix), c.WebPrefix)
+	c.registerWeb(e, c.WebPrefix)
 	c.registerAPI(e.Group(c.APIPrefix), c.APIPrefix)
 
 	e.Logger.Fatal(e.Start(":" + strconv.Itoa(c.Port)))
@@ -92,8 +93,8 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.POST("/upload/base64", c.AdminUploadCtrl.UploadBase64)
 }
 
-func (c *Controller) registerWeb(group *echo.Group, prefix string) {
-
+func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {
+	echo.GET("/", buildHandlerFunc(s.IndexCtrl.Index))
 }
 
 func (c *Controller) registerAPI(group *echo.Group, prefix string) {
@@ -129,7 +130,7 @@ func (s *RouterRegister) GET(path string, fn ControllerFunc) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.GET(path, buildHandlerFunc(fn, s.renderSource))
+	s.group.GET(path, buildHandlerFunc(fn))
 	fmt.Printf("Register Router[GET], Path: %v%v\n", s.prefix, path)
 }
 
@@ -137,7 +138,7 @@ func (s *RouterRegister) POST(path string, fn ControllerFunc) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.POST(path, buildHandlerFunc(fn, s.renderSource))
+	s.group.POST(path, buildHandlerFunc(fn))
 	fmt.Printf("Register Router[POST], Path: %v%v\n", s.prefix, path)
 }
 
@@ -145,7 +146,7 @@ func (s *RouterRegister) PUT(path string, fn ControllerFunc) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.PUT(path, buildHandlerFunc(fn, s.renderSource))
+	s.group.PUT(path, buildHandlerFunc(fn))
 	fmt.Printf("Register Router[PUT], Path: %v%v\n", s.prefix, path)
 }
 
@@ -153,23 +154,20 @@ func (s *RouterRegister) DELETE(path string, fn ControllerFunc) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.DELETE(path, buildHandlerFunc(fn, s.renderSource))
+	s.group.DELETE(path, buildHandlerFunc(fn))
 	fmt.Printf("Register Router[DELETE], Path: %v%v\n", s.prefix, path)
 }
 
 func (s *RouterRegister) Any(path string, fn ControllerFunc) {
-	s.group.Any(path, buildHandlerFunc(fn, s.renderSource))
+	s.group.Any(path, buildHandlerFunc(fn))
 	fmt.Printf("Register Router[Any], Path: %v%v\n", s.prefix, path)
 }
 
-func buildHandlerFunc(fn ControllerFunc, sourceRender string) echo.HandlerFunc {
+func buildHandlerFunc(fn ControllerFunc) echo.HandlerFunc {
 	return func(e echo.Context) error {
 		ctx := new(ctrl.HTTPContext)
 		ctx.Context = e
 		ctx.Result = &ctrl.HTTPResult{Data: make(map[string]interface{})}
-		if sourceRender != "" {
-			ctx.Result.Data["#render_source#"] = sourceRender
-		}
 		return fn(ctx)
 	}
 }

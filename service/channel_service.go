@@ -80,6 +80,7 @@ type ChannelTree struct {
 	Title    string         `json:"title"`
 	Value    string         `json:"value"`
 	Key      string         `json:"key"`
+	Icon     string         `json:"icon"`
 	Children []*ChannelTree `json:"children"`
 }
 
@@ -100,6 +101,7 @@ func (s *ChannelService) tree(parentId uint) []*ChannelTree {
 			Title:    v.Name,
 			Value:    strconv.Itoa(int(v.ID)),
 			Key:      strconv.Itoa(int(v.ID)),
+			Icon:     v.Icon,
 			Children: child,
 		}
 		trees = append(trees, tmp)

@@ -2,6 +2,7 @@ package web
 
 import (
 	"github.com/GoodHot/TinyCMS/common/render"
+	"html/template"
 	"io"
 )
 
@@ -23,6 +24,12 @@ func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interfa
 			Suffix:       ".html",
 			Compress:     s.HTMLCompress,
 		}
+		funcMap := template.FuncMap{
+			"noescape": func(s string) template.HTML {
+				return template.HTML(s)
+			},
+		}
+		s.webRender.Init(funcMap)
 	}
 	return s.webRender.Render(writer, name, data)
 }
