@@ -24,7 +24,7 @@ func main() {
 
 	orm := &orm.ORM{}
 	spring.Reg(orm)
-	err = orm.Init(&model.Admin{}, &model.Channel{}, &model.Article{}, &model.Tag{}, &model.RelTagArticle{}, &model.Upload{})
+	err = orm.Init(&model.Admin{}, &model.Channel{}, &model.Article{}, &model.Tag{}, &model.RelTagArticle{}, &model.Upload{}, &model.Dict{})
 	if err != nil {
 		panic(err)
 	}

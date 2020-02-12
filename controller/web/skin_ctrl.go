@@ -2,13 +2,17 @@ package web
 
 import (
 	"github.com/GoodHot/TinyCMS/common/render"
+	"github.com/GoodHot/TinyCMS/common/times"
+	"github.com/GoodHot/TinyCMS/service"
 	"html/template"
 	"io"
+	"time"
 )
 
 type SkinCtrl struct {
-	TemplateDir  string `val:"${server.skin_template_dir}"`
-	HTMLCompress bool   `val:"${server.html_compress}"`
+	DictService  *service.DictService `ioc:"auto"`
+	TemplateDir  string               `val:"${server.skin_template_dir}"`
+	HTMLCompress bool                 `val:"${server.html_compress}"`
 	templateSkin string
 	webRender    *render.HTMLRenderer
 }
@@ -27,6 +31,16 @@ func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interfa
 		funcMap := template.FuncMap{
 			"noescape": func(s string) template.HTML {
 				return template.HTML(s)
+			},
+			"timeFmt": func(t time.Time) string {
+				return times.TimeFmt(t, "2006-01-02 15:04")
+			},
+			"dict": func(key string) string {
+				dict := s.DictService.GetByKey(key)
+				if dict == nil {
+					return ""
+				}
+				return dict.Value
 			},
 		}
 		s.webRender.Init(funcMap)

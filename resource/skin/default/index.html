@@ -1,8 +1,7 @@
 <div class="content content-components">
     <div class="container">
         <h1 class="df-title">今日金句</h1>
-        <p class="df-lead">Get started with over a dozen reusable components built on top of Bootstrap with styles
-            enhancement and additional components and options. -- 对对对</p>
+        <p class="df-lead">{{dict "website_name"}}</p>
         <hr class="mg-y-40">
         <ul class="list-unstyled">
             {{range $i, $article := .list.List}}
@@ -12,7 +11,7 @@
                 </a>
                 <div class="article-card-body">
                     <h2><a href="#">{{$article.Title}}</a></h2>
-                    <time class="article-card-time" datetime="2019-09-11T03:08:01+08:00">2019-01-01 15:33</time>
+                    <time class="article-card-time" datetime="{{$article.CreatedAt}}">{{timeFmt $article.CreatedAt}}</time>
                     <div class="article-card-tags">
                         <a href="#"><span class="badge badge-pill badge-secondary">Secondary</span></a>
                         <a href="#"><span class="badge badge-pill badge-light">#aaa</span></a>

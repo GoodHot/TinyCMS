@@ -17,6 +17,7 @@ type Controller struct {
 	AdminAuthCtrl    *admin.AdminAuthCtrl    `ioc:"auto"`
 	AdminArticleCtrl *admin.AdminArticleCtrl `ioc:"auto"`
 	AdminUploadCtrl  *admin.AdminUploadCtrl  `ioc:"auto"`
+	AdminDictCtrl    *admin.AdminDictCtrl    `ioc:"auto"`
 	SkinCtrl         *web.SkinCtrl           `ioc:"auto"`
 	IndexCtrl        *web.IndexCtrl          `ioc:"auto"`
 	Port             int                     `val:"${server.port}"`
@@ -91,6 +92,10 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 	// upload
 	router.POST("/upload", c.AdminUploadCtrl.Upload)
 	router.POST("/upload/base64", c.AdminUploadCtrl.UploadBase64)
+	// dict
+	router.GET("/dict/init", c.AdminDictCtrl.Init)
+	router.GET("/dict/all", c.AdminDictCtrl.All)
+	router.PUT("/dict", c.AdminDictCtrl.Edit)
 }
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {

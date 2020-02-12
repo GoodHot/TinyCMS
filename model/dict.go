@@ -1,27 +1,24 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/GoodHot/TinyCMS/orm"
+)
 
-type DictType uint
+type DictType string
 
 const (
-	DictTypeText     = 10
-	DictTypeTextArea = 20
-	DictTypeRadio    = 30
-	DictTypeSelect   = 40
-	DictTypeSwitch   = 50
+	DictTypeText     = "text"
+	DictTypeTextArea = "textarea"
+	DictTypeSelect   = "select"
 )
 
 type Dict struct {
-	gorm.Model
-	Name        string
-	Description string
-	Type        DictType
-	Options     string
-	Value       string
-	ReadOnly    bool
-}
-
-func (Dict) TableName() string {
-	return "t_config"
+	orm.Model
+	Key         string   `json:"key"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Type        DictType `json:"type"`
+	Options     string   `json:"options"`
+	Value       string   `json:"value"`
+	ReadOnly    bool     `json:"read_only"`
 }
