@@ -55,11 +55,6 @@ export default {
           dataIndex: 'id'
         },
         {
-          title: '图标',
-          width: 100,
-          scopedSlots: { customRender: 'icon' }
-        },
-        {
           title: '频道名称',
           width: 230,
           dataIndex: 'name'

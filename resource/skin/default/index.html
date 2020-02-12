@@ -5,20 +5,7 @@
         <hr class="mg-y-40">
         <ul class="list-unstyled">
             {{range $i, $article := .list.List}}
-            <li class="article-card mg-b-20">
-                <a class="article-card-img" href="#">
-                    <img src="{{$article.Cover}}">
-                </a>
-                <div class="article-card-body">
-                    <h2><a href="#">{{$article.Title}}</a></h2>
-                    <time class="article-card-time" datetime="{{$article.CreatedAt}}">{{timeFmt $article.CreatedAt}}</time>
-                    <div class="article-card-tags">
-                        <a href="#"><span class="badge badge-pill badge-secondary">Secondary</span></a>
-                        <a href="#"><span class="badge badge-pill badge-light">#aaa</span></a>
-                        <a href="#"><span class="badge badge-pill badge-light">#dfd</span></a>
-                    </div>
-                </div>
-            </li>
+                {{template "comp:article_card" $article}}
             {{end}}
         </ul>
         <nav class="mg-t-40">

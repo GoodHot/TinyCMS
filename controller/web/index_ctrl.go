@@ -13,6 +13,8 @@ type IndexCtrl struct {
 
 func (s *IndexCtrl) Index(ctx *ctrl.HTTPContext) error {
 	page := s.ArticleService.Page(1, service.ArticlePageQuery{})
+	ctx.Put("parentLink", "")
+	ctx.Put("channelId", "")
 	ctx.Put("list", page)
 	return ctx.HTML("index")
 }

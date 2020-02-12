@@ -23,6 +23,7 @@ type Article struct {
 	PublishTime  *time.Time    `json:"publish_time"`  // timing publish
 	Status       ArticleStatus `json:"status"`        // status
 	Views        int           `json:"views"`         // page view count
+	Tags         string        `json:"tags"`          // article tags
 }
 
 type ArticleContent struct {

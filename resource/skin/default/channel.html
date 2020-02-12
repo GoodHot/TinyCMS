@@ -1,24 +1,44 @@
 <div class="content content-components">
     <div class="container">
-        <h1 class="df-title">今日金句</h1>
-        <p class="df-lead">{{dict "website_name"}}</p>
+        <ol class="breadcrumb df-breadcrumbs mg-b-10">
+            <li class="breadcrumb-item"><a href="#">首页</a></li>
+            <li class="breadcrumb-item"><a href="#">Linux</a></li>
+            <li class="breadcrumb-item active" aria-current="page">CentOS</li>
+        </ol>
+        <table class="table table-primary table-hover table-striped mg-b-0">
+            <thead>
+            <tr>
+                <th scope="col" colspan="5" style="text-align: center">CentOS</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Adrian Monino</td>
+                <td>Front-End Engineer</td>
+                <td>Computer Science</td>
+                <td>$120,000</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Socrates Itumay</td>
+                <td>Software Engineer</td>
+                <td>Computer Engineering</td>
+                <td>$150,000</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>Reynante Labares</td>
+                <td>Product Manager</td>
+                <td>Business Management</td>
+                <td>$250,000</td>
+            </tr>
+            </tbody>
+        </table>
         <hr class="mg-y-40">
         <ul class="list-unstyled">
             {{range $i, $article := .list.List}}
-                <li class="article-card mg-b-20">
-                    <a class="article-card-img" href="#">
-                        <img src="{{$article.Cover}}">
-                    </a>
-                    <div class="article-card-body">
-                        <h2><a href="#">{{$article.Title}}</a></h2>
-                        <time class="article-card-time" datetime="{{$article.CreatedAt}}">{{timeFmt $article.CreatedAt}}</time>
-                        <div class="article-card-tags">
-                            <a href="#"><span class="badge badge-pill badge-secondary">Secondary</span></a>
-                            <a href="#"><span class="badge badge-pill badge-light">#aaa</span></a>
-                            <a href="#"><span class="badge badge-pill badge-light">#dfd</span></a>
-                        </div>
-                    </div>
-                </li>
+                {{template "comp:article_card" $article}}
             {{end}}
         </ul>
         <nav class="mg-t-40">

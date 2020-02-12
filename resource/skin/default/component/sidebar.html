@@ -27,13 +27,13 @@
             {{$channelId := .channelId}}
             {{range $i, $channel := $channels}}
             <li class="nav-item show">
-                <a href="javascript:void(0)" class="nav-link with-sub {{if eq $link $channel.Link}}active{{end}}">
+                <a href="javascript:void(0)" class="nav-link with-sub {{if eq $link $channel.Channel.Title}}active{{end}}">
                     {{noescape $channel.Icon}}
                     {{$channel.Title}}
                 </a>
                 <nav class="nav">
                     {{range $j, $child := $channel.Children}}
-                    <a class="{{if eq $channelId $child.Value}}active{{end}}" href="/channel/{{$channel.Link}}/{{$child.Link}}">{{$child.Title}}</a>
+                    <a class="{{if eq $channelId $child.Value}}active{{end}}" href="/channel/{{$channel.Channel.Title}}/{{$child.Channel.Title}}">{{$child.Title}}</a>
                     {{end}}
                 </nav>
             </li>

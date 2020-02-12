@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"errors"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
@@ -42,8 +43,8 @@ func (s *ArticleService) Publish(article *model.ArticlePublish) error {
 		article.Article.ContentTable = s.contentTableName(channel)
 		article.Article.Views = 0
 		article.Article.ContentID = article.Content.ID
-		db.Create(article.Article)
 		if len(article.Tags) > 0 {
+			tagStr := bytes.NewBufferString("")
 			for _, t := range article.Tags {
 				tag := s.TagService.GetByName(t.Name)
 				if tag.Name == "" {
@@ -51,6 +52,8 @@ func (s *ArticleService) Publish(article *model.ArticlePublish) error {
 					db.Create(t)
 					tag = t
 				}
+				tagStr.WriteString(t.Name)
+				tagStr.WriteString(",")
 				err := db.Model(&tag).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
 				if err != nil {
 					return err
@@ -63,7 +66,9 @@ func (s *ArticleService) Publish(article *model.ArticlePublish) error {
 					return err
 				}
 			}
+			article.Article.Tags = tagStr.String()
 		}
+		db.Create(article.Article)
 		return nil
 	})
 }
@@ -82,13 +87,7 @@ func (s *ArticleService) Edit(article *model.ArticlePublish) error {
 			return err
 		}
 		tmp := article.Article
-		db.Model(tmp).Updates(map[string]interface{}{
-			"title":        tmp.Title,
-			"channel_id":   tmp.ChannelID,
-			"cover":        tmp.Cover,
-			"description":  tmp.Description,
-			"publish_time": tmp.PublishTime,
-		})
+
 		tags := s.TagService.GetByArticleID(int(article.Article.ID))
 		if tags != nil && len(tags) > 0 {
 			for _, v := range tags {
@@ -100,6 +99,7 @@ func (s *ArticleService) Edit(article *model.ArticlePublish) error {
 		}
 		db.Unscoped().Where("article_id = ?", article.Article.ID).Delete(&model.RelTagArticle{})
 		if len(article.Tags) > 0 {
+			tagStr := bytes.NewBufferString("")
 			for _, t := range article.Tags {
 				tag := s.TagService.GetByName(t.Name)
 				if tag.Name == "" {
@@ -111,6 +111,8 @@ func (s *ArticleService) Edit(article *model.ArticlePublish) error {
 				if err != nil {
 					return err
 				}
+				tagStr.WriteString(t.Name)
+				tagStr.WriteString(",")
 				rel := &model.RelTagArticle{}
 				rel.ArticleID = article.Article.ID
 				rel.TagID = tag.ID
@@ -119,7 +121,16 @@ func (s *ArticleService) Edit(article *model.ArticlePublish) error {
 					return err
 				}
 			}
+			tmp.Tags = tagStr.String()
 		}
+		db.Model(tmp).Updates(map[string]interface{}{
+			"title":        tmp.Title,
+			"channel_id":   tmp.ChannelID,
+			"cover":        tmp.Cover,
+			"description":  tmp.Description,
+			"publish_time": tmp.PublishTime,
+			"tags":         tmp.Tags,
+		})
 		return nil
 	})
 	return nil
