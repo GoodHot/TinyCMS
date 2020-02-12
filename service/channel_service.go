@@ -81,6 +81,7 @@ type ChannelTree struct {
 	Value    string         `json:"value"`
 	Key      string         `json:"key"`
 	Icon     string         `json:"icon"`
+	Link     string         `json:"link"`
 	Children []*ChannelTree `json:"children"`
 }
 
@@ -102,9 +103,16 @@ func (s *ChannelService) tree(parentId uint) []*ChannelTree {
 			Value:    strconv.Itoa(int(v.ID)),
 			Key:      strconv.Itoa(int(v.ID)),
 			Icon:     v.Icon,
+			Link:     v.Title,
 			Children: child,
 		}
 		trees = append(trees, tmp)
 	}
 	return trees
+}
+
+func (s *ChannelService) GetByTitle(title string) (*model.Channel, error) {
+	model := &model.Channel{}
+	err := s.ORM.DB.Where("title = ?", title).Find(model).Error
+	return model, err
 }

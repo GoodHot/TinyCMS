@@ -100,6 +100,7 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {
 	echo.GET("/", buildHandlerFunc(s.IndexCtrl.Index))
+	echo.GET("/channel/:parent/:title", buildHandlerFunc(s.IndexCtrl.Channel))
 }
 
 func (c *Controller) registerAPI(group *echo.Group, prefix string) {

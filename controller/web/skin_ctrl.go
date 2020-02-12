@@ -10,11 +10,12 @@ import (
 )
 
 type SkinCtrl struct {
-	DictService  *service.DictService `ioc:"auto"`
-	TemplateDir  string               `val:"${server.skin_template_dir}"`
-	HTMLCompress bool                 `val:"${server.html_compress}"`
-	templateSkin string
-	webRender    *render.HTMLRenderer
+	DictService    *service.DictService    `ioc:"auto"`
+	ChannelService *service.ChannelService `ioc:"auto"`
+	TemplateDir    string                  `val:"${server.skin_template_dir}"`
+	HTMLCompress   bool                    `val:"${server.html_compress}"`
+	templateSkin   string
+	webRender      *render.HTMLRenderer
 }
 
 func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interface{}) error {
@@ -41,6 +42,10 @@ func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interfa
 					return ""
 				}
 				return dict.Value
+			},
+			"channelTree": func() []*service.ChannelTree {
+				channels := s.ChannelService.Tree()
+				return channels
 			},
 		}
 		s.webRender.Init(funcMap)
