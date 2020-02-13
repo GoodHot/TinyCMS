@@ -7,6 +7,9 @@ import TButtonGroup from './Button/ButtonGroup'
 import TBadge from './Badge/Badge'
 import TInput from './Input/Input'
 import TInputGroup from './Input/InputGroup'
+import TTextarea from './Textarea/Textarea'
+import TSwitch from './Switch/Switch'
+import TForm from './Form/Form'
 
 export default {
   TNavigation,
@@ -17,5 +20,8 @@ export default {
   TButtonGroup,
   TBadge,
   TInput,
-  TInputGroup
+  TInputGroup,
+  TTextarea,
+  TSwitch,
+  TForm
 }

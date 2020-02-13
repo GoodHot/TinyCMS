@@ -6,7 +6,7 @@
       textAlign: left(default), right, center,
       state: success, error
   -->
-  <input :type="type" :class="inputClass() " >
+  <textarea :class="inputClass()" ></textarea>
 </template>
 <script>
 export default {
@@ -14,10 +14,6 @@ export default {
     theme: {
       type: String,
       default: ''
-    },
-    type: {
-      type: String,
-      default: 'text'
     },
     state: {
       type: String,

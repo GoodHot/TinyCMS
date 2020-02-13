@@ -24,6 +24,11 @@ export const routerMap = [
         path: '/badge',
         name: 'badge',
         component: () => import('@/pages/badge')
+      },
+      {
+        path: '/form',
+        name: 'form',
+        component: () => import('@/pages/form')
       }
     ]
   }

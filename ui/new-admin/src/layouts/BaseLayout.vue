@@ -45,6 +45,14 @@ export default {
               icon: 'icons',
               badge: '5',
               to: '/icon'
+            },
+            {
+              title: 'Form',
+              icon: {
+                icon: 'wpforms',
+                pack: 'fab'
+              },
+              to: '/form'
             }
           ]
         },
