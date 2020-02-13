@@ -102,5 +102,75 @@
     <TButton block="block" border="rounded" disabled size="lg" theme="outline" icon="plus" type="danger">danger</TButton>
     <TButton block="block" border="rounded" disabled size="lg" theme="outline" icon="plus" type="dark">dark</TButton>
     <TButton block="block" border="rounded" disabled size="lg" theme="outline" icon="plus" type="light">light</TButton>
+    <h1>btn group</h1>
+    <div class="row items-push">
+      <div class="col-sm-6 col-xl-3">
+        <div class="mb-3" v-for="item of types" :key="item">
+          <TButtonGroup :type="item">
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="mb-3" v-for="item of sizes" :key="item">
+          <TButtonGroup :size="item">
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="mb-3">
+          <TButtonGroup>
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+        <div class="mb-3">
+          <TButtonGroup theme="alt">
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+        <div class="mb-3">
+          <TButtonGroup theme="outline">
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="mb-3">
+          <TButtonGroup direction="hr">
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+        <div class="mb-3">
+          <TButtonGroup direction="ve">
+            <TButton>secondary</TButton>
+            <TButton>success</TButton>
+            <TButton>info</TButton>
+          </TButtonGroup>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+<script>
+export default {
+  data () {
+    return {
+      types: ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'dark', 'light'],
+      sizes: ['', 'sm', 'lg'],
+    }
+  }
+}
+</script>

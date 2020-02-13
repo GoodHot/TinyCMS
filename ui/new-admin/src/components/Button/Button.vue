@@ -22,6 +22,7 @@
 </template>
 <script>
 export default {
+  name: 'TButton',
   props: {
     type: {
       type: String, // default, primary, secondary, success, info, warning, danger, dark, light

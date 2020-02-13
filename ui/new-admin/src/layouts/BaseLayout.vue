@@ -47,6 +47,11 @@ export default {
               to: '/icon'
             }
           ]
+        },
+        {
+          title: 'Book',
+          icon: 'book',
+          to: '/'
         }
       ]
     }
