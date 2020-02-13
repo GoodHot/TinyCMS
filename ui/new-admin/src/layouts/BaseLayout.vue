@@ -1,12 +1,55 @@
 <template>
   <div class="content">
-    <TNavbar />
+    <TNavigation :data="navData" />
     <div class="block d-none d-lg-block">
         <div class="block-content">
-            <p class="text-center py-8">
-                <router-view/>
-            </p>
+            <router-view/>
         </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      navData: [
+        {
+          title: 'Home',
+          icon: 'home',
+          active: true,
+          to: '/'
+        },
+        {
+          title: '组件',
+          icon: 'ad',
+          badge: '3',
+          children: [
+            {
+              title: 'Badge',
+              icon: {
+                icon: 'badge',
+                pack: 'si'
+              },
+              to: '/badge'
+            },
+            {
+              title: 'Button',
+              icon: {
+                icon: 'circle',
+                pack: 'far'
+              },
+              to: '/button'
+            },
+            {
+              title: 'Icon',
+              icon: 'icons',
+              badge: '5',
+              to: '/icon'
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+</script>

@@ -2,11 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/css/codebase.css'
+import './assets/css/style.css'
 import Components from './components'
 
 Vue.config.productionTip = false
 
-for (let key in Components) {
+for (const key in Components) {
   Vue.component(key, Components[key])
 }
 

@@ -1,5 +1,13 @@
-import TNavbar from './Navbar/Navbar'
+import TNavigation from './Navigation/Navigation'
+import TNavigationItem from './Navigation/NavigationItem'
+import TIcon from './Icon/Icon'
+import TButton from './Button/Button'
+import TBadge from './Badge/Badge'
 
 export default {
-  TNavbar
+  TNavigation,
+  TNavigationItem,
+  TIcon,
+  TButton,
+  TBadge
 }
