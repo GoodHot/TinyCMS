@@ -10,8 +10,8 @@
       title: string
       subtitle: string
   -->
-  <div :class="blockClass()">
-    <div :class="blockHeaderClass()" v-if="title || subtitle">
+  <div :class="classes">
+    <div :class="headerClass" v-if="title || subtitle">
       <h3 class="block-title">
         {{ title }}
         <small v-if="subtitle">{{ subtitle }}</small>
@@ -62,20 +62,8 @@ export default {
   created() {
     this.renderOptions()
   },
-  methods: {
-    renderOptions() {
-      const opts = this.$slots.options
-      if (!opts) {
-        return
-      }
-      opts.forEach(btn => {
-        if (btn.componentOptions.tag !== 'TButton') {
-          return
-        }
-        btn.componentOptions.propsData.isBlockOption = true
-      })
-    },
-    blockClass() {
+  computed: {
+    classes() {
       let cls = 'block '
       if (this.transparent) {
         return cls + 'block-transparent'
@@ -94,7 +82,7 @@ export default {
       }
       return cls
     },
-    blockHeaderClass() {
+    headerClass() {
       let cls = 'block-header '
       if (this.transparent) {
         return cls
@@ -107,6 +95,20 @@ export default {
       }
       return cls
     }
+  },
+  methods: {
+    renderOptions() {
+      const opts = this.$slots.options
+      if (!opts) {
+        return
+      }
+      opts.forEach(btn => {
+        if (btn.componentOptions.tag !== 'TButton') {
+          return
+        }
+        btn.componentOptions.propsData.isBlockOption = true
+      })
+    },
   }
 }
 </script>

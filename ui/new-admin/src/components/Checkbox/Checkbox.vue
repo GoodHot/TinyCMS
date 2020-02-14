@@ -6,7 +6,7 @@
       size: sm, lg
       type: primary, secondary, success, info, warning, danger, dark, light
   -->
-  <div :class="checkboxClass()">
+  <div :class="classes">
     <input
       type="checkbox"
       class="custom-control-input"
@@ -48,8 +48,8 @@ export default {
       default: 'circle'
     }
   },
-  methods: {
-    checkboxClass() {
+  computed: {
+    classes() {
       let cls = `custom-control custom-checkbox custom-control-${this.type} `
       if (this.size) {
         cls += `custom-control-${this.size} `

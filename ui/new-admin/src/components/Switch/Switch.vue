@@ -6,7 +6,7 @@
       size: sm, lg
       type: primary, secondary, success, info, warning, danger, dark, light
   -->
-  <div :class="switchClass()">
+  <div :class="classes">
     <input
       type="checkbox"
       class="custom-control-input"
@@ -44,8 +44,8 @@ export default {
       type: String
     }
   },
-  methods: {
-    switchClass() {
+  computed: {
+    classes() {
       let cls = `custom-control custom-switch custom-control-${this.type} `
       if (this.size) {
         cls += `custom-control-${this.size} `

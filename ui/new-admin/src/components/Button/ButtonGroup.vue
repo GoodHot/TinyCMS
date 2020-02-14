@@ -6,7 +6,7 @@
       size: Normal(default), Small, Large
       theme: Normal(default), alt, outline, 
   -->
-  <div :class="btnGroupClass()">
+  <div :class="classes">
     <slot></slot>
   </div>
 </template>
@@ -33,8 +33,8 @@ export default {
   created() {
     this.renderChild()
   },
-  methods: {
-    btnGroupClass() {
+  computed: {
+    classes() {
       let cls = ''
       if (this.direction === '' || this.direction === 'hr') {
         cls = 'btn-group '
@@ -45,7 +45,9 @@ export default {
         cls += `btn-group-${this.size} `
       }
       return cls
-    },
+    }
+  },
+  methods: {
     renderChild() {
       const btns = this.$slots.default
       if (!btns) {

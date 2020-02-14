@@ -14,10 +14,10 @@
     带有图标的按钮
       按钮位置：before, after
   -->
-  <button type="button" :class="btnClass()" @click="click">
-    <TIcon :icon="icon" :pack="iconPack" :class="iconClass()" v-if="icon && iconPosition === 'before'" />
+  <button type="button" :class="classes" @click="click">
+    <TIcon :icon="icon" :pack="iconPack" :class="iconClass" v-if="icon && iconPosition === 'before'" />
     <slot></slot>
-    <TIcon :icon="icon" :pack="iconPack" :class="iconClass()" v-if="icon && iconPosition === 'after'" />
+    <TIcon :icon="icon" :pack="iconPack" :class="iconClass" v-if="icon && iconPosition === 'after'" />
   </button>
 </template>
 <script>
@@ -61,14 +61,8 @@ export default {
       default: false
     }
   },
-  methods: {
-    iconClass() {
-      if (this.isBlockOption) {
-        return ''
-      }
-      return 'ml-1 fa-fw'
-    },
-    btnClass() {
+  computed: {
+    classes() {
       if (this.isBlockOption) {
         return 'btn-block-option'
       }
@@ -89,6 +83,14 @@ export default {
       }
       return cls
     },
+    iconClass() {
+      if (this.isBlockOption) {
+        return ''
+      }
+      return 'ml-1 fa-fw'
+    }
+  },
+  methods: {
     click(e) {
       this.$emit('click', e)
     }

@@ -43,10 +43,33 @@
     <div class="row">
       <div class="col-6">
         <TBlock title="form" headerBg theme="primary">
-          <TForm>
-            <TFormItem label="Email address" help="We'll never share your email with anyone else." v-slot:default="item" >
+          <TForm ref="form">
+            <TFormItem col="6" label="First name" help="First name." v-slot:default="item" >
               <TInput placeholder="请输入邮箱" :state="item.state" />
             </TFormItem>
+            <TFormItem col="6" label="Last name" help="Last name." v-slot:default="item" >
+              <TInput placeholder="请输入邮箱" :state="item.state" />
+            </TFormItem>
+            <TFormItem label="Your password" help="Your password." v-slot:default="item" >
+              <TInput placeholder="请输入邮箱" :state="item.state" type="password" />
+            </TFormItem>
+            <TFormItem label="Your email" help="Your email." v-slot:default="item" >
+              <TInput placeholder="请输入邮箱" :state="item.state" />
+            </TFormItem>
+            <TFormItem label="Description" help="Text your description." v-slot:default="item" >
+              <TTextarea :state="item.state"></TTextarea>
+            </TFormItem>
+            <TFormItem label="Email address" help="Choose switch" >
+              <TSwitch label="f1" name="ff1" inline />
+              <TSwitch label="f2" name="ff2" inline/>
+              <TSwitch label="f3" name="ff3" inline/>
+            </TFormItem>
+            <TFormItem label="Email address" help="Choose checkbox." >
+              <TCheckbox label="aaa" name="dd1" inline checked />
+              <TCheckbox label="bbb" name="dd2" type="success" inline />
+              <TCheckbox label="ccc" name="dd3" inline checked /><br>
+            </TFormItem>
+            <button @click="valid">ddd</button>
           </TForm>
         </TBlock>
       </div>
@@ -78,6 +101,12 @@ export default {
   data() {
     return {
       types: ['primary','secondary','success','info','warning','danger','dark','light']
+    }
+  },
+  methods: {
+    valid() {
+      this.$refs.form.validate()
+      return false
     }
   }
 }

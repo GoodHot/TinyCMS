@@ -6,7 +6,7 @@
       textAlign: left(default), right, center,
       state: success, error
   -->
-  <textarea :class="inputClass()" ></textarea>
+  <textarea :class="classes" ></textarea>
 </template>
 <script>
 export default {
@@ -20,8 +20,8 @@ export default {
       default: null
     }
   },
-  methods: {
-    inputClass() {
+  computed: {
+    classes() {
       let cls = 'form-control '
       if (this.theme === 'alt') {
         cls += 'form-control-alt '

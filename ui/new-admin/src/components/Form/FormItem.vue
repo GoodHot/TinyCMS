@@ -5,9 +5,11 @@
       help: string
       state: success, error
   -->
-  <div class="form-group">
+  <div :class="classes">
     <label>{{ label }}</label>
-    <slot v-bind:state="formState"></slot>
+    <div>
+      <slot v-bind:state="selfState"></slot>
+    </div>
     <small class="form-text text-muted" v-if="help">{{ help }}</small>
   </div>
 </template>
@@ -25,15 +27,28 @@ export default {
     state: {
       type: String,
       default: null
+    },
+    col: {
+      type: String,
+      default: "12"
     }
   },
   data() {
     return {
-      formState: null
+      selfState: null
+    }
+  },
+  computed: {
+    classes() {
+      let cls = 'form-group '
+      if (this.col) {
+        cls += 'col-md-' + this.col
+      }
+      return cls
     }
   },
   created() {
-    this.formState = this.state;
+    this.selfState = this.state;
   }
 }
 </script>

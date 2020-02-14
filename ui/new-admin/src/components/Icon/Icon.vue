@@ -1,5 +1,5 @@
 <template>
-  <i :class="iconClass()"></i>
+  <i :class="classes"></i>
 </template>
 <script>
 export default {
@@ -16,8 +16,8 @@ export default {
       default: ''
     }
   },
-  methods: {
-    iconClass() {
+  computed: {
+    classes() {
       let icon = ''
       switch(this.pack){
         case 'fa':

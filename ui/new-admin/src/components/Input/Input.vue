@@ -6,7 +6,7 @@
       textAlign: left(default), right, center,
       state: success, error
   -->
-  <input :type="type" :class="inputClass() ">
+  <input :type="type" :class="classes">
 </template>
 <script>
 export default {
@@ -25,8 +25,8 @@ export default {
       default: null
     }
   },
-  methods: {
-    inputClass() {
+  computed: {
+    classes() {
       let cls = 'form-control '
       if (this.theme === 'alt') {
         cls += 'form-control-alt '

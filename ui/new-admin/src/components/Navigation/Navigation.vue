@@ -15,7 +15,7 @@
       children = []
     }
    -->
-  <div :class="classTheme()">
+  <div :class="classes">
     <div class="d-lg-none">
       <TButton @click="showHorizontalNavigation" block="block" type="light" class="d-flex justify-content-between align-items-center" iconPosition="after" icon="bars">
         TinyCMS
@@ -47,14 +47,16 @@ export default {
       horizontalNavigationDisplay: false
     }
   },
-  methods: {
-    classTheme() {
+  computed: {
+    classes() {
       if (this.theme === "light") {
         return "bg-white p-3 push"
       } else {
         return "bg-sidebar-dark p-3 push"
       }
-    },
+    }
+  },
+  methods: {
     showHorizontalNavigation() {
       const nav = this.$refs.horizontalNavigation
       const clsList = nav.classList
