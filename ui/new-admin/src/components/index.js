@@ -11,6 +11,7 @@ import TTextarea from './Textarea/Textarea'
 import TSwitch from './Switch/Switch'
 import TCheckbox from './Checkbox/Checkbox'
 import TForm from './Form/Form'
+import TBlock from './Block/Block'
 
 export default {
   TNavigation,
@@ -25,5 +26,6 @@ export default {
   TTextarea,
   TSwitch,
   TCheckbox,
-  TForm
+  TForm,
+  TBlock
 }

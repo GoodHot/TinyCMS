@@ -1,11 +1,7 @@
 <template>
   <div class="content">
     <TNavigation :data="navData" />
-    <div class="block d-none d-lg-block">
-        <div class="block-content">
-            <router-view/>
-        </div>
-    </div>
+    <router-view/>
   </div>
 </template>
 <script>
@@ -53,6 +49,14 @@ export default {
                 pack: 'fab'
               },
               to: '/form'
+            },
+            {
+              title: 'Block',
+              icon: {
+                icon: 'elementor',
+                pack: 'fab'
+              },
+              to: '/block'
             }
           ]
         }

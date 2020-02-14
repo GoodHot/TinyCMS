@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <TBlock>
     <h1>badge type</h1>
     <TBadge>default</TBadge>
     <TBadge type="secondary">secondary</TBadge>
@@ -18,5 +18,5 @@
     <TBadge theme="pill" type="info">info</TBadge>
     <TBadge theme="pill" type="light">light</TBadge>
     <TBadge theme="pill" type="dark">dark</TBadge>
-  </div>
+  </TBlock>
 </template>

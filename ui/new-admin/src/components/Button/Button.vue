@@ -15,9 +15,9 @@
       按钮位置：before, after
   -->
   <button type="button" :class="btnClass()" @click="click">
-    <TIcon :icon="icon" :pack="iconPack" class="mr-1 fa-fw" v-if="icon && iconPosition === 'before'" />
+    <TIcon :icon="icon" :pack="iconPack" :class="iconClass()" v-if="icon && iconPosition === 'before'" />
     <slot></slot>
-    <TIcon :icon="icon" :pack="iconPack" class="ml-1 fa-fw" v-if="icon && iconPosition === 'after'" />
+    <TIcon :icon="icon" :pack="iconPack" :class="iconClass()" v-if="icon && iconPosition === 'after'" />
   </button>
 </template>
 <script>
@@ -55,10 +55,23 @@ export default {
     icon: {
       type: String,
       default: null
+    },
+    isBlockOption: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
+    iconClass() {
+      if (this.isBlockOption) {
+        return ''
+      }
+      return 'ml-1 fa-fw'
+    },
     btnClass() {
+      if (this.isBlockOption) {
+        return 'btn-block-option'
+      }
       let cls = 'btn '
       if (this.theme !== '' && (this.theme === 'alt' || this.theme === 'outline')) {
         cls += `btn-${this.theme}-${this.type} `
