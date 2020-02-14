@@ -40,6 +40,37 @@
     <TCheckbox label="aaa" :inline="true" checked /><TCheckbox label="bbb" :inline="true" /><TCheckbox label="ccc" :inline="true" checked /><br>
     <TCheckbox label="aaa" :inline="true" checked shape="square" /><TCheckbox label="bbb" :inline="true"  shape="square" /><TCheckbox label="ccc" :inline="true" checked shape="square" />
     <h1>form</h1>
+    <div class="row">
+      <div class="col-6">
+        <TBlock title="form" headerBg theme="primary">
+          <TForm>
+            <TFormItem label="Email address" help="We'll never share your email with anyone else." v-slot:default="item" >
+              <TInput placeholder="请输入邮箱" :state="item.state" />
+            </TFormItem>
+          </TForm>
+        </TBlock>
+      </div>
+      <div class="col-6">
+        <TBlock title="form" headerBg theme="primary">
+          <p>sdfasdfsdfs</p>
+        </TBlock>
+      </div>
+      <div class="col-4">
+        <TBlock title="form" headerBg theme="primary">
+          <p>sdfasdfsdfs</p>
+        </TBlock>
+      </div>
+      <div class="col-4">
+        <TBlock title="form" headerBg theme="primary">
+          <p>sdfasdfsdfs</p>
+        </TBlock>
+      </div>
+      <div class="col-4">
+        <TBlock title="form" headerBg theme="primary">
+          <p>sdfasdfsdfs</p>
+        </TBlock>
+      </div>
+    </div>
   </div>
 </template>
 <script>

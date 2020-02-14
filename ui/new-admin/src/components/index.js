@@ -11,6 +11,7 @@ import TTextarea from './Textarea/Textarea'
 import TSwitch from './Switch/Switch'
 import TCheckbox from './Checkbox/Checkbox'
 import TForm from './Form/Form'
+import TFormItem from './Form/FormItem'
 import TBlock from './Block/Block'
 
 export default {
@@ -27,5 +28,6 @@ export default {
   TSwitch,
   TCheckbox,
   TForm,
+  TFormItem,
   TBlock
 }

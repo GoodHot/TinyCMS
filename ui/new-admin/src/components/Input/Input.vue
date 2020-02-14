@@ -6,10 +6,11 @@
       textAlign: left(default), right, center,
       state: success, error
   -->
-  <input :type="type" :class="inputClass() " >
+  <input :type="type" :class="inputClass() ">
 </template>
 <script>
 export default {
+  name: "TInput",
   props: {
     theme: {
       type: String,
