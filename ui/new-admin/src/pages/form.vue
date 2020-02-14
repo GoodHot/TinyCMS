@@ -30,8 +30,16 @@
     <TTextarea theme="alt" state="error">hello</TTextarea>
     <h2>switch</h2>
     <TSwitch v-for="item of types" :key="item" :type="item" :name="item" :label="item" /><br>
-    <TSwitch v-for="item of types" :key="item" :type="item" :name="item" :label="item" size="lg" /><br>
-    <TSwitch v-for="item of types" :key="item" :type="item" :name="item" :label="item" size="sm" />
+    <TSwitch v-for="item of types" :key="item + '1'" :type="item" :name="item + '1'" :label="item" size="lg" /><br>
+    <TSwitch v-for="item of types" :key="item + '2'" :type="item" :name="item + '2'" :label="item" size="sm" /><br>
+    <TSwitch label="aaa" :inline="true" /><TSwitch label="bbb" :inline="true" /><TSwitch label="ccc" :inline="true" />
+    <h2>checkbox</h2>
+    <TCheckbox v-for="item of types" :key="item + '3'" :type="item" :name="item" :label="item" /><br>
+    <TCheckbox v-for="item of types" :key="item + '4'" :type="item" :name="item + '3'" :label="item" size="lg" shape="square" /><br>
+    <TCheckbox v-for="item of types" :key="item + '5'" :type="item" :name="item + '5'" :label="item" size="sm" /><br>
+    <TCheckbox label="aaa" :inline="true" checked /><TCheckbox label="bbb" :inline="true" /><TCheckbox label="ccc" :inline="true" checked /><br>
+    <TCheckbox label="aaa" :inline="true" checked shape="square" /><TCheckbox label="bbb" :inline="true"  shape="square" /><TCheckbox label="ccc" :inline="true" checked shape="square" />
+    <h1>form</h1>
   </div>
 </template>
 <script>

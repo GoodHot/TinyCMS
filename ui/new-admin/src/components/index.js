@@ -9,6 +9,7 @@ import TInput from './Input/Input'
 import TInputGroup from './Input/InputGroup'
 import TTextarea from './Textarea/Textarea'
 import TSwitch from './Switch/Switch'
+import TCheckbox from './Checkbox/Checkbox'
 import TForm from './Form/Form'
 
 export default {
@@ -23,5 +24,6 @@ export default {
   TInputGroup,
   TTextarea,
   TSwitch,
+  TCheckbox,
   TForm
 }

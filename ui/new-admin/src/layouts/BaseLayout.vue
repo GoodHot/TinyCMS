@@ -55,11 +55,6 @@ export default {
               to: '/form'
             }
           ]
-        },
-        {
-          title: 'Book',
-          icon: 'book',
-          to: '/'
         }
       ]
     }

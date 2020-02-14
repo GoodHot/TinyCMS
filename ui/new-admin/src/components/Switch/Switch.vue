@@ -1,11 +1,10 @@
 <template>
   <!--
     Switch
-      defaultChecked: true/false
+      checked: true/false
       inline: true/false
       size: sm, lg
       type: primary, secondary, success, info, warning, danger, dark, light
-      theme: alt, outline
   -->
   <div :class="switchClass()">
     <input
@@ -13,6 +12,7 @@
       class="custom-control-input"
       :name="name"
       :id="`switch-id-${name}`"
+      :checked="checked"
     />
     <label class="custom-control-label" :for="`switch-id-${name}`">{{ label }}</label>
   </div>
@@ -49,6 +49,9 @@ export default {
       let cls = `custom-control custom-switch custom-control-${this.type} `
       if (this.size) {
         cls += `custom-control-${this.size} `
+      }
+      if (this.inline) {
+        cls += 'custom-control-inline '
       }
       return cls
     }
