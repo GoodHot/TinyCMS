@@ -65,6 +65,14 @@ export default {
                 pack: 'si'
               },
               to: '/modal'
+            },
+            {
+              title: 'Table',
+              icon: {
+                icon: 'table',
+                pack: 'fa'
+              },
+              to: '/table'
             }
           ]
         }

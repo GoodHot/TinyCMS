@@ -4,28 +4,28 @@
     <div class="js-icon-list row items-push-2x text-center">
       <div class="col-sm-6 col-lg-4 col-xl-3" v-for="item of far" :key="item"  >
         <p><TIcon :icon="item" size="fa-2x" pack="far"/></p>
-        <code>{{ item }}</code>
+        <code>far {{ item }}</code>
       </div>
     </div>
     <h1>fa fa-*</h1>
     <div class="js-icon-list row items-push-2x text-center">
       <div class="col-sm-6 col-lg-4 col-xl-3" v-for="item of fa" :key="item"  >
         <p><TIcon :icon="item" size="fa-2x" pack="fa" /></p>
-        <code>{{ item }}</code>
+        <code>fa {{ item }}</code>
       </div>
     </div>
     <h1>fab fa-*</h1>
     <div class="js-icon-list row items-push-2x text-center">
       <div class="col-sm-6 col-lg-4 col-xl-3" v-for="item of fab" :key="item"  >
         <p><TIcon :icon="item" size="fa-2x" pack="fab"/></p>
-        <code>{{ item }}</code>
+        <code>fab {{ item }}</code>
       </div>
     </div>
     <h1>si si-*</h1>
     <div class="js-icon-list row items-push-2x text-center">
       <div class="col-sm-6 col-lg-4 col-xl-3" v-for="item of si" :key="item"  >
         <p><TIcon :icon="item" size="fa-2x" pack="si"/></p>
-        <code>{{ item }}</code>
+        <code>si {{ item }}</code>
       </div>
     </div>
   </div>

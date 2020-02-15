@@ -14,6 +14,7 @@ import TForm from './Form/Form'
 import TFormItem from './Form/FormItem'
 import TBlock from './Block/Block'
 import TModal from './Modal/Modal'
+import TTable from './Table/Table'
 
 export default {
   TNavigation,
@@ -31,5 +32,6 @@ export default {
   TForm,
   TFormItem,
   TBlock,
-  TModal
+  TModal,
+  TTable
 }

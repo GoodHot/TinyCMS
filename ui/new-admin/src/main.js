@@ -6,6 +6,7 @@ import './assets/css/style.css'
 import './assets/js/bootstrap'
 import Components from './components'
 import JQuery from 'jquery'
+import dialog from './assets/js/dialog'
 
 Vue.config.productionTip = false
 
@@ -14,6 +15,7 @@ for (const key in Components) {
 }
 
 Vue.prototype.$ = JQuery
+Vue.prototype.$dialog = dialog
 
 new Vue({
   router,

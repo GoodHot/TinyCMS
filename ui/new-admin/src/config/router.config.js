@@ -39,6 +39,11 @@ export const routerMap = [
         path: '/modal',
         name: 'modal',
         component: () => import('@/pages/modal')
+      },
+      {
+        path: '/table',
+        name: 'table',
+        component: () => import('@/pages/table')
       }
     ]
   }
