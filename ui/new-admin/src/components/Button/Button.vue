@@ -13,6 +13,9 @@
     按钮赋能
     带有图标的按钮
       按钮位置：before, after
+
+
+      iconType: primary, secondary, success, info, warning, danger, dark, light
   -->
   <button type="button" :class="classes" @click="click">
     <TIcon :icon="icon" :pack="iconPack" :class="iconClass" v-if="icon && iconPosition === 'before'" />
@@ -56,6 +59,10 @@ export default {
       type: String,
       default: null
     },
+    iconType: {
+      type: String,
+      default: null
+    },
     isBlockOption: {
       type: Boolean,
       default: false
@@ -87,7 +94,11 @@ export default {
       if (this.isBlockOption) {
         return ''
       }
-      return 'ml-1 fa-fw'
+      let cls = 'ml-1 fa-fw '
+      if (this.iconType) {
+        cls += `text-${this.iconType}`
+      }
+      return cls
     }
   },
   methods: {

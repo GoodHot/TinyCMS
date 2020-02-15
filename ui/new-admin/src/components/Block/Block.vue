@@ -9,14 +9,19 @@
       theme: ''(default),'primary','primary-light','primary-dark','primary-darker','success','info','warning','danger','gray','gray-dark','gray-darker','black','default','default-light','default-dark','default-darker','amethyst','amethyst-light','amethyst-dark','amethyst-darker','city','city-light','city-dark','city-darker','flat','flat-light','flat-dark','flat-darker','modern','modern-light','modern-dark','modern-darker','smooth','smooth-light','smooth-dark','smooth-darker'
       title: string
       subtitle: string
+      icon: string
+      iconPack: stirng
   -->
   <div :class="classes">
     <div :class="headerClass" v-if="title || subtitle">
       <h3 class="block-title">
+        <TIcon :icon="icon" :pack="iconPack" v-if="icon" />
         {{ title }}
         <small v-if="subtitle">{{ subtitle }}</small>
       </h3>
-      <slot name="options" class="block-options"></slot>
+      <div class="block-options">
+        <slot name="options"></slot>
+      </div>
     </div>
     <div class="block-content">
       <slot></slot>
@@ -32,7 +37,7 @@ export default {
     },
     headerBg: {
       type: Boolean,
-      default: false
+      default: true
     },
     borderRound: {
       type: Boolean,
@@ -57,6 +62,14 @@ export default {
     subtitle: {
       type: String,
       default: null
+    },
+    icon: {
+      type: String,
+      default: null
+    },
+    iconPack: {
+      type: String,
+      default: 'fa'
     }
   },
   created() {
@@ -103,7 +116,7 @@ export default {
         return
       }
       opts.forEach(btn => {
-        if (btn.componentOptions.tag !== 'TButton') {
+        if (!btn.componentOptions || btn.componentOptions.tag !== 'TButton') {
           return
         }
         btn.componentOptions.propsData.isBlockOption = true

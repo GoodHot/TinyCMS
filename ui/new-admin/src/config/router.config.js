@@ -8,42 +8,47 @@ export const routerMap = [
       {
         path: '/',
         name: 'hello',
-        component: () => import('@/pages/index'),
+        component: () => import('@/pages/components/index'),
       },
       {
-        path: '/icon',
+        path: '/content',
+        name: 'content',
+        component: () => import('@/pages/content'),
+      },
+      {
+        path: '/component/icon',
         name: 'icon',
-        component: () => import('@/pages/icon'),
+        component: () => import('@/pages/components/icon'),
       },
       {
-        path: '/button',
+        path: '/component/button',
         name: 'button',
-        component: () => import('@/pages/button'),
+        component: () => import('@/pages/components/button'),
       },
       {
-        path: '/badge',
+        path: '/component/badge',
         name: 'badge',
-        component: () => import('@/pages/badge')
+        component: () => import('@/pages/components/badge')
       },
       {
-        path: '/form',
+        path: '/component/form',
         name: 'form',
-        component: () => import('@/pages/form')
+        component: () => import('@/pages/components/form')
       },
       {
-        path: '/block',
+        path: '/component/block',
         name: 'block',
-        component: () => import('@/pages/block')
+        component: () => import('@/pages/components/block')
       },
       {
         path: '/modal',
         name: 'modal',
-        component: () => import('@/pages/modal')
+        component: () => import('@/pages/components/modal')
       },
       {
         path: '/table',
         name: 'table',
-        component: () => import('@/pages/table')
+        component: () => import('@/pages/components/table')
       }
     ]
   }

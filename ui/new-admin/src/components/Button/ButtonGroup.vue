@@ -7,7 +7,7 @@
       theme: Normal(default), alt, outline, 
   -->
   <div :class="classes">
-    <slot></slot>
+    <slot v-bind:size="size" v-bind:type="type" v-bind:theme="theme"></slot>
   </div>
 </template>
 <script>
@@ -57,6 +57,7 @@ export default {
         if (btn.componentOptions.tag !== 'TButton') {
           return
         }
+        btn.componentOptions.propsData.size = this.size
         btn.componentOptions.propsData.type = this.type
         btn.componentOptions.propsData.theme = this.theme
       })

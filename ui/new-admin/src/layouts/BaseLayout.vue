@@ -1,7 +1,20 @@
 <template>
   <div class="content">
     <TNavigation :data="navData" />
-    <router-view/>
+    <router-view />
+    <footer id="page-footer" class="bg-body-light">
+      <div class="content py-3">
+        <div class="row font-size-sm">
+          <div class="col-sm-6 order-sm-2 py-1 text-center text-sm-right">
+            Create by TinyCMS
+          </div>
+          <div class="col-sm-6 order-sm-1 py-1 text-center text-sm-left">
+            <a class="font-w600" href="https://1.envato.market/AVD6j" target="_blank">TinyCMS 1.0</a> ©
+            <span data-toggle="year-copy" class="js-year-copy-enabled">2020</span>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 <script>
@@ -10,74 +23,100 @@ export default {
     return {
       navData: [
         {
-          title: 'Home',
-          icon: 'home',
+          title: "Home",
+          icon: "home",
           active: true,
-          to: '/'
+          to: "/"
         },
         {
-          title: '组件',
-          icon: 'ad',
-          badge: '3',
+          title: "内容管理",
+          icon: {
+            icon: 'book-open',
+            pack: 'si'
+          },
+          to: '/content',
           children: [
             {
-              title: 'Badge',
+              title: "文章列表",
               icon: {
-                icon: 'badge',
+                icon: 'docs',
                 pack: 'si'
               },
-              to: '/badge'
+              to: "/content"
             },
             {
-              title: 'Button',
+              title: "标签管理",
               icon: {
-                icon: 'circle',
-                pack: 'far'
-              },
-              to: '/button'
-            },
-            {
-              title: 'Icon',
-              icon: 'icons',
-              badge: '5',
-              to: '/icon'
-            },
-            {
-              title: 'Form',
-              icon: {
-                icon: 'wpforms',
-                pack: 'fab'
-              },
-              to: '/form'
-            },
-            {
-              title: 'Block',
-              icon: {
-                icon: 'elementor',
-                pack: 'fab'
-              },
-              to: '/block'
-            },
-            {
-              title: 'Modal',
-              icon: {
-                icon: 'frame',
+                icon: 'tag',
                 pack: 'si'
               },
-              to: '/modal'
+              to: "/"
+            }
+          ]
+        },
+        {
+          title: "组件",
+          icon: "ad",
+          badge: "3",
+          children: [
+            {
+              title: "Badge",
+              icon: {
+                icon: "badge",
+                pack: "si"
+              },
+              to: "/component/badge"
             },
             {
-              title: 'Table',
+              title: "Button",
               icon: {
-                icon: 'table',
-                pack: 'fa'
+                icon: "circle",
+                pack: "far"
               },
-              to: '/table'
+              to: "/component/button"
+            },
+            {
+              title: "Icon",
+              icon: "icons",
+              badge: "5",
+              to: "/component/icon"
+            },
+            {
+              title: "Form",
+              icon: {
+                icon: "wpforms",
+                pack: "fab"
+              },
+              to: "/component/form"
+            },
+            {
+              title: "Block",
+              icon: {
+                icon: "elementor",
+                pack: "fab"
+              },
+              to: "/component/block"
+            },
+            {
+              title: "Modal",
+              icon: {
+                icon: "frame",
+                pack: "si"
+              },
+              to: "/component/modal"
+            },
+            {
+              title: "Table",
+              icon: {
+                icon: "table",
+                pack: "fa"
+              },
+              to: "/component/table"
             }
           ]
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
