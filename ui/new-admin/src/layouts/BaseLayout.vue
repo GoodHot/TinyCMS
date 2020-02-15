@@ -57,6 +57,14 @@ export default {
                 pack: 'fab'
               },
               to: '/block'
+            },
+            {
+              title: 'Modal',
+              icon: {
+                icon: 'frame',
+                pack: 'si'
+              },
+              to: '/modal'
             }
           ]
         }

@@ -40,7 +40,7 @@
     <TCheckbox label="aaa" :inline="true" checked /><TCheckbox label="bbb" :inline="true" /><TCheckbox label="ccc" :inline="true" checked /><br>
     <TCheckbox label="aaa" :inline="true" checked shape="square" /><TCheckbox label="bbb" :inline="true"  shape="square" /><TCheckbox label="ccc" :inline="true" checked shape="square" />
     <h1>form</h1>
-    <div class="row">
+    <div class="row justify-content-center">
       <div class="col-6">
         <TBlock title="form" headerBg theme="primary">
           <TForm ref="form">
@@ -71,26 +71,6 @@
             </TFormItem>
             <button @click="valid">ddd</button>
           </TForm>
-        </TBlock>
-      </div>
-      <div class="col-6">
-        <TBlock title="form" headerBg theme="primary">
-          <p>sdfasdfsdfs</p>
-        </TBlock>
-      </div>
-      <div class="col-4">
-        <TBlock title="form" headerBg theme="primary">
-          <p>sdfasdfsdfs</p>
-        </TBlock>
-      </div>
-      <div class="col-4">
-        <TBlock title="form" headerBg theme="primary">
-          <p>sdfasdfsdfs</p>
-        </TBlock>
-      </div>
-      <div class="col-4">
-        <TBlock title="form" headerBg theme="primary">
-          <p>sdfasdfsdfs</p>
         </TBlock>
       </div>
     </div>

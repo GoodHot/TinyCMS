@@ -13,6 +13,7 @@ import TCheckbox from './Checkbox/Checkbox'
 import TForm from './Form/Form'
 import TFormItem from './Form/FormItem'
 import TBlock from './Block/Block'
+import TModal from './Modal/Modal'
 
 export default {
   TNavigation,
@@ -29,5 +30,6 @@ export default {
   TCheckbox,
   TForm,
   TFormItem,
-  TBlock
+  TBlock,
+  TModal
 }

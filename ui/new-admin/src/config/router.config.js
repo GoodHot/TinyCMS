@@ -34,6 +34,11 @@ export const routerMap = [
         path: '/block',
         name: 'block',
         component: () => import('@/pages/block')
+      },
+      {
+        path: '/modal',
+        name: 'modal',
+        component: () => import('@/pages/modal')
       }
     ]
   }
