@@ -12,7 +12,8 @@
       class="custom-control-input"
       :name="name"
       :id="`checkbox-id-${name}`"
-      :checked="checked"
+      :checked="selected"
+      @change="changeHandler"
     />
     <label class="custom-control-label" :for="`checkbox-id-${name}`">{{label}}</label>
   </div>
@@ -48,6 +49,11 @@ export default {
       default: 'circle'
     }
   },
+  data() {
+    return {
+      selected: this.checked
+    }
+  },
   computed: {
     classes() {
       let cls = `custom-control custom-checkbox custom-control-${this.type} `
@@ -61,6 +67,21 @@ export default {
         cls += 'custom-checkbox-square '
       }
       return cls
+    }
+  },
+  methods: {
+    changeHandler(e) {
+      this.selected = !this.selected
+      this.$emit("change", {
+        checked: this.selected,
+        event: e
+      })
+    },
+    check(val) {
+      this.selected = val
+    },
+    state() {
+      return this.selected
     }
   }
 }

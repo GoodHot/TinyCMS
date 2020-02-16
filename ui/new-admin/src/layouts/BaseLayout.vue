@@ -34,25 +34,7 @@ export default {
             icon: 'book-open',
             pack: 'si'
           },
-          to: '/content',
-          children: [
-            {
-              title: "文章列表",
-              icon: {
-                icon: 'docs',
-                pack: 'si'
-              },
-              to: "/content"
-            },
-            {
-              title: "标签管理",
-              icon: {
-                icon: 'tag',
-                pack: 'si'
-              },
-              to: "/"
-            }
-          ]
+          to: '/content'
         },
         {
           title: "组件",
@@ -112,6 +94,22 @@ export default {
                 pack: "fa"
               },
               to: "/component/table"
+            },
+            {
+              title: "Popover",
+              icon: {
+                icon: "window-maximize",
+                pack: "far"
+              },
+              to: "/component/popover"
+            },
+            {
+              title: "Checkbox",
+              icon: {
+                icon: "check-square",
+                pack: "far"
+              },
+              to: "/component/checkbox"
             }
           ]
         }

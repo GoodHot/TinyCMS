@@ -41,14 +41,24 @@ export const routerMap = [
         component: () => import('@/pages/components/block')
       },
       {
-        path: '/modal',
+        path: '/component/modal',
         name: 'modal',
         component: () => import('@/pages/components/modal')
       },
       {
-        path: '/table',
+        path: '/component/table',
         name: 'table',
         component: () => import('@/pages/components/table')
+      },
+      {
+        path: '/component/popover',
+        name: 'popover',
+        component: () => import('@/pages/components/popover')
+      },
+      {
+        path: '/component/checkbox',
+        name: 'checkbox',
+        component: () => import('@/pages/components/checkbox')
       }
     ]
   }

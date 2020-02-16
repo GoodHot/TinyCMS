@@ -22,7 +22,7 @@
         <button type="submit" class="btn btn-alt-success">Update</button>
       </TFormItem>
     </TForm>
-    <TTable :column="column" :data="data">
+    <TTable :column="column" :data="data" select>
       <template slot="action" scope>
         <a
           class="btn btn-sm btn-alt-secondary js-tooltip-enabled"
