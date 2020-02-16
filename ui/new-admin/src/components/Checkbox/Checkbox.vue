@@ -12,7 +12,7 @@
       class="custom-control-input"
       :name="name"
       :id="`checkbox-id-${name}`"
-      :checked="selected"
+      v-bind:checked="checked"
       @change="changeHandler"
     />
     <label class="custom-control-label" :for="`checkbox-id-${name}`">{{label}}</label>
@@ -20,13 +20,17 @@
 </template>
 <script>
 export default {
+  model: {
+    prop: 'checked',
+    event: 'updateChecked'
+  },
   props: {
     label: {
       type: String,
       default: ''
     },
     checked: {
-      type: Boolean,
+      type: [Boolean, Object],
       default: false
     },
     inline: {
@@ -47,11 +51,10 @@ export default {
     shape: {
       type: String,
       default: 'circle'
-    }
-  },
-  data() {
-    return {
-      selected: this.checked
+    },
+    val: {
+      type: [String, Number, Boolean, Array, Object, Function],
+      default: null
     }
   },
   computed: {
@@ -71,17 +74,8 @@ export default {
   },
   methods: {
     changeHandler(e) {
-      this.selected = !this.selected
-      this.$emit("change", {
-        checked: this.selected,
-        event: e
-      })
-    },
-    check(val) {
-      this.selected = val
-    },
-    state() {
-      return this.selected
+      this.$emit('updateChecked', e.target.checked)
+      this.$emit('change', {checked: e.target.checked, value: this.val})
     }
   }
 }

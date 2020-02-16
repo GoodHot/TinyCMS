@@ -4,13 +4,17 @@
       <table :class="'table table-borderless table-striped table-vcenter'">
         <thead v-if="!hideHeader">
           <tr>
-            <th v-if="select" width="60px"><TCheckbox type="secondary" name="selectAll" ref="selectAll" @change="selectAll" /></th>
+            <th v-if="selectKey" width="60px" class="text-center">
+              <TCheckbox type="secondary" name="selectAll" v-model="selectAllValue" @change="$selectAll" />
+            </th>
             <th :class="thClass(item)" v-for="item of column" :key="item.title">{{item.title}}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(d, index) of data" :key="d.id">
-            <td v-if="select" width="60px" class="text-center"><TCheckbox type="secondary" :name="`select-${index}`" :ref="`select${index}`" @change="selectOne" /></td>
+            <td v-if="selectKey" width="60px" class="text-center">
+              <TCheckbox type="secondary" :name="`select-${index}`" v-model="selectValues[index].checked" :val="d[selectKey]" :ref="`selectItems`" @change="selectOne" />
+            </td>
             <template v-for="col of column">
               <td :class="thClass(col)" :key="col.title" :width="col.width ? col.width : ''">
                 <div v-if="!col.slot">
@@ -60,23 +64,39 @@ export default {
       }
     },
     pagination: {
-      type: Object,
-      default() {
-        return {
-          show: false
-        }
-      }
-    },
-    select: {
-      type: Boolean,
+      type: [Boolean, Object],
       default: false
+    },
+    selectKey: {
+      type: String
     },
     hideHeader: {
       type: Boolean,
       default: false
     }
   },
+  data() {
+    return {
+      selectAllValue: false,
+      selectValues: []
+    }
+  },
+  created() {
+    this.initSelectValues()
+  },
   methods: {
+    initSelectValues() {
+      if (!this.selectKey || !this.data) {
+        return 
+      }
+      for (let i in this.data) {
+        this.selectValues.push({
+          index: i,
+          checked: false,
+          value: this.data[i][this.selectKey]
+        })
+      }
+    },
     thClass(col) {
       let cls = ' '
       if (col.align && col.align == 'center') {
@@ -87,27 +107,35 @@ export default {
       }
       return cls
     },
-    selectAll(data) {
-      for (let i=0;i<this.data.length;i++) {
-        const sel = this.$refs[`select${i}`]
-        sel[0].check(data.checked)
-      }
+    $selectAll(rst) {
+      this.selectAll(rst.checked)
     },
-    selectOne(data) {
-      if (!data.checked) {
-        if (this.$refs.selectAll) {
-          this.$refs.selectAll.check(false)
+    selectAll(checked) {
+      for (let i in this.selectValues) {
+        this.selectValues[i].checked = checked
+      }
+      this.onSelected()
+    },
+    selectOne(rst) {
+      this.onSelected()
+      if (!rst.checked) {
+        this.selectAllValue = false
+      }
+      for (let i in this.selectValues) {
+        if (!this.selectValues[i].checked) {
+          return 
         }
       }
-      for (let i=0;i<this.data.length;i++) {
-        const sel = this.$refs[`select${i}`]
-        if (!sel[0].state()) {
-          return
+      this.selectAllValue = true
+    },
+    onSelected() {
+      const values = new Array()
+      for (let i in this.selectValues) {
+        if (this.selectValues[i].checked) {
+          values.push(this.selectValues[i].value)
         }
       }
-      if (this.$refs.selectAll) {
-        this.$refs.selectAll.check(true)
-      }
+      this.$emit("onselected", values, values.length == this.selectValues.length)
     }
   }
 }

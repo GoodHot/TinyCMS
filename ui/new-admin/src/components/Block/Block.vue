@@ -75,6 +75,9 @@ export default {
   created() {
     this.renderOptions()
   },
+  beforeUpdate() {
+    this.renderOptions()
+  },
   computed: {
     classes() {
       let cls = 'block '

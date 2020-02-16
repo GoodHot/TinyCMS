@@ -22,7 +22,7 @@
         <button type="submit" class="btn btn-alt-success">Update</button>
       </TFormItem>
     </TForm>
-    <TTable :column="column" :data="data" select>
+    <TTable :column="column" :data="data" selectKey="id" @onselected="selectedHandler">
       <template slot="action" scope>
         <a
           class="btn btn-sm btn-alt-secondary js-tooltip-enabled"
@@ -129,6 +129,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    selectedHandler(vals) {
+      console.log(vals)
+    }
   }
 };
 </script>

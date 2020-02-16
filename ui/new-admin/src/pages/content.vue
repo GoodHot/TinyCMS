@@ -7,9 +7,8 @@
       <div ref="category" class="d-none d-md-block push">
         <TBlock title="文章分类" headerBg>
           <template slot="options">
-            <button type="button" class="btn btn-success btn-sm">
-              <i class="fa fa-plus ml-1 fa-fw"></i>新建分类
-            </button>
+            <TButton icon="plus"></TButton>
+            <TButton icon="settings" iconPack="si"></TButton>
           </template>
           <ul class="nav nav-pills flex-column font-size-sm push">
             <li class="nav-item my-1">
@@ -41,7 +40,37 @@
                 <span class="badge badge-pill badge-secondary ml-1">3篇</span>
               </a>
             </li>
+            <li class="nav-item mb-1">
+              <a
+                class="nav-link d-flex justify-content-between align-items-center"
+                href="javascript:void(0)"
+              >
+                npm
+                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a
+                class="nav-link d-flex justify-content-between align-items-center"
+                href="javascript:void(0)"
+              >
+                npm
+                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
+              </a>
+            </li>
+            <li class="nav-item mb-1">
+              <a
+                class="nav-link d-flex justify-content-between align-items-center"
+                href="javascript:void(0)"
+              >
+                npm
+                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
+              </a>
+            </li>
           </ul>
+          <div class="text-center push">
+              <button type="button" class="btn btn-sm btn-light">查看所有标签</button>
+          </div>
         </TBlock>
       </div>
     </div>
@@ -56,14 +85,13 @@
         </template>
         <div class="d-flex justify-content-between push">
           <span>
-            <TButtonGroup size="sm" type="light" v-slot:default="{size, type, theme}" class="mr-2" >
-              <TButton :size="size" :type="type" :theme="theme" icon="check-circle" iconPack="far" iconType="primary" @click="selectAll(true)">全选</TButton>
+            <TButtonGroup size="sm" type="light" v-slot:default="{size, type, theme}" class="mr-1" >
+              <TButton :size="size" :type="type" :theme="theme" icon="check-circle" iconPack="far" iconType="primary" v-if="!isSelectAll" @click="selectAll(true)">全选</TButton>
               <TButton :size="size" :type="type" :theme="theme" icon="circle" iconPack="far" iconType="primary" v-if="isSelectAll" @click="selectAll(false)">反选</TButton>
             </TButtonGroup>
-            <button class="btn btn-sm btn-light" type="button">
-              <i class="fa fa-times text-danger"></i>
-              <span class="d-none d-sm-inline ml-1">删除3篇文章</span>
-            </button>
+            <TButton v-if="deleteIds.length > 0" size="sm" type="light" icon="times" iconType="danger">
+              删除这{{deleteIds.length}}篇文章
+            </TButton>
           </span>
           <ul class="pagination pagination-sm" style="margin-bottom: 0">
             <li class="page-item">
@@ -87,11 +115,12 @@
           </ul>
         </div>
         <div class="pull-x">
-          <TTable :pagination="{show: true}" :column="column" :data="data" select hideHeader ref="dataTable" class="table table-hover table-vcenter font-size-sm">
+          <TTable :column="column" :data="data" selectKey="auth" hideHeader @onselected="selectedHandler" ref="dataTable" class="table table-hover table-vcenter font-size-sm">
             <template v-slot:auth="{item}" class="d-none d-sm-table-cell font-w600">
               {{item.auth}}
             </template>
             <template v-slot:title="{item, index}">
+              <TBadge size="sm" type="success">未归类</TBadge>
               <a
                 class="font-w600"
                 data-toggle="modal"
@@ -101,7 +130,7 @@
               <div class="text-muted mt-1">{{ index }} We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..</div>
             </template>
             <template v-slot:tags="{item, index}">
-              <i class="fa fa-tags mr-1"></i> ({{ index }})
+              <i class="fa fa-tags mr-1"></i> {{ index }}, <a href="#">计算机</a>, NPM, JAVA
             </template>
             <template v-slot:time="{item, index}">
               <em>{{ index }} min ago</em>
@@ -133,7 +162,7 @@ export default {
           title: '标签',
           index: 'tags',
           slot: 'tags',
-          width: '80px',
+          width: '120px',
           class: 'd-none d-xl-table-cell text-muted'
         },
         {
@@ -164,7 +193,8 @@ export default {
           time: 'sdf'
         }
       ],
-      isSelectAll: false
+      isSelectAll: false,
+      deleteIds: []
     }
   },
   methods: {
@@ -178,10 +208,12 @@ export default {
       }
     },
     selectAll(val) {
-      this.$refs.dataTable.selectAll({
-        checked: val
-      })
+      this.$refs.dataTable.selectAll(val)
       this.isSelectAll = val
+    },
+    selectedHandler(vals, isAll) {
+      this.deleteIds = vals
+      this.isSelectAll = isAll
     }
   }
 };
