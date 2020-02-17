@@ -10,66 +10,12 @@
             <TButton icon="plus"></TButton>
             <TButton icon="settings" iconPack="si"></TButton>
           </template>
-          <ul class="nav nav-pills flex-column font-size-sm push">
-            <li class="nav-item my-1">
-              <a class="nav-link d-flex justify-content-between align-items-center" href>
-                <span>
-                  <i class="fa fa-fw fa-book mr-1"></i> 全部文章
-                </span>
-                <span class="badge badge-pill badge-secondary">3篇</span>
-              </a>
-            </li>
-            <li class="nav-item my-1">
-              <a class="nav-link d-flex justify-content-between align-items-center" href>
-                <span>
-                  <i class="fa fa-fw fa-inbox mr-1"></i> 未归档
-                </span>
-                <span class="badge badge-pill badge-secondary">3篇</span>
-              </a>
-            </li>
-          </ul>
+          <TList class="push" :data="category"></TList>
         </TBlock>
         <TBlock title="标签" icon="tags">
-          <ul class="nav nav-pills flex-column push">
-            <li class="nav-item mb-1">
-              <a
-                class="nav-link d-flex justify-content-between align-items-center"
-                href="javascript:void(0)"
-              >
-                npm
-                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
-              </a>
-            </li>
-            <li class="nav-item mb-1">
-              <a
-                class="nav-link d-flex justify-content-between align-items-center"
-                href="javascript:void(0)"
-              >
-                npm
-                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
-              </a>
-            </li>
-            <li class="nav-item mb-1">
-              <a
-                class="nav-link d-flex justify-content-between align-items-center"
-                href="javascript:void(0)"
-              >
-                npm
-                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
-              </a>
-            </li>
-            <li class="nav-item mb-1">
-              <a
-                class="nav-link d-flex justify-content-between align-items-center"
-                href="javascript:void(0)"
-              >
-                npm
-                <span class="badge badge-pill badge-secondary ml-1">3篇</span>
-              </a>
-            </li>
-          </ul>
+          <TList class="push" :data="category"></TList>
           <div class="text-center push">
-              <button type="button" class="btn btn-sm btn-light">查看所有标签</button>
+            <TButton size="sm" type="light">查看所有标签</TButton>
           </div>
         </TBlock>
       </div>
@@ -115,7 +61,7 @@
           </ul>
         </div>
         <div class="pull-x">
-          <TTable :column="column" :data="data" selectKey="auth" hideHeader @onselected="selectedHandler" ref="dataTable" class="table table-hover table-vcenter font-size-sm">
+          <TTable :pagination="true" :column="column" :data="data" selectKey="auth" hideHeader @onselected="selectedHandler" ref="dataTable" class="table table-hover table-vcenter font-size-sm">
             <template v-slot:auth="{item}" class="d-none d-sm-table-cell font-w600">
               {{item.auth}}
             </template>
@@ -194,7 +140,54 @@ export default {
         }
       ],
       isSelectAll: false,
-      deleteIds: []
+      deleteIds: [],
+      category: [
+        {
+          title: '全部分类',
+          icon: 'book',
+          remark: '3篇',
+          img: 'http://ww1.sinaimg.cn/mw1024/00745YaMgy1gbyi3gl2mhj33402c0hdw.jpg'
+        },
+        {
+          title: '全部分类1',
+          icon: 'book',
+          remark: '3篇'
+        },
+        {
+          title: '全部分类2',
+          icon: 'book',
+          remark: '3篇'
+        },
+        {
+          title: '全部分类3',
+          icon: 'book',
+          remark: '3篇',
+          children: [
+            {
+              title: '全部分类4',
+              icon: 'book',
+              remark: '3篇',
+              children: [
+                {
+                  title: '全部分类4',
+                  icon: 'book',
+                  remark: '3篇'
+                },
+                {
+                  title: '全部分类5',
+                  icon: 'book',
+                  remark: '3篇'
+                }
+              ]
+            },
+            {
+              title: '全部分类5',
+              icon: 'book',
+              remark: '3篇'
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {

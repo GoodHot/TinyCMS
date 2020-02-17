@@ -27,7 +27,7 @@
         </tbody>
       </table>
     </div>
-    <nav v-if="pagination.show">
+    <nav v-if="pagination">
       <ul class="pagination pagination-sm justify-content-end mt-2">
         <li class="page-item">
           <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-label="Previous">上一页</a>

@@ -1,5 +1,5 @@
 <template>
-  <i :class="classes"></i>
+  <i :class="classes" @click="$emit('click', $event)"></i>
 </template>
 <script>
 export default {

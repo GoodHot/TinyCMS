@@ -16,6 +16,8 @@ import TBlock from './Block/Block'
 import TModal from './Modal/Modal'
 import TTable from './Table/Table'
 import TPopover from './Popover/Popover'
+import TList from './List/List'
+import TListItem from './List/ListItem'
 
 export default {
   TNavigation,
@@ -35,5 +37,7 @@ export default {
   TBlock,
   TModal,
   TTable,
-  TPopover
+  TPopover,
+  TList,
+  TListItem
 }
