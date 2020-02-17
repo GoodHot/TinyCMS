@@ -50,9 +50,9 @@ export default {
   computed: {
     classes() {
       if (this.theme === "light") {
-        return "bg-white p-3 push"
+        return "bg-white p-2 push"
       } else {
-        return "bg-sidebar-dark p-3 push"
+        return "bg-sidebar-dark p-2 push"
       }
     }
   },

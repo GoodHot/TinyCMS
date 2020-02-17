@@ -1,6 +1,9 @@
 <template>
   <div class="content">
     <TNavigation :data="navData" />
+      <template slot="right">
+        <TButton size="sm" type="success" icon="plus">写新文章</TButton>
+      </template>
     <router-view />
     <footer id="page-footer" class="bg-body-light">
       <div class="content py-3">
