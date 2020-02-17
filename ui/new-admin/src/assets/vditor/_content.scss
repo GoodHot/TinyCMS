@@ -82,6 +82,7 @@
     box-shadow: inset 1px 0  var(--border-color);
     box-sizing: border-box;
     border-radius: 0 0 3px 0;
+    border-left: 3px dashed #e1e1e1;
 
     & > div::-webkit-scrollbar {
       display: none;

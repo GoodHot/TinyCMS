@@ -4,3 +4,50 @@
 .t-list-item-tree {
   cursor: pointer;
 }
+
+.t-publish-title {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px dashed #e1e1e1;
+  padding: 1rem;
+  text-align: center;
+  outline: none;
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.t-publish-option {
+  padding: 1rem;
+  background: #fff;
+  border-top: 1px dashed #e1e1e1;
+  display: -webkit-flex; 
+  -webkit-justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+}
+
+.t-publish-option .options .btn {
+  float: left;
+}
+
+.t-publish-option .options .form-control {
+  float: left;
+  width: 200px;
+}
+
+.t-publish-content {
+  position: relative;
+  z-index: 400;
+}
+.t-publish-focus_ovr {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #000;
+  z-index: 300;
+  opacity: 0.2;
+}

@@ -1,5 +1,5 @@
 <template>
-  <div id="vditor"></div>
+  <div id="vditor" @click="clickHandler"></div>
 </template>
 <script>
 import '../../assets/vditor/index.scss'
@@ -17,19 +17,9 @@ export default {
   methods: {
     initMarkdown() {
       new Vditor('vditor')
-      // this.markdown = new Editor({
-      //   el: this.$refs.markdownEditor,
-      //   initialEditType: 'markdown',
-      //   previewStyle: 'vertical',
-      //   height: '700px',
-      //   exts: ['scrollSync'],
-      //   initialValue: initValue,
-      //   // hooks: {
-      //   //   addImageBlobHook (blob, callback) {
-      //   //     _this.imageUpload(blob, callback)
-      //   //   }
-      //   // }
-      // })
+    },
+    clickHandler(e) {
+      this.$emit('click', e)
     }
   }
 }
