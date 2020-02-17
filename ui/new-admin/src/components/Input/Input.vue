@@ -23,6 +23,10 @@ export default {
     state: {
       type: String,
       default: null
+    },
+    size: {
+      type: String,
+      default: null
     }
   },
   computed: {
@@ -37,6 +41,9 @@ export default {
         } else {
           cls += 'is-invalid '
         }
+      }
+      if (this.size) {
+        cls += `form-control-${this.size}`
       }
       return cls
     }

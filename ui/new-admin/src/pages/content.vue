@@ -23,7 +23,7 @@
     <div class="col-md-7 col-xl-9">
       <TBlock title="全部文章">
         <template slot="options">
-          <TButton icon="plus"></TButton>
+          <TButton icon="plus" @click="$router.push('/publish')"></TButton>
           <TButton icon="magnifier" iconPack="si"></TButton>
           <TButton icon="arrow-left" iconPack="si"></TButton>
           <TButton icon="arrow-right" iconPack="si"></TButton>

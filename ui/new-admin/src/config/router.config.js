@@ -16,6 +16,16 @@ export const routerMap = [
         component: () => import('@/pages/content'),
       },
       {
+        path: '/publish',
+        name: 'publish',
+        component: () => import('@/pages/publish/publish'),
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: () => import('@/pages/user/user'),
+      },
+      {
         path: '/component/icon',
         name: 'icon',
         component: () => import('@/pages/components/icon'),

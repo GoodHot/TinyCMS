@@ -94,7 +94,7 @@ export default {
       if (this.isBlockOption) {
         return ''
       }
-      let cls = 'ml-1 fa-fw '
+      let cls = 'ml-1 mr-1 fa-fw '
       if (this.iconType) {
         cls += `text-${this.iconType}`
       }

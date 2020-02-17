@@ -18,6 +18,7 @@ import TTable from './Table/Table'
 import TPopover from './Popover/Popover'
 import TList from './List/List'
 import TListItem from './List/ListItem'
+import TMarkdown from './Markdown/Markdown'
 
 export default {
   TNavigation,
@@ -39,5 +40,6 @@ export default {
   TTable,
   TPopover,
   TList,
-  TListItem
+  TListItem,
+  TMarkdown
 }

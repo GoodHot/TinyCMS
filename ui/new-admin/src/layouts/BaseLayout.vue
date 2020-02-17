@@ -37,6 +37,14 @@ export default {
           to: '/content'
         },
         {
+          title: "用户管理",
+          icon: {
+            icon: 'users',
+            pack: 'si'
+          },
+          to: '/user'
+        },
+        {
           title: "组件",
           icon: "ad",
           badge: "3",

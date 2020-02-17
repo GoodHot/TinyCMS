@@ -19,7 +19,7 @@
         {{ title }}
         <small v-if="subtitle">{{ subtitle }}</small>
       </h3>
-      <div class="block-options">
+      <div :class="`block-options ${contentClass}`">
         <slot name="options"></slot>
       </div>
     </div>
@@ -70,6 +70,10 @@ export default {
     iconPack: {
       type: String,
       default: 'fa'
+    },
+    contentClass: {
+      type: String,
+      default: ''
     }
   },
   created() {
