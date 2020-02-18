@@ -49,6 +49,55 @@ export default {
           to: '/user'
         },
         {
+          title: "设置",
+          icon: {
+            icon: 'settings',
+            pack: 'si'
+          },
+          children: [
+            {
+              title: "全局设置",
+              icon: {
+                icon: 'settings',
+                pack: 'si'
+              },
+              to: '/general'
+            },
+            {
+              title: "自定义标签",
+              icon: {
+                icon: 'code',
+                pack: 'fa'
+              },
+              to: '/skin'
+            },
+            {
+              title: "皮肤管理",
+              icon: {
+                icon: 'magic-wand',
+                pack: 'si'
+              },
+              to: '/skin'
+            },
+            {
+              title: "资源管理",
+              icon: {
+                icon: 'social-dropbox',
+                pack: 'si'
+              },
+              to: '/skin'
+            },
+            {
+              title: "系统设置",
+              icon: {
+                icon: 'cogs',
+                pack: 'fa'
+              },
+              to: '/skin'
+            }
+          ]
+        },
+        {
           title: "组件",
           icon: "ad",
           badge: "3",
@@ -122,6 +171,14 @@ export default {
                 pack: "far"
               },
               to: "/component/checkbox"
+            },
+            {
+              title: "Select",
+              icon: {
+                icon: "ellipsis-h",
+                pack: "fa"
+              },
+              to: "/component/select"
             }
           ]
         }

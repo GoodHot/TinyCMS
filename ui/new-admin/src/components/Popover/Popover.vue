@@ -37,7 +37,6 @@ export default {
   },
   methods: {
     showPopover() {
-      console.log(123)
       const opt = {
         animation: true,
         title: this.title,

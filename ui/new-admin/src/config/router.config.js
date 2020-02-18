@@ -8,12 +8,12 @@ export const routerMap = [
       {
         path: '/',
         name: 'hello',
-        component: () => import('@/pages/components/index'),
+        component: () => import('@/pages/index'),
       },
       {
         path: '/content',
         name: 'content',
-        component: () => import('@/pages/content'),
+        component: () => import('@/pages/content/content'),
       },
       {
         path: '/publish',
@@ -24,6 +24,11 @@ export const routerMap = [
         path: '/user',
         name: 'user',
         component: () => import('@/pages/user/user'),
+      },
+      {
+        path: '/general',
+        name: 'general',
+        component: () => import('@/pages/setting/general'),
       },
       {
         path: '/component/icon',
@@ -69,6 +74,11 @@ export const routerMap = [
         path: '/component/checkbox',
         name: 'checkbox',
         component: () => import('@/pages/components/checkbox')
+      },
+      {
+        path: '/component/select',
+        name: 'select',
+        component: () => import('@/pages/components/select')
       }
     ]
   }
