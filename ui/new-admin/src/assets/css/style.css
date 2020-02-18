@@ -42,7 +42,7 @@
 }
 .t-publish-focus_ovr {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
@@ -50,4 +50,20 @@
   background: #000;
   z-index: 300;
   opacity: 0.2;
+}
+
+@media screen and (min-width: 992px) {
+  .t-nav-between {
+    display: -webkit-flex;
+    -webkit-justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .t-nav-right-btn {
+    margin-top: 5px;
+    width: 100%;
+  }
 }

@@ -22,9 +22,14 @@
       </TButton>
     </div>
     <div ref="horizontalNavigation" class="d-none d-lg-block mt-2 mt-lg-0">
-      <ul :class="'nav-main nav-main-horizontal nav-main-hover ' + (theme === 'dark' ? 'nav-main-dark' : '')" v-if="data">
-        <TNavigationItem v-for="item of data" :key="item.title + item.icon" :data="item" />
-      </ul>
+      <div class="t-nav-between">
+        <ul :class="'nav-main nav-main-horizontal nav-main-hover ' + (theme === 'dark' ? 'nav-main-dark' : '')" v-if="data">
+          <TNavigationItem v-for="item of data" :key="item.title + item.icon" :data="item" />
+        </ul>
+        <span>
+          <slot name="right"></slot>
+        </span>
+      </div>
     </div>
   </div>
 </template>
