@@ -12,7 +12,7 @@
     </div>
     <div class="col-8 push">
       <TButton icon="plus" size="sm" type="success">创建新用户</TButton>
-      <TButton icon="user" iconPack="si" size="sm" class="ml-1" type="secondary">角色管理</TButton>
+      <TButton icon="user" iconPack="si" size="sm" class="ml-1" type="secondary" @click="$router.push('/role')">角色管理</TButton>
     </div>
     <div class="col-sm-6 col-xl-4">
       <UserCard>是打发斯蒂芬</UserCard>

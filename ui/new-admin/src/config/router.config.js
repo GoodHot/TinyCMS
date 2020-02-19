@@ -1,6 +1,18 @@
 
 export const routerMap = [
   {
+    path: '/auth',
+    name: 'auth',
+    component: () => import('@/layouts/AuthLayout'),
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import('@/pages/auth/login'),
+      }
+    ]
+  },
+  {
     path: '/',
     name: 'hello',
     component: () => import('@/layouts/BaseLayout'),
@@ -24,6 +36,11 @@ export const routerMap = [
         path: '/user',
         name: 'user',
         component: () => import('@/pages/user/user'),
+      },
+      {
+        path: '/role',
+        name: 'role',
+        component: () => import('@/pages/user/role'),
       },
       {
         path: '/general',

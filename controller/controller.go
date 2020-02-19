@@ -76,26 +76,29 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 		buildOption: true,
 	}
 	// auth
+	router.Any("/auth/init", c.AdminAuthCtrl.InitRole)
 	router.POST("/auth/login", c.AdminAuthCtrl.Login)
 	router.Any("/auth/info", c.AdminAuthCtrl.Info)
+
+
 	// channel
-	router.GET("/channel/page_:page", c.AdminChannelCtrl.Page)
-	router.GET("/channel/tree", c.AdminChannelCtrl.Tree)
-	router.POST("/channel", c.AdminChannelCtrl.Save)
-	router.DELETE("/channel/:id", c.AdminChannelCtrl.Delete)
-	router.GET("/channel/:id", c.AdminChannelCtrl.Get)
+	//router.GET("/channel/page_:page", c.AdminChannelCtrl.Page)
+	//router.GET("/channel/tree", c.AdminChannelCtrl.Tree)
+	//router.POST("/channel", c.AdminChannelCtrl.Save)
+	//router.DELETE("/channel/:id", c.AdminChannelCtrl.Delete)
+	//router.GET("/channel/:id", c.AdminChannelCtrl.Get)
 	// articcle
-	router.POST("/article/publish", c.AdminArticleCtrl.Publish)
-	router.GET("/article/page_:page", c.AdminArticleCtrl.Page)
-	router.GET("/article/:id", c.AdminArticleCtrl.Get)
-	router.DELETE("/article/:id", c.AdminArticleCtrl.Delete)
+	//router.POST("/article/publish", c.AdminArticleCtrl.Publish)
+	//router.GET("/article/page_:page", c.AdminArticleCtrl.Page)
+	//router.GET("/article/:id", c.AdminArticleCtrl.Get)
+	//router.DELETE("/article/:id", c.AdminArticleCtrl.Delete)
 	// upload
-	router.POST("/upload", c.AdminUploadCtrl.Upload)
-	router.POST("/upload/base64", c.AdminUploadCtrl.UploadBase64)
+	//router.POST("/upload", c.AdminUploadCtrl.Upload)
+	//router.POST("/upload/base64", c.AdminUploadCtrl.UploadBase64)
 	// dict
-	router.GET("/dict/init", c.AdminDictCtrl.Init)
-	router.GET("/dict/all", c.AdminDictCtrl.All)
-	router.PUT("/dict", c.AdminDictCtrl.Edit)
+	//router.GET("/dict/init", c.AdminDictCtrl.Init)
+	//router.GET("/dict/all", c.AdminDictCtrl.All)
+	//router.PUT("/dict", c.AdminDictCtrl.Edit)
 }
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {

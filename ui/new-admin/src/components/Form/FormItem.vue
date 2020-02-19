@@ -6,7 +6,7 @@
       state: success, error
   -->
   <div :class="classes">
-    <label :style="label? '' : 'margin-bottom:1.5rem'">{{ label }}</label>
+    <label v-if="label" :style="label? '' : 'margin-bottom:1.5rem'">{{ label }}</label>
     <div>
       <slot v-bind:state="selfState"></slot>
     </div>
