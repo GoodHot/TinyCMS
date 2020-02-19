@@ -22,15 +22,22 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
 import { userLogin } from '@/api/auth'
 export default {
+  data() {
+    return {
+      form: {
+      }
+    }
+  },
   methods: {
     loginHandler() {
       userLogin({
-        username: 'asdfasdf',
-        password: 'ffffff'
+        username: 'admin',
+        password: 'admin'
       }).then(res => {
-        console.log(res)
+        Vue.ls.set('ACCESS-TOKEN', res.info.token)
       })
     }
   }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 
-const ACCESS_TOKEN = 'Access-Token'
+const ACCESS_TOKEN = 'ACCESS-TOKEN'
 
 const requestConfig = {
   baseURL: 'http://localhost:9000/admin',
@@ -13,7 +13,6 @@ const service = axios.create({
   baseURL: requestConfig.baseURL, // api base_url
   timeout: 20000 // 请求超时时间
 })
-
 
 const err = (error) => {
   if (error.response) {
@@ -32,6 +31,7 @@ const err = (error) => {
       //   message: 'Unauthorized',
       //   description: msg
       // })
+      window.location = "/#/auth/login"
       alert(msg)
       if (token) {
         // store.dispatch('Logout').then(() => {
@@ -49,7 +49,7 @@ const err = (error) => {
 service.interceptors.request.use(config => {
   const token = Vue.ls.get(ACCESS_TOKEN)
   if (token) {
-    config.headers['Access-Token'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+    config.headers[ACCESS_TOKEN] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
   return config
 }, err)

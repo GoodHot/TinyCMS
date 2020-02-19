@@ -45,3 +45,12 @@ func (s *AdminService) GenToken(admin *model.Admin) {
 	admin.Token = token
 	s.CacheService.Set(cacheKey, admin, 30*time.Minute)
 }
+
+func (s *AdminService) CheckToken(token string) (*model.Admin, error) {
+	cacheKey := "token:" + token
+	admin := &model.Admin{}
+	if err := s.CacheService.Get(cacheKey, admin); err != nil {
+		return nil, err
+	}
+	return admin, nil
+}

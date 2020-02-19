@@ -88,6 +88,7 @@
   </div>
 </template>
 <script>
+import {channelTree} from '@/api/channel'
 export default {
   data() {
     return {
@@ -208,6 +209,9 @@ export default {
       this.deleteIds = vals
       this.isSelectAll = isAll
     }
+  },
+  mounted() {
+    channelTree()
   }
 };
 </script>

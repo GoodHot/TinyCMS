@@ -21,6 +21,7 @@ func (s *CacheService) initCacher() {
 	if s.isInited {
 		return
 	}
+	s.isInited = true
 	if s.CacheType == "redis" {
 		s.cacher = &redis.Redis{
 			Address:  s.Address,

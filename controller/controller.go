@@ -5,6 +5,7 @@ import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/controller/admin"
 	"github.com/GoodHot/TinyCMS/controller/web"
+	"github.com/GoodHot/TinyCMS/service"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"io"
@@ -20,6 +21,7 @@ type Controller struct {
 	AdminDictCtrl    *admin.AdminDictCtrl    `ioc:"auto"`
 	SkinCtrl         *web.SkinCtrl           `ioc:"auto"`
 	IndexCtrl        *web.IndexCtrl          `ioc:"auto"`
+	AdminService     *service.AdminService   `ioc:"auto"`
 	Port             int                     `val:"${server.port}"`
 	AdminPrefix      string                  `val:"${server.admin_prefix}"`
 	WebPrefix        string                  `val:"${server.web_prefix}"`
@@ -45,30 +47,34 @@ func (c *Controller) StartUp() {
 	//}
 }
 
-func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
+func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	group.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{"*"},
 		AllowMethods: []string{"*"},
 	}))
 
-	//whiteList := []string{"/auth/login"}
+	whiteList := []string{"/auth/login"}
 
-	//group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
-	//	return func(c echo.Context) error {
-	//		url := c.Request().URL.String()
-	//		for _, v := range whiteList {
-	//			if prefix+v == url {
-	//				return next(c)
-	//			}
-	//		}
-	//		token := c.Request().Header.Get("Access-Token")
-	//		if token == "" {
-	//			return c.Redirect(http.StatusFound, "/")
-	//		}
-	//		return next(c)
-	//	}
-	//})
+	group.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			url := c.Request().URL.String()
+			for _, v := range whiteList {
+				if prefix+v == url {
+					return next(c)
+				}
+			}
+			token := c.Request().Header.Get("ACCESS-TOKEN")
+			if token == "" {
+				return c.JSON(http.StatusUnauthorized, "please login")
+			}
+			_, err := s.AdminService.CheckToken(token)
+			if err != nil {
+				return c.JSON(http.StatusUnauthorized, "please login")
+			}
+			return next(c)
+		}
+	})
 
 	router := &RouterRegister{
 		group:       group,
@@ -76,17 +82,16 @@ func (c *Controller) registerAdmin(group *echo.Group, prefix string) {
 		buildOption: true,
 	}
 	// auth
-	router.Any("/auth/init", c.AdminAuthCtrl.InitRole)
-	router.POST("/auth/login", c.AdminAuthCtrl.Login)
-	router.Any("/auth/info", c.AdminAuthCtrl.Info)
-
+	router.Any("/auth/init", s.AdminAuthCtrl.InitRole)
+	router.POST("/auth/login", s.AdminAuthCtrl.Login)
+	router.Any("/auth/info", s.AdminAuthCtrl.Info)
 
 	// channel
-	//router.GET("/channel/page_:page", c.AdminChannelCtrl.Page)
-	//router.GET("/channel/tree", c.AdminChannelCtrl.Tree)
-	//router.POST("/channel", c.AdminChannelCtrl.Save)
-	//router.DELETE("/channel/:id", c.AdminChannelCtrl.Delete)
-	//router.GET("/channel/:id", c.AdminChannelCtrl.Get)
+	router.GET("/channel/page_:page", s.AdminChannelCtrl.Page)
+	router.GET("/channel/tree", s.AdminChannelCtrl.Tree)
+	router.POST("/channel", s.AdminChannelCtrl.Save)
+	router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
+	router.GET("/channel/:id", s.AdminChannelCtrl.Get)
 	// articcle
 	//router.POST("/article/publish", c.AdminArticleCtrl.Publish)
 	//router.GET("/article/page_:page", c.AdminArticleCtrl.Page)
