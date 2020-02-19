@@ -28,6 +28,7 @@ func (s *AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
 	if !s.AdminService.AssertPwd(u.Password, admin.Password) {
 		return ctx.ResultErr("wrong password")
 	}
+	s.AdminService.GenToken(admin)
 	ctx.Put("info", admin)
 	return ctx.ResultOK()
 }

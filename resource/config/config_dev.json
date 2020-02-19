@@ -8,6 +8,7 @@
   "cache": {
     "type": "free",
     "url": "127.0.0.1",
+    "password": "",
     "db": 1,
     "cache_size": 3
   },

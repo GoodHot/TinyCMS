@@ -5,10 +5,14 @@ import (
 	"encoding/hex"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	uuid "github.com/satori/go.uuid"
+	"strings"
+	"time"
 )
 
 type AdminService struct {
-	ORM *orm.ORM `ioc:"auto"`
+	ORM          *orm.ORM      `ioc:"auto"`
+	CacheService *CacheService `ioc:"auto"`
 }
 
 func (s *AdminService) GetByUsername(username string) *model.Admin {
@@ -32,4 +36,12 @@ func (t *AdminService) encrptyPwd(pwd string) string {
 	h2 := md5.New()
 	h2.Write([]byte(pwdOnce[16:] + pwdOnce[:16]))
 	return hex.EncodeToString(h2.Sum(nil))
+}
+
+func (s *AdminService) GenToken(admin *model.Admin) {
+	uid := uuid.Must(uuid.NewV4())
+	token := strings.ReplaceAll(uid.String(), "-", "")
+	cacheKey := "token:" + token
+	admin.Token = token
+	s.CacheService.Set(cacheKey, admin, 30*time.Minute)
 }
