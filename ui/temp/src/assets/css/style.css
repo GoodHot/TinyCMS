@@ -1,0 +1,98 @@
+.t-list-item-img {
+  width: 14px; height: 15px;
+}
+.t-list-item-tree {
+  cursor: pointer;
+}
+
+.t-publish-title {
+  width: 100%;
+  border: 0;
+  border-bottom: 3px dashed #e1e1e1;
+  padding: 1rem;
+  text-align: center;
+  outline: none;
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.t-publish-option {
+  padding: 1rem;
+  background: #fff;
+  border-top: 3px dashed #e1e1e1;
+  display: -webkit-flex; 
+  -webkit-justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+}
+
+.t-publish-option .options .btn {
+  float: left;
+}
+
+.t-publish-option .options .tags-input {
+  float: left;
+  width: 200px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.t-publish-option .options .tags-show {
+  float: left;
+  padding: 0 .25rem;
+  background: #f5f5f5;
+  border-top-left-radius: .2rem;
+  border-bottom-left-radius: .2rem;
+  height: 38px;
+  padding: 0 .5rem;
+}
+
+.t-publish-option .options .tags-show i {
+  float: left;
+  line-height: 39px;
+}
+
+.t-publish-option .options .tags-show .badge {
+  margin-left: .25rem;
+  float: left;
+  margin-top: 10px;
+}
+
+.t-publish-advanced {
+  padding: 1rem;
+  background: #fff;
+  border-top: 3px dashed #e1e1e1;
+}
+
+.t-publish-content {
+  position: relative;
+  z-index: 400;
+}
+.t-publish-focus_ovr {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #000;
+  z-index: 300;
+  opacity: 0.2;
+}
+
+@media screen and (min-width: 992px) {
+  .t-nav-between {
+    display: -webkit-flex;
+    -webkit-justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .t-nav-right-btn {
+    margin-top: 5px;
+    width: 100%;
+  }
+}
