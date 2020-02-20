@@ -26,7 +26,7 @@ func main() {
 	spring.Reg(orm)
 	err = orm.Init(
 		&model.Admin{},
-		&model.Channel{},
+		&model.Category{},
 		&model.Article{},
 		&model.Tag{},
 		&model.RelTagArticle{},

@@ -6,11 +6,15 @@
       textAlign: left(default), right, center,
       state: success, error
   -->
-  <input :type="type" :class="classes">
+  <input :type="type" :class="classes" @change="$emit('change.value', $event.target.value)" >
 </template>
 <script>
 export default {
   name: "TInput",
+  model: {
+    prop: 'value',
+    event: 'change.value'
+  },
   props: {
     theme: {
       type: String,
@@ -46,6 +50,12 @@ export default {
         cls += `form-control-${this.size}`
       }
       return cls
+    }
+  },
+  methods: {
+    changeHandler(e) {
+      console.log(e)
+      // this.$emit('change.value', this.value)
     }
   }
 }

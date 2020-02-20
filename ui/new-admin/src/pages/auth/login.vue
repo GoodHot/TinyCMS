@@ -7,10 +7,10 @@
           <p>欢迎，请登录</p>
           <TForm>
             <TFormItem col="12" v-slot:default="item" >
-              <TInput placeholder="用户名" :state="item.state" theme="alt" />
+              <TInput placeholder="用户名" :state="item.state" v-model="form.username" theme="alt" valid="" />
             </TFormItem>
             <TFormItem col="12" v-slot:default="item" >
-              <TInput placeholder="密码" type="password" :state="item.state" theme="alt" />
+              <TInput placeholder="密码" type="password" :state="item.state" v-model="form.password" theme="alt" />
             </TFormItem>
             <TFormItem col="12" >
               <TButton icon="sign-in-alt" class="pr-4" @click="loginHandler">登录</TButton>
@@ -28,16 +28,22 @@ export default {
   data() {
     return {
       form: {
+        username: '',
+        password: ''
       }
     }
   },
   methods: {
     loginHandler() {
       userLogin({
-        username: 'admin',
-        password: 'admin'
+        username: this.form.username,
+        password: this.form.password
       }).then(res => {
+        const _this = this
         Vue.ls.set('ACCESS-TOKEN', res.info.token)
+        this.$dialog.success('登录成功', '', () => {
+          _this.$router.push('/')
+        })
       })
     }
   }

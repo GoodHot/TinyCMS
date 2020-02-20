@@ -8,11 +8,15 @@ export default {
       text: text
     })
   },
-  success(title, text) {
+  success(title, text, callback) {
     Swal.fire({
       icon: 'success',
       title: title,
       text: text
+    }).then(res => {
+      if (callback) {
+        callback(res)
+      }
     })
   },
   alert(text) {

@@ -14,21 +14,21 @@ import (
 )
 
 type Controller struct {
-	AdminChannelCtrl *admin.AdminChannelCtrl `ioc:"auto"`
-	AdminAuthCtrl    *admin.AdminAuthCtrl    `ioc:"auto"`
-	AdminArticleCtrl *admin.AdminArticleCtrl `ioc:"auto"`
-	AdminUploadCtrl  *admin.AdminUploadCtrl  `ioc:"auto"`
-	AdminDictCtrl    *admin.AdminDictCtrl    `ioc:"auto"`
-	SkinCtrl         *web.SkinCtrl           `ioc:"auto"`
-	IndexCtrl        *web.IndexCtrl          `ioc:"auto"`
-	AdminService     *service.AdminService   `ioc:"auto"`
-	Port             int                     `val:"${server.port}"`
-	AdminPrefix      string                  `val:"${server.admin_prefix}"`
-	WebPrefix        string                  `val:"${server.web_prefix}"`
-	APIPrefix        string                  `val:"${server.api_prefix}"`
-	Static           string                  `val:"${server.static}"`
-	HTMLCompress     bool                    `val:"${server.html_compress}"`
-	AdminTemplateDir string                  `val:"${server.admin_template_dir}"`
+	AdminCategoryCtrl *admin.AdminCategoryCtrl `ioc:"auto"`
+	AdminAuthCtrl     *admin.AdminAuthCtrl     `ioc:"auto"`
+	AdminArticleCtrl  *admin.AdminArticleCtrl  `ioc:"auto"`
+	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
+	AdminDictCtrl     *admin.AdminDictCtrl     `ioc:"auto"`
+	SkinCtrl          *web.SkinCtrl            `ioc:"auto"`
+	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
+	AdminService      *service.AdminService    `ioc:"auto"`
+	Port              int                      `val:"${server.port}"`
+	AdminPrefix       string                   `val:"${server.admin_prefix}"`
+	WebPrefix         string                   `val:"${server.web_prefix}"`
+	APIPrefix         string                   `val:"${server.api_prefix}"`
+	Static            string                   `val:"${server.static}"`
+	HTMLCompress      bool                     `val:"${server.html_compress}"`
+	AdminTemplateDir  string                   `val:"${server.admin_template_dir}"`
 }
 
 func (c *Controller) StartUp() {
@@ -82,16 +82,16 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 		buildOption: true,
 	}
 	// auth
-	router.Any("/auth/init", s.AdminAuthCtrl.InitRole)
+	//router.Any("/auth/init", s.AdminAuthCtrl.InitRole)
 	router.POST("/auth/login", s.AdminAuthCtrl.Login)
 	router.Any("/auth/info", s.AdminAuthCtrl.Info)
 
 	// channel
-	router.GET("/channel/page_:page", s.AdminChannelCtrl.Page)
-	router.GET("/channel/tree", s.AdminChannelCtrl.Tree)
-	router.POST("/channel", s.AdminChannelCtrl.Save)
-	router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
-	router.GET("/channel/:id", s.AdminChannelCtrl.Get)
+	//router.GET("/channel/page_:page", s.AdminChannelCtrl.Page)
+	//router.GET("/channel/tree", s.AdminChannelCtrl.Tree)
+	//router.POST("/channel", s.AdminChannelCtrl.Save)
+	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
+	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)
 	// articcle
 	//router.POST("/article/publish", c.AdminArticleCtrl.Publish)
 	//router.GET("/article/page_:page", c.AdminArticleCtrl.Page)
