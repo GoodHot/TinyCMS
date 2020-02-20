@@ -17,7 +17,10 @@
    -->
   <div :class="classes">
     <div class="d-lg-none">
-      <b-button @click="showHorizontalNavigation" block variant="light">TinyCMS</b-button>
+      <b-button @click="showHorizontalNavigation" block variant="light" class="d-flex justify-content-between align-items-center">
+        TinyCMS
+        <TIcon icon="bars" />
+      </b-button>
     </div>
     <div ref="horizontalNavigation" class="d-none d-lg-block mt-2 mt-lg-0">
       <div class="t-nav-between">

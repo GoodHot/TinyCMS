@@ -87,7 +87,7 @@
         </div>
       </TBlock>
     </div>
-    <b-modal v-model="categoryVisible">
+    <b-modal v-model="categoryVisible" size="lg" title="创建分类" no-close-on-backdrop>
       <CategoryModal></CategoryModal>
     </b-modal>
   </div>
