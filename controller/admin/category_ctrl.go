@@ -1,11 +1,29 @@
 package admin
 
 import (
+	"github.com/GoodHot/TinyCMS/common/ctrl"
+	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
 )
 
 type AdminCategoryCtrl struct {
-	ChannelCategory *service.CategoryService `ioc:"auto"`
+	CategoryService *service.CategoryService `ioc:"auto"`
+}
+
+func (s *AdminCategoryCtrl) Save(ctx *ctrl.HTTPContext) error {
+	category := new(model.Category)
+	if err := ctx.Bind(category); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	if err := s.CategoryService.Save(category); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	return ctx.ResultOK()
+}
+
+func (s *AdminCategoryCtrl) Tree(ctx *ctrl.HTTPContext) error {
+	ctx.Put("tree", s.CategoryService.Tree())
+	return ctx.ResultOK()
 }
 
 //func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {

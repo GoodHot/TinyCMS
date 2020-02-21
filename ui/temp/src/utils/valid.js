@@ -42,6 +42,16 @@ valid.methods["length"] = function(elem) {
   return elem.valid
 }
 
+valid.methods.regex = function(elem) {
+  const {reg, msg} = elem.regex
+  const re = new RegExp(reg, 'g')
+  if (re.test(elem.value)) {
+    return true
+  }
+  elem.valid = false
+  elem.msg = msg
+}
+
 valid.checkElement = function(key, elem) {
   for (let type in elem) {
     if (type === 'require' && elem[type] && !this.methods.require(elem)) {
@@ -51,6 +61,9 @@ valid.checkElement = function(key, elem) {
       return false
     }
     if (type === 'length' && elem[type] && !this.methods[type](elem)) {
+      return false
+    }
+    if (type === 'regex' && elem[type] && !this.methods.regex(elem)) {
       return false
     }
   }

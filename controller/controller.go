@@ -87,9 +87,11 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.Any("/auth/info", s.AdminAuthCtrl.Info)
 
 	// channel
+	router.POST("/category", s.AdminCategoryCtrl.Save)
+	router.GET("/category/tree", s.AdminCategoryCtrl.Tree)
 	//router.GET("/channel/page_:page", s.AdminChannelCtrl.Page)
-	//router.GET("/channel/tree", s.AdminChannelCtrl.Tree)
-	//router.POST("/channel", s.AdminChannelCtrl.Save)
+
+
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)
 	// articcle

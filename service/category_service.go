@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 )
 
@@ -8,6 +9,53 @@ type CategoryService struct {
 	ArticleService *ArticleService `ioc:"auto"`
 	PageSize       int             `val:"${website.page_size}"`
 	ORM            *orm.ORM        `ioc:"auto"`
+}
+
+func (s *CategoryService) Get(id int) (*model.Category, error) {
+	model := &model.Category{}
+	err := s.ORM.DB.Find(model, id).Error
+	return model, err
+}
+
+func (s *CategoryService) Save(category *model.Category) error {
+	if category.ID == 0 {
+		return s.ORM.DB.Create(category).Error
+	}
+	tmp, _ := s.Get(int(category.ID))
+	category.Sort = tmp.Sort
+	category.ParentId = tmp.ParentId
+	return s.ORM.DB.Save(category).Error
+}
+
+func (s *CategoryService) Tree() []*CategoryTree {
+	return s.tree(0)
+}
+
+type CategoryTree struct {
+	ID       uint            `json:"id"`
+	Name     string          `json:"name"`
+	Children []*CategoryTree `json:"children"`
+	Channel  *model.Category `json:"channel"`
+}
+
+func (s *CategoryService) tree(parentId uint) []*CategoryTree {
+	var channels []*model.Category
+	s.ORM.DB.Where("parent_id = ?", parentId).Find(&channels)
+	if len(channels) == 0 {
+		return nil
+	}
+	var trees []*CategoryTree
+	for _, v := range channels {
+		child := s.tree(v.ID)
+		tmp := &CategoryTree{
+			ID:       v.ID,
+			Name:     v.Name,
+			Children: child,
+			Channel:  v,
+		}
+		trees = append(trees, tmp)
+	}
+	return trees
 }
 
 //func (s *ChannelService) Page(page, parentId int) *orm.Page {

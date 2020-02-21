@@ -12,9 +12,14 @@
               <b-button class="btn-block-option" variant="light"><TIcon icon="settings" pack="si" /></b-button>
             </b-button-group>
           </template>
-          <TList class="push" :data="category"></TList>
+          <TList class="push" rowkey="id" :data="category"></TList>
         </TBlock>
         <TBlock title="标签" icon="tags">
+          <template slot="options">
+            <b-button-group size="sm">
+              <b-button class="btn-block-option" variant="light"><TIcon icon="settings" pack="si" /></b-button>
+            </b-button-group>
+          </template>
           <TList class="push" :data="category"></TList>
           <div class="text-center push">
             <b-button size="sm" variant="light">查看所有标签</b-button>
@@ -87,14 +92,16 @@
         </div>
       </TBlock>
     </div>
-    <b-modal v-model="categoryVisible" size="lg" title="创建分类" no-close-on-backdrop>
-      <CategoryModal></CategoryModal>
+    <b-modal v-model="categoryVisible" size="lg" title="创建分类" no-close-on-backdrop @ok="submitCategory">
+      <CategoryModal ref="categoryModal"></CategoryModal>
     </b-modal>
   </div>
 </template>
 <script>
+import {categoryTree} from '@/api/category'
 import ArticleTable from './comp/ArticleTable'
 import CategoryModal from './comp/CategoryModal'
+
 export default {
   components: {
     ArticleTable,
@@ -153,54 +160,11 @@ export default {
       ],
       isSelectAll: false,
       deleteIds: [],
-      category: [
-        {
-          title: '全部分类',
-          icon: 'book',
-          remark: '3篇',
-          img: 'http://ww1.sinaimg.cn/mw1024/00745YaMgy1gbyi3gl2mhj33402c0hdw.jpg'
-        },
-        {
-          title: '全部分类1',
-          icon: 'book',
-          remark: '3篇'
-        },
-        {
-          title: '全部分类2',
-          icon: 'book',
-          remark: '3篇'
-        },
-        {
-          title: '全部分类3',
-          icon: 'book',
-          remark: '3篇',
-          children: [
-            {
-              title: '全部分类4',
-              icon: 'book',
-              remark: '3篇',
-              children: [
-                {
-                  title: '全部分类4',
-                  icon: 'book',
-                  remark: '3篇'
-                },
-                {
-                  title: '全部分类5',
-                  icon: 'book',
-                  remark: '3篇'
-                }
-              ]
-            },
-            {
-              title: '全部分类5',
-              icon: 'book',
-              remark: '3篇'
-            }
-          ]
-        }
-      ]
+      category: []
     }
+  },
+  mounted() {
+    this.getCategoryTree()
   },
   methods: {
     showCategory() {
@@ -219,6 +183,36 @@ export default {
     selectedHandler(vals, isAll) {
       this.deleteIds = vals
       this.isSelectAll = isAll
+    },
+    submitCategory(bvModalEvt) {
+      bvModalEvt.preventDefault()
+      this.$refs.categoryModal.submit()
+      return false
+    },
+    getCategoryTree() {
+      categoryTree().then(res => {
+        if (res.tree) {
+          console.log(res.tree)
+          this.category = this.setCategoryTree(res.tree)
+        }
+      })
+    },
+    setCategoryTree(tree) {
+      const result = []
+      for (let i in tree) {
+        const data = tree[i]
+        const cat = {
+          title: data.name,
+          icon: 'book',
+          remark: `${data.article_count ? data.article_count : 0}篇`,
+          img: data.icon
+        }
+        if (data.children && data.children.length > 0) {
+          cat.children = this.setCategoryTree(data.children)
+        }
+        result.push(cat)
+      }
+      return result
     }
   }
 };

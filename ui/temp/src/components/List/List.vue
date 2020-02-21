@@ -8,7 +8,7 @@
     <slot v-if="!data"></slot>
     <TListItem
       v-for="item of data"
-      :key="item.title + item.icon"
+      :key="item[rowkey]"
       :img="item.img"
       :children="item.children"
       :icon="item.icon"
@@ -26,6 +26,9 @@ export default {
       default() {
         return null;
       }
+    },
+    rowkey: {
+      type: String
     }
   }
 };
