@@ -4,7 +4,7 @@ import (
 	"github.com/GoodHot/TinyCMS/orm"
 )
 
-type ChannelCategory struct {
+type CategoryService struct {
 	ArticleService *ArticleService `ioc:"auto"`
 	PageSize       int             `val:"${website.page_size}"`
 	ORM            *orm.ORM        `ioc:"auto"`

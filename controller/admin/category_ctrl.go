@@ -5,7 +5,7 @@ import (
 )
 
 type AdminCategoryCtrl struct {
-	ChannelCategory *service.ChannelCategory `ioc:"auto"`
+	ChannelCategory *service.CategoryService `ioc:"auto"`
 }
 
 //func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {

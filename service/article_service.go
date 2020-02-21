@@ -9,11 +9,11 @@ import (
 )
 
 type ArticleService struct {
-	ChannelService *ChannelService `ioc:"auto"`
-	TagService     *TagService     `ioc:"auto"`
-	ORM            *orm.ORM        `ioc:"auto"`
-	PageSize       int             `val:"${website.page_size}"`
-	TablePrefix    string          `val:"${db.table_prefix}"`
+	CategoryService *CategoryService `ioc:"auto"`
+	TagService     *TagService      `ioc:"auto"`
+	ORM            *orm.ORM         `ioc:"auto"`
+	PageSize       int              `val:"${website.page_size}"`
+	TablePrefix    string           `val:"${db.table_prefix}"`
 }
 
 func (s *ArticleService) GetContent(tableName string, id int) *model.ArticleContent {
@@ -23,54 +23,55 @@ func (s *ArticleService) GetContent(tableName string, id int) *model.ArticleCont
 }
 
 func (s *ArticleService) Publish(article *model.ArticlePublish) error {
-	channel, err := s.ChannelService.Get(int(article.Article.ChannelID))
-	if err != nil {
-		return err
-	}
-	if channel == nil {
-		return errors.New("this channel not exists")
-	}
-	tableName := s.contentTableName(channel)
-	err = s.createContentTable(tableName)
-	if err != nil {
-		return err
-	}
-	return s.ORM.Tx(func(db *gorm.DB) error {
-		err := db.Table(tableName).Create(article.Content).Error
-		if err != nil {
-			return err
-		}
-		article.Article.ContentTable = s.contentTableName(channel)
-		article.Article.Views = 0
-		article.Article.ContentID = article.Content.ID
-		if len(article.Tags) > 0 {
-			tagStr := bytes.NewBufferString("")
-			for _, t := range article.Tags {
-				tag := s.TagService.GetByName(t.Name)
-				if tag.Name == "" {
-					t.ArticleCount = 0
-					db.Create(t)
-					tag = t
-				}
-				tagStr.WriteString(t.Name)
-				tagStr.WriteString(",")
-				err := db.Model(&tag).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
-				if err != nil {
-					return err
-				}
-				rel := &model.RelTagArticle{}
-				rel.ArticleID = article.Article.ID
-				rel.TagID = t.ID
-				err = db.Create(rel).Error
-				if err != nil {
-					return err
-				}
-			}
-			article.Article.Tags = tagStr.String()
-		}
-		db.Create(article.Article)
-		return nil
-	})
+	return nil
+	//channel, err := s.CategoryService.Get(int(article.Article.ChannelID))
+	//if err != nil {
+	//	return err
+	//}
+	//if channel == nil {
+	//	return errors.New("this channel not exists")
+	//}
+	//tableName := s.contentTableName(channel)
+	//err = s.createContentTable(tableName)
+	//if err != nil {
+	//	return err
+	//}
+	//return s.ORM.Tx(func(db *gorm.DB) error {
+	//	err := db.Table(tableName).Create(article.Content).Error
+	//	if err != nil {
+	//		return err
+	//	}
+	//	article.Article.ContentTable = s.contentTableName(channel)
+	//	article.Article.Views = 0
+	//	article.Article.ContentID = article.Content.ID
+	//	if len(article.Tags) > 0 {
+	//		tagStr := bytes.NewBufferString("")
+	//		for _, t := range article.Tags {
+	//			tag := s.TagService.GetByName(t.Name)
+	//			if tag.Name == "" {
+	//				t.ArticleCount = 0
+	//				db.Create(t)
+	//				tag = t
+	//			}
+	//			tagStr.WriteString(t.Name)
+	//			tagStr.WriteString(",")
+	//			err := db.Model(&tag).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
+	//			if err != nil {
+	//				return err
+	//			}
+	//			rel := &model.RelTagArticle{}
+	//			rel.ArticleID = article.Article.ID
+	//			rel.TagID = t.ID
+	//			err = db.Create(rel).Error
+	//			if err != nil {
+	//				return err
+	//			}
+	//		}
+	//		article.Article.Tags = tagStr.String()
+	//	}
+	//	db.Create(article.Article)
+	//	return nil
+	//})
 }
 
 func (s *ArticleService) Edit(article *model.ArticlePublish) error {
@@ -142,8 +143,8 @@ func (s *ArticleService) GetById(id int) *model.Article {
 	return &article
 }
 
-func (s *ArticleService) contentTableName(channel *model.Channel) string {
-	return s.TablePrefix + "article_content_" + channel.Title
+func (s *ArticleService) contentTableName(category *model.Category) string {
+	return s.TablePrefix + "article_content_" + category.Path
 }
 
 func (s *ArticleService) createContentTable(tableName string) error {

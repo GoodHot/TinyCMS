@@ -5,7 +5,7 @@ import "github.com/GoodHot/TinyCMS/orm"
 type Category struct {
 	orm.Model
 	Name         string      `json:"name"`
-	Title        string      `json:"title"`
+	Path         string      `json:"path"`
 	SEOTitle     string      `json:"seo_title"`
 	Desccription string      `json:"desccription"`
 	Keyword      string      `json:"keyword"`

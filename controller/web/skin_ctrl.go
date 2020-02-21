@@ -3,7 +3,6 @@ package web
 import (
 	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/common/times"
-	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
 	"html/template"
 	"io"
@@ -13,7 +12,7 @@ import (
 
 type SkinCtrl struct {
 	DictService    *service.DictService    `ioc:"auto"`
-	ChannelService *service.ChannelService `ioc:"auto"`
+	CategoryService *service.CategoryService `ioc:"auto"`
 	TemplateDir    string                  `val:"${server.skin_template_dir}"`
 	HTMLCompress   bool                    `val:"${server.html_compress}"`
 	templateSkin   string
@@ -45,17 +44,17 @@ func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interfa
 				}
 				return dict.Value
 			},
-			"channelTree": func() []*service.ChannelTree {
-				channels := s.ChannelService.Tree()
-				return channels
-			},
-			"getChannel": func(cid uint) *model.Channel {
-				channel, err := s.ChannelService.Get(int(cid))
-				if err != nil {
-					return &model.Channel{}
-				}
-				return channel
-			},
+			//"channelTree": func() []*service.ChannelTree {
+			//	channels := s.ChannelService.Tree()
+			//	return channels
+			//},
+			//"getChannel": func(cid uint) *model.Channel {
+			//	channel, err := s.ChannelService.Get(int(cid))
+			//	if err != nil {
+			//		return &model.Channel{}
+			//	}
+			//	return channel
+			//},
 			"split": func(str string) []string {
 				return strings.Split(str, ",")
 			},

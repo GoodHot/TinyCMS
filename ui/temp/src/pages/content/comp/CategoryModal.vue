@@ -4,8 +4,8 @@
       <b-form-input placeholder="分类名称"></b-form-input>
     </b-form-group>
 
-    <b-form-group label="分类标题" label-for="input-1">
-      <b-form-input id="input-2" required placeholder="分类标题"></b-form-input>
+    <b-form-group label="分类路径" label-for="input-1">
+      <b-form-input id="input-2" required placeholder="分类路径"></b-form-input>
     </b-form-group>
 
     <b-form-group label="SEO标题" label-for="input-1">

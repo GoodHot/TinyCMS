@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Components from './components'
+import Storage from 'vue-ls'
+import dialog from './assets/js/dialog'
 
 // import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -19,6 +21,10 @@ for (const key in Components) {
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
+// vue.ls
+Vue.use(Storage)
+// dialog
+Vue.prototype.$dialog = dialog
 
 new Vue({
   router,
