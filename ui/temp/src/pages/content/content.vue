@@ -12,7 +12,11 @@
               <b-button class="btn-block-option" variant="light"><TIcon icon="settings" pack="si" /></b-button>
             </b-button-group>
           </template>
-          <TList class="push" rowkey="id" :data="category"></TList>
+          <TList rowkey="id" :data="defaultCategory"></TList>
+          <TList class="push" rowkey="id" v-if="category && category.length > 0" :data="category"></TList>
+          <div class="text-center push mt-3" v-if="!category || category.length == 0">
+            <b-button size="sm" variant="light" @click="categoryVisible = !categoryVisible">创建第一个分类</b-button>
+          </div>
         </TBlock>
         <TBlock title="标签" icon="tags">
           <template slot="options">
@@ -160,6 +164,18 @@ export default {
       ],
       isSelectAll: false,
       deleteIds: [],
+      defaultCategory: [
+        {
+          title: '未归类',
+          icon: 'boxes',
+          remark: '0篇'
+        },
+        {
+          title: '草稿箱',
+          icon: 'file-signature',
+          remark: '0篇'
+        }
+      ],
       category: []
     }
   },
@@ -192,7 +208,6 @@ export default {
     getCategoryTree() {
       categoryTree().then(res => {
         if (res.tree) {
-          console.log(res.tree)
           this.category = this.setCategoryTree(res.tree)
         }
       })
