@@ -73,11 +73,15 @@ export default {
         username: this.form.username.value,
         password: this.form.password.value
       }).then(res => {
-        const _this = this
         Vue.ls.set('ACCESS-TOKEN', res.info.token)
-        this.$dialog.success('登录成功', '', () => {
-          _this.$router.push('/')
+        this.$bvToast.toast(`欢迎回来,${res.info.nickname}`, {
+          title: `登录成功`,
+          variant: 'success',
+          solid: true
         })
+        window.setTimeout(() => {
+          this.$router.push('/')
+        }, 2000)
       })
       return false
 

@@ -124,8 +124,8 @@ export default {
         icon: this.form.icon.value,
         parent_id: this.form.parent_id.value
       }
-      saveCategory(param).then(res => {
-        console.log(res)
+      saveCategory(param).then(() => {
+        this.$emit('savedCategory')
       })
     },
     getCategoryTree() {

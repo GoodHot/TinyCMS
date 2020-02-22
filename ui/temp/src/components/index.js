@@ -4,6 +4,7 @@ import TIcon from './Icon/Icon'
 import TBlock from './Block/Block'
 import TList from './List/List'
 import TListItem from './List/ListItem'
+import TMarkdown from './Markdown/Markdown'
 
 export default {
   TNavigation,
@@ -11,5 +12,6 @@ export default {
   TIcon,
   TBlock,
   TList,
-  TListItem
+  TListItem,
+  TMarkdown
 }

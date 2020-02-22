@@ -4,7 +4,7 @@ import router from './router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Components from './components'
 import Storage from 'vue-ls'
-import dialog from './assets/js/dialog'
+import dialog from './utils/dialog'
 
 // import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

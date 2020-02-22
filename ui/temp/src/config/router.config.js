@@ -26,6 +26,11 @@ export const routerMap = [
         path: '/content',
         name: 'content',
         component: () => import('@/pages/content/content'),
+      },
+      {
+        path: '/publish',
+        name: 'publish',
+        component: () => import('@/pages/publish/publish'),
       }
     ]
   }

@@ -70,7 +70,6 @@
   z-index: 400;
 }
 .t-publish-focus_ovr {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
