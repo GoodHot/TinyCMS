@@ -2,8 +2,8 @@
   <div class="push">
     <div class="t-publish-content">
       <input class="t-publish-title" placeholder="请输入文章标题" @focus="showFocusOver = true" />
-      <TMarkdown @click="showFocusOver = true"></TMarkdown>
-      <ArticleOption @showAdvance="showAdvance = !showAdvance"></ArticleOption>
+      <TMarkdown ref="markdown" @click="showFocusOver = true"></TMarkdown>
+      <ArticleOption @showAdvance="showAdvance = !showAdvance"  @onpublish="publishHandler" @onsave="saveHandler"></ArticleOption>
       <AdvancedOption v-show="showAdvance"></AdvancedOption>
     </div>
     <transition name="fade">
@@ -27,6 +27,12 @@ export default {
     }
   },
   methods: {
+    publishHandler() {
+      console.log('publish', this.$refs.markdown.getValue())
+    },
+    saveHandler() {
+      console.log('saved', this.$refs.markdown.getValue())
+    }
   }
 }
 </script>

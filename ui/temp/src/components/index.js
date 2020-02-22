@@ -5,6 +5,7 @@ import TBlock from './Block/Block'
 import TList from './List/List'
 import TListItem from './List/ListItem'
 import TMarkdown from './Markdown/Markdown'
+import TCategory from './Category/Category'
 
 export default {
   TNavigation,
@@ -13,5 +14,6 @@ export default {
   TBlock,
   TList,
   TListItem,
-  TMarkdown
+  TMarkdown,
+  TCategory
 }

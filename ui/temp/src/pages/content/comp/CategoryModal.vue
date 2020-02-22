@@ -1,10 +1,9 @@
 <template>
   <b-form>
     <b-form-group label="上级分类" >
-      <b-form-select v-model="form.parent_id.value" :options="categoryTree"></b-form-select>
-      <b-form-invalid-feedback :state="form.parent_id.valid">
-        {{form.parent_id.msg}}
-      </b-form-invalid-feedback>
+      <b-dropdown :text="categoryName" variant="outline-secondary" class="t-create-category" style="width: 100%" >
+        <TCategory :defaultCategory="defaultCategory" @selectItem="selectItem"></TCategory>
+      </b-dropdown>
     </b-form-group>
 
     <b-form-group label="分类名称" >
@@ -62,7 +61,7 @@
 </template>
 <script>
 import valid from '@/utils/valid'
-import {categoryTree, saveCategory} from '@/api/category'
+import {saveCategory} from '@/api/category'
 
 export default {
   data() {
@@ -99,13 +98,17 @@ export default {
           value: ''
         }
       },
-      categoryTree: [
-        { value: null, text: '顶级分类' }
-      ]
+      defaultCategory: [
+        {
+          id: null,
+          title: "顶级分类",
+          icon: "list-ul",
+          remark: "0篇",
+          active: false
+        }
+      ],
+      categoryName: '顶级分类'
     }
-  },
-  mounted() {
-    this.getCategoryTree()
   },
   methods: {
     submit() {
@@ -128,33 +131,9 @@ export default {
         this.$emit('savedCategory')
       })
     },
-    getCategoryTree() {
-      categoryTree().then(res => {
-        if (res.tree) {
-          console.log(res.tree)
-          this.setCategoryTree(0, res.tree)
-        }
-      })
-    },
-    setCategoryTree(level, tree) {
-      let placeholder = ''
-      for (let i = 0 ; i < level ; i++) {
-        if (i === 0) {
-          placeholder += '|--'
-        } else {
-          placeholder = '&nbsp;&nbsp;&nbsp;&nbsp;' + placeholder
-        }
-      }
-      for (let i in tree) {
-        const data = tree[i]
-        this.categoryTree.push({
-          value: data.id,
-          html: placeholder + data.name
-        })
-        if (data.children && data.children.length > 0) {
-          this.setCategoryTree((level + 1), data.children)
-        }
-      }
+    selectItem(row) {
+      this.form.parent_id.value = row.id
+      this.categoryName = row.title
     }
   }
 }

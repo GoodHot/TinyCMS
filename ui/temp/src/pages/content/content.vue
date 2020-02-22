@@ -20,9 +20,8 @@
               </b-button>
             </b-button-group>
           </template>
-          <TList rowkey="id" :data="defaultCategory"></TList>
-          <TList class="push" rowkey="id" v-if="category && category.length > 0" :data="category"></TList>
-          <div class="text-center push mt-3" v-if="!category || category.length == 0">
+          <TCategory class="push" ref="categoryList" :defaultCategory="defaultCategory" @inited="categoryInitedHandler"></TCategory>
+          <div class="text-center push mt-3" v-if="!hasCategoryData">
             <b-button size="sm" variant="light" @click="categoryVisible = !categoryVisible">创建第一个分类</b-button>
           </div>
         </TBlock>
@@ -34,7 +33,7 @@
               </b-button>
             </b-button-group>
           </template>
-          <TList class="push" :data="category"></TList>
+          <TList class="push"></TList>
           <div class="text-center push">
             <b-button size="sm" variant="light">查看所有标签</b-button>
           </div>
@@ -148,7 +147,6 @@
   </div>
 </template>
 <script>
-import { categoryTree } from "@/api/category";
 import ArticleTable from "./comp/ArticleTable";
 import CategoryModal from "./comp/CategoryModal";
 
@@ -210,23 +208,22 @@ export default {
       ],
       isSelectAll: false,
       deleteIds: [],
+      hasCategoryData: false,
       defaultCategory: [
         {
           title: "未归类",
           icon: "boxes",
-          remark: "0篇"
+          remark: "0篇",
+          active: false
         },
         {
           title: "草稿箱",
           icon: "file-signature",
-          remark: "0篇"
+          remark: "0篇",
+          active: false
         }
-      ],
-      category: []
+      ]
     };
-  },
-  mounted() {
-    this.getCategoryTree();
   },
   methods: {
     showCategory() {
@@ -258,31 +255,10 @@ export default {
         solid: true
       })
       this.categoryVisible = false
-      this.getCategoryTree()
+      this.$refs.categoryList.reload()
     },
-    getCategoryTree() {
-      categoryTree().then(res => {
-        if (res.tree) {
-          this.category = this.setCategoryTree(res.tree);
-        }
-      });
-    },
-    setCategoryTree(tree) {
-      const result = [];
-      for (let i in tree) {
-        const data = tree[i];
-        const cat = {
-          title: data.name,
-          icon: "book",
-          remark: `${data.article_count ? data.article_count : 0}篇`,
-          img: data.icon
-        };
-        if (data.children && data.children.length > 0) {
-          cat.children = this.setCategoryTree(data.children);
-        }
-        result.push(cat);
-      }
-      return result;
+    categoryInitedHandler(category) {
+      this.hasCategoryData = category && category.length > 0
     }
   }
 };

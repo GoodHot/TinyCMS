@@ -8,7 +8,8 @@ import Vditor from 'vditor'
 export default {
   data() {
     return {
-      markdown: null
+      markdown: null,
+      contentEditor: null
     }
   },
   mounted() {
@@ -16,10 +17,19 @@ export default {
   },
   methods: {
     initMarkdown() {
-      new Vditor('vditor')
+      this.contentEditor = new Vditor('vditor', {
+        tab: '  ',
+        cache: false,
+      })
     },
     clickHandler(e) {
       this.$emit('click', e)
+    },
+    getValue() {
+      return {
+        markdown: this.contentEditor.getValue(),
+        html: this.contentEditor.getHTML()
+      }
     }
   }
 }

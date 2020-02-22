@@ -48,6 +48,15 @@
   padding: 0 .5rem;
 }
 
+.t-publish-option .options .t-publish-option-category {
+  width:250px
+}
+
+.t-publish-option .options .t-publish-option-category .dropdown-menu {
+  width: 100%;
+  padding: 10px;
+}
+
 .t-publish-option .options .tags-show i {
   float: left;
   line-height: 39px;
@@ -94,4 +103,9 @@
     margin-top: 5px;
     width: 100%;
   }
+}
+
+.t-create-category .dropdown-menu {
+  width: 100%;
+  padding: 10px;
 }

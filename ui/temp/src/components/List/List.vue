@@ -8,13 +8,17 @@
     <slot v-if="!data"></slot>
     <TListItem
       v-for="item of data"
-      :key="item[rowkey]"
+      :key="item[rowKey]"
       :img="item.img"
       :children="item.children"
       :icon="item.icon"
       :title="item.title"
       :remark="item.remark"
       :remarkType="item.remarkType"
+      :row="item"
+      :rowKey="rowKey"
+      v-model="item.active"
+      @onclick="selectItem"
     ></TListItem>
   </ul>
 </template>
@@ -27,9 +31,14 @@ export default {
         return null;
       }
     },
-    rowkey: {
+    rowKey: {
       type: String
     }
+  },
+  methods: {
+    selectItem(row) {
+      this.$emit('onclick', row)
+    }
   }
-};
+}
 </script>
