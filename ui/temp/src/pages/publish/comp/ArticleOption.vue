@@ -8,14 +8,7 @@
         <TIcon icon="settings" pack="si" />
         高级设置
       </b-button>
-      <span class="tags-show">
-        <TIcon icon="tag" pack="si" class="mr-1" />
-        <!-- <b-badge variant="dark">Java</b-badge>
-        <b-badge variant="dark">Java</b-badge>
-        <b-badge variant="dark">Java</b-badge>
-        <b-badge variant="dark">Java</b-badge> -->
-      </span>
-      <b-form-input placeholder="输入标签，按回车键确认" class="form-control-alt tags-input"></b-form-input>
+      <TagInput></TagInput>
     </div>
     <div>
       <b-button class="mr-2" variant="success" @click="$emit('onpublish', $event)">
@@ -31,7 +24,11 @@
   </div>
 </template>
 <script>
+import TagInput from './TagInput'
 export default {
+  components:{
+    TagInput
+  },
   data() {
     return {
       categoryName: '选择分类'

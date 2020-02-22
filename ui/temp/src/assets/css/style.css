@@ -31,14 +31,50 @@
   float: left;
 }
 
-.t-publish-option .options .tags-input {
+.t-publish-option-tags {
+  float: left;
+}
+
+.t-publish-option-tags .tags-input {
+  position: relative;
+  display: inline-block;
+}
+
+.t-publish-option-tags .tags-input .form-control-alt {
   float: left;
   width: 200px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.t-publish-option .options .tags-show {
+.t-publish-option-tags .tags-input .note-menu {
+  position: absolute;
+  display: block;
+  top: 40px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: .25rem;
+}
+
+.t-publish-option-tags .tags-input .note-menu ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.t-publish-option-tags .tags-input .note-menu ul .active {
+  background: #ddd;
+}
+.t-publish-option-tags .tags-input .note-menu ul li {
+  padding: .25rem .5rem;
+  cursor: pointer;
+}
+
+.t-publish-option-tags .tags-input .note-menu ul li:hover {
+  background: #efefef;
+}
+
+.t-publish-option-tags .tags-show {
   float: left;
   padding: 0 .25rem;
   background: #f5f5f5;
@@ -48,6 +84,22 @@
   padding: 0 .5rem;
 }
 
+.t-publish-option-tags .tags-show .badge span {
+  cursor: pointer;
+}
+
+.t-publish-option-tags .tags-show i {
+  float: left;
+  line-height: 39px;
+}
+
+.t-publish-option-tags .tags-show .badge {
+  margin-left: .25rem;
+  float: left;
+  margin-top: 10px;
+}
+
+
 .t-publish-option .options .t-publish-option-category {
   width:250px
 }
@@ -55,17 +107,6 @@
 .t-publish-option .options .t-publish-option-category .dropdown-menu {
   width: 100%;
   padding: 10px;
-}
-
-.t-publish-option .options .tags-show i {
-  float: left;
-  line-height: 39px;
-}
-
-.t-publish-option .options .tags-show .badge {
-  margin-left: .25rem;
-  float: left;
-  margin-top: 10px;
 }
 
 .t-publish-advanced {
