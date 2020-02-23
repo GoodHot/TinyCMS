@@ -92,7 +92,11 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.GET("/category/tree", s.AdminCategoryCtrl.Tree)
 	//router.GET("/channel/page_:page", s.AdminChannelCtrl.Page)
 
+	// tag
 	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search)
+
+	// upload
+	router.POST("/upload", s.AdminUploadCtrl.Upload)
 
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)

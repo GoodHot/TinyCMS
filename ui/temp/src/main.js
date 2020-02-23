@@ -5,6 +5,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import Components from './components'
 import Storage from 'vue-ls'
 import dialog from './utils/dialog'
+import { config } from '@/utils/request'
 
 // import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -25,6 +26,13 @@ Vue.use(IconsPlugin)
 Vue.use(Storage)
 // dialog
 Vue.prototype.$dialog = dialog
+
+Vue.prototype.assetsURL = function (src) {
+  if (src.startsWith('http')) {
+    return src
+  }
+  return config.assetsURL + src
+}
 
 new Vue({
   router,

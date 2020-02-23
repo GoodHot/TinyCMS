@@ -1,7 +1,7 @@
 <template>
   <div class="push">
     <div class="t-publish-content">
-      <input class="t-publish-title" placeholder="请输入文章标题" @focus="showFocusOver = true" />
+      <input class="t-publish-title" placeholder="请输入文章标题" v-model="postData.title" @focus="showFocusOver = true" />
       <TMarkdown ref="markdown" @click="showFocusOver = true"></TMarkdown>
       <ArticleOption @showAdvance="showAdvance = !showAdvance"  @onpublish="publishHandler" @onsave="saveHandler"></ArticleOption>
       <AdvancedOption v-show="showAdvance"></AdvancedOption>
@@ -23,7 +23,10 @@ export default {
   data() {
     return {
       showAdvance: false,
-      showFocusOver: false
+      showFocusOver: false,
+      postData: {
+        title: 'Hello World'
+      }
     }
   },
   methods: {

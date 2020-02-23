@@ -49,13 +49,7 @@
     </b-form-group>
 
     <b-form-group label="分类图标">
-      <b-form-file
-        placeholder="上传图片"
-        drop-placeholder="Drop file here..."
-      ></b-form-file>
-      <b-form-invalid-feedback :state="form.icon.valid">
-        {{form.icon.msg}}
-      </b-form-invalid-feedback>
+      <TUpload></TUpload>
     </b-form-group>
   </b-form>
 </template>

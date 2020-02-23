@@ -26,9 +26,16 @@ export default {
       this.$emit('click', e)
     },
     getValue() {
+      const htmlProm = this.contentEditor.getHTML()
+      let html = ''
+      if (typeof(htmlProm) === String) {
+        html = htmlProm
+      } else {
+        html = this.contentEditor.vditor.lute.Md2HTML(this.contentEditor.getValue())
+      }
       return {
         markdown: this.contentEditor.getValue(),
-        html: this.contentEditor.getHTML()
+        html: html
       }
     }
   }

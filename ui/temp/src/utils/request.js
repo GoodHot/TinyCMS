@@ -71,5 +71,6 @@ service.interceptors.response.use((response) => {
 
 export {
   service as request,
-  ACCESS_TOKEN
+  ACCESS_TOKEN,
+  requestConfig as config
 }

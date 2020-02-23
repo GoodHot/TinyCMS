@@ -26,7 +26,7 @@ type LocalUpload struct {
 
 func (s *LocalUpload) Upload(file *multipart.FileHeader) (*model.Upload, error) {
 	// check size
-	if file.Size > int64(s.MaxSize) {
+	if file.Size > int64(s.MaxSize * 1024) {
 		return nil, errors.New("Upload file must smaller than " + strconv.Itoa(s.MaxSize) + "k")
 	}
 	tmpFile, err := file.Open()

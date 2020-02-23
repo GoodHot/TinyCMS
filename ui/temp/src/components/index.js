@@ -6,6 +6,7 @@ import TList from './List/List'
 import TListItem from './List/ListItem'
 import TMarkdown from './Markdown/Markdown'
 import TCategory from './Category/Category'
+import TUpload from './Upload/Upload'
 
 export default {
   TNavigation,
@@ -15,5 +16,6 @@ export default {
   TList,
   TListItem,
   TMarkdown,
-  TCategory
+  TCategory,
+  TUpload
 }

@@ -17,13 +17,24 @@
             label="封面图"
             description="当不上传时，会自动获取文章中的第一张图片作为封面图"
           >
-            <b-form-file
-              placeholder="点击上传图片"
-              drop-placeholder="Drop file here..."
-            ></b-form-file>
+            <TUpload @uploaded="uploadHandler"></TUpload>
           </b-form-group>
         </b-form>
       </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      cover: null
+    }
+  },
+  methods: {
+    uploadHandler(src) {
+      this.cover = src
+    }
+  }
+}
+</script>
