@@ -8,6 +8,7 @@
             description="当不填写时，会自动从文章中获取解析简介信息"
           >
             <b-form-textarea
+            v-model="description"
               rows="3"
               max-rows="6"
             ></b-form-textarea>
@@ -28,12 +29,19 @@
 export default {
   data() {
     return {
-      cover: null
+      cover: null,
+      description: ''
     }
   },
   methods: {
     uploadHandler(src) {
       this.cover = src
+    },
+    getValue() {
+      return {
+        cover: this.cover,
+        description: this.description
+      }
     }
   }
 }

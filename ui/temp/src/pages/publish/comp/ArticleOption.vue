@@ -8,7 +8,7 @@
         <TIcon icon="settings" pack="si" />
         高级设置
       </b-button>
-      <TagInput></TagInput>
+      <TagInput ref="tags"></TagInput>
     </div>
     <div>
       <b-button class="mr-2" variant="success" @click="$emit('onpublish', $event)">
@@ -31,12 +31,21 @@ export default {
   },
   data() {
     return {
-      categoryName: '选择分类'
+      categoryName: '选择分类',
+      categoryId: null
     }
   },
   methods: {
     selectItem(row) {
       this.categoryName = ` 分类: ${row.title} `
+      this.categoryId = row.id
+    },
+    getValue() {
+      const tags = this.$refs.tags.getValue()
+      return {
+        category_id: this.categoryId,
+        tags
+      }
     }
   }
 }

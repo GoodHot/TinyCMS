@@ -93,6 +93,9 @@ export default {
       setTimeout(() => {
         this.showHint = false
       }, 200)
+    },
+    getValue() {
+      return this.tags
     }
   }
 }

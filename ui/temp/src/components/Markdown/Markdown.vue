@@ -1,11 +1,21 @@
 <template>
-  <div id="vditor" @click="clickHandler"></div>
+  <div id="vditor" @click="clickHandler">{{value}}</div>
 </template>
 <script>
 import '../../assets/vditor/index.scss'
 import Vditor from 'vditor'
 
 export default {
+  model: {
+    prop: 'value',
+    event: 'value.change'
+  },
+  props: {
+    value: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       markdown: null,

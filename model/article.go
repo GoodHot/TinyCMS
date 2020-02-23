@@ -15,7 +15,7 @@ const (
 type Article struct {
 	orm.Model
 	Title        string        `json:"title"`
-	ChannelID    uint          `json:"channel_id"`
+	CategoryID   uint          `json:"category_id"`
 	Description  string        `json:"description"`   // article description
 	Cover        string        `json:"cover"`         // conver image
 	ContentTable string        `json:"content_table"` // content table

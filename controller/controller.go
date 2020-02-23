@@ -98,6 +98,9 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	// upload
 	router.POST("/upload", s.AdminUploadCtrl.Upload)
 
+	// article
+	router.POST("/article", s.AdminArticleCtrl.Publish)
+
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)
 	// articcle

@@ -6,8 +6,8 @@
     "physical_deletion": false
   },
   "cache": {
-    "type": "free",
-    "url": "127.0.0.1",
+    "type": "redis",
+    "url": "127.0.0.1:6379",
     "password": "",
     "db": 1,
     "cache_size": 3
@@ -32,6 +32,7 @@
     "skin_template_dir": "resource/skin"
   },
   "website": {
-    "page_size": 20
+    "page_size": 20,
+    "article_table_size": 10
   }
 }
