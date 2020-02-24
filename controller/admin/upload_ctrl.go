@@ -58,3 +58,30 @@ func (s *AdminUploadCtrl) UploadBase64(ctx *ctrl.HTTPContext) error {
 	ctx.Put("path", result.URL)
 	return ctx.ResultOK()
 }
+
+func (s *AdminUploadCtrl) MarkdownUpload(ctx *ctrl.HTTPContext) error {
+	form, err := ctx.Context.MultipartForm()
+	//file, err := ctx.FormFile("file[]")
+	if err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	var results []*model.Upload
+	for _, files := range form.File {
+		for _, file := range files {
+			var result *model.Upload
+			if s.UploadType == "local" {
+				result, err = s.LocalUpload.Upload(file)
+			} else if s.UploadType == "upyun" {
+				result, err = s.UpyunUpload.Upload(file)
+			} else {
+				err = errors.New("Unsupport uploader type " + s.UploadType)
+			}
+			if err != nil {
+				return ctx.ResultErr(err.Error())
+			}
+			results = append(results, result)
+		}
+	}
+	ctx.Put("path", results)
+	return ctx.ResultOK()
+}

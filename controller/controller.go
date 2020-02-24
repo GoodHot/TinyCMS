@@ -97,6 +97,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 
 	// upload
 	router.POST("/upload", s.AdminUploadCtrl.Upload)
+	router.POST("/upload/markdown", s.AdminUploadCtrl.MarkdownUpload)
 
 	// article
 	router.POST("/article", s.AdminArticleCtrl.Publish)

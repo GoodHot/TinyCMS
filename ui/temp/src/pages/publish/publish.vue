@@ -27,6 +27,7 @@ export default {
       article: {
         id: null,
         title: 'Hello World',
+        seo_title: '',
         markdown: '# 你好，世界',
         html: null,
         cover: null,
@@ -50,6 +51,7 @@ export default {
         this.$bvToast.toast(`请输入文章标题`, {
           title: '提示',
           variant: 'danger',
+          toaster: 'b-toaster-top-center',
           solid: true
         })
         return
@@ -57,6 +59,7 @@ export default {
       const advance = this.$refs.advance.getValue()
       const editor = this.$refs.markdown.getValue()
       const options = this.$refs.options.getValue()
+      this.article.seo_title = advance.seo_title
       this.article.markdown = editor.markdown
       this.article.html = editor.html
       this.article.cover = advance.cover

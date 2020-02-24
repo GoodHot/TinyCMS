@@ -16,6 +16,7 @@ type AdminArticleCtrl struct {
 type PublishForm struct {
 	ID          int      `json:"id"`
 	Title       string   `json:"title"`
+	SEOTitle    string   `json:"seo_title"`
 	Markdown    string   `json:"markdown"`
 	Html        string   `json:"html"`
 	Cover       string   `json:"cover"`
@@ -52,6 +53,7 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 				ID: uint(publish.ID),
 			},
 			Title:       publish.Title,
+			SEOTitle:    publish.SEOTitle,
 			CategoryID:  uint(publish.CategoryID),
 			Description: publish.Description,
 			Cover:       publish.Cover,

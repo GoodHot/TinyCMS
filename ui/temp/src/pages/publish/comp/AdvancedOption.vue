@@ -4,6 +4,12 @@
       <div class="col-md-8 col-lg-6">
         <b-form>
           <b-form-group
+            label="SEO标题"
+            description="当不填写时，会自动解析标题名称"
+          >
+            <b-form-input placeholder="SEO标题" v-model="seoTitle"></b-form-input>
+          </b-form-group>
+          <b-form-group
             label="文章简介"
             description="当不填写时，会自动从文章中获取解析简介信息"
           >
@@ -30,7 +36,8 @@ export default {
   data() {
     return {
       cover: null,
-      description: ''
+      description: '',
+      seoTitle: ''
     }
   },
   methods: {
@@ -40,7 +47,8 @@ export default {
     getValue() {
       return {
         cover: this.cover,
-        description: this.description
+        description: this.description,
+        seo_title: this.seoTitle
       }
     }
   }
