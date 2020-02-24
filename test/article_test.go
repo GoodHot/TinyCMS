@@ -44,7 +44,7 @@ func getPinyin(han string, a pinyin.Args) string {
 
 func TestTitle(t *testing.T)  {
 	symbolReg := regexp.MustCompile("\\p{P}")
-	title := "hello world"
+	title := "How to Install Python 3.8 on CentOS 8"
 	dict := gse.New("zh,resource/dict/dictionary.txt", "alpha")
 	hmm := dict.Cut(title,true)
 	fmt.Println(hmm)
@@ -57,7 +57,7 @@ func TestTitle(t *testing.T)  {
 		}
 		findSymbol := symbolReg.FindAllString(trim, -1)
 		if len(findSymbol) > 0 {
-			continue
+			trim = symbolReg.ReplaceAllString(trim, "-")
 		}
 		py := getPinyin(trim, a)
 		fmt.Println(trim, "-->", py)
@@ -66,7 +66,9 @@ func TestTitle(t *testing.T)  {
 			result.WriteString("-")
 		}
 	}
-	fmt.Println(result)
+	compile := regexp.MustCompile("\\-{1,}")
+	s := compile.ReplaceAllString(result.String(), "-")
+	fmt.Println(s)
 	// 1. 分词
 	// 2. 转拼音
 	// 3. 拼接

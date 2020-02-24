@@ -22,7 +22,8 @@ type ArticleService struct {
 	coverRegexp       *regexp.Regexp
 	descriptionRegexp *regexp.Regexp
 	tagRegexp         *regexp.Regexp
-	symbolReg         *regexp.Regexp
+	symbolRegexp      *regexp.Regexp
+	cleanTitleRegexp  *regexp.Regexp
 	dict              *gse.Segmenter
 }
 
@@ -65,8 +66,11 @@ func (s *ArticleService) findDescription(html string) string {
 }
 
 func (s *ArticleService) findTitle(title string) string {
-	if s.symbolReg == nil {
-		s.symbolReg = regexp.MustCompile("\\p{P}")
+	if s.symbolRegexp == nil {
+		s.symbolRegexp = regexp.MustCompile("\\p{P}")
+	}
+	if s.cleanTitleRegexp == nil {
+		s.cleanTitleRegexp = regexp.MustCompile("\\-{1,}")
 	}
 	if s.dict == nil {
 		tmp := gse.New("zh,resource/dict/dictionary.txt", "alpha")
@@ -79,17 +83,17 @@ func (s *ArticleService) findTitle(title string) string {
 		if trim == "" {
 			continue
 		}
-		findSymbol := s.symbolReg.FindAllString(trim, -1)
+		findSymbol := s.symbolRegexp.FindAllString(trim, -1)
 		if len(findSymbol) > 0 {
-			continue
+			trim = s.symbolRegexp.ReplaceAllString(trim, "-")
 		}
-		py := strings.ReplaceAll(pinyin.Paragraph(han), " ", "")
+		py := strings.ReplaceAll(pinyin.Paragraph(trim), " ", "")
 		result.WriteString(py)
 		if i != len(hmm)-1 {
 			result.WriteString("-")
 		}
 	}
-	return result.String()
+	return s.cleanTitleRegexp.ReplaceAllString(result.String(), "-")
 }
 
 func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish) error {
