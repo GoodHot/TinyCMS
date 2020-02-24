@@ -93,7 +93,11 @@ func (s *ArticleService) findTitle(title string) string {
 			result.WriteString("-")
 		}
 	}
-	return s.cleanTitleRegexp.ReplaceAllString(result.String(), "-")
+	rst := s.cleanTitleRegexp.ReplaceAllString(result.String(), "-")
+	if rst[len(rst)-1:] == "-" {
+		rst = rst[:len(rst)-1]
+	}
+	return rst
 }
 
 func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish) error {
