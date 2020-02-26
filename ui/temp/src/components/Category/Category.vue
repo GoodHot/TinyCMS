@@ -58,16 +58,19 @@ export default {
       const result = [];
       for (let i in tree) {
         const data = tree[i];
+        let remark = null;
         const cat = {
           id: data.id,
           title: data.name,
           icon: "book",
-          remark: `${data.article_count ? data.article_count : 0}篇`,
+          remark: remark,
           img: data.icon,
           active: false
         };
         if (data.children && data.children.length > 0) {
           cat.children = this.setCategoryTree(data.children);
+        } else {
+          cat.remark = `${data.channel.article_count ? data.channel.article_count : 0}篇`
         }
         result.push(cat);
       }

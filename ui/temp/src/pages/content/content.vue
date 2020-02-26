@@ -111,7 +111,15 @@
             <template v-slot:auth="{item}" class="d-none d-sm-table-cell font-w600">{{item.author_name}}</template>
             <template v-slot:title="{item}">
               <b-badge variant="success">{{item.category_name}}</b-badge>
-              <router-link class="font-w600 ml-1" :to="`/publish?id=${item.id}`">{{ item.title }}</router-link>
+              <router-link class="font-w600 ml-1" :to="`/publish?id=${item.id}`">
+                {{ item.title }}
+                <span class="ml-1" v-if="item.status===2">
+                  <TIcon icon="save" pack="far" :id="`draftIcon${item.id}`" style="color:#aaa" />
+                  <b-tooltip :target="`draftIcon${item.id}`" variant="primary">
+                    草稿
+                  </b-tooltip>
+                </span>
+              </router-link>
               <div class="text-muted mt-1">{{item.description}}</div>
             </template>
             <template v-slot:tags="{item}">

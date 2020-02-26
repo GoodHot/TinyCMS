@@ -98,8 +98,15 @@ export default {
       this.article.description = advance.description
       this.article.tags = options.tags
       this.article.type = type
-      saveArticle(this.article).then(res => {
-        console.log('res', res)
+      saveArticle(this.article).then(() => {
+        this.$bvToast.toast('保存成功', {
+          title: '提示',
+          toaster: 'b-toaster-top-center',
+          solid: true
+        })
+        window.setTimeout(() => {
+          this.$router.push('/content')
+        }, 1500)
       })
     }
   }

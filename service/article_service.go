@@ -105,17 +105,26 @@ func (s *ArticleService) findTitle(title string) string {
 func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish) error {
 	dbArticle := &model.Article{}
 	db.Where("id = ?", article.Article.ID).Find(dbArticle)
-
+	if dbArticle.CategoryID != 0 && dbArticle.CategoryID != article.Article.CategoryID {
+		err := db.Model(&model.Category{}).Where("id = ?", dbArticle.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1)).Error
+		if err != nil {
+			return err
+		}
+	}
+	err := db.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
+	if err != nil {
+		return err
+	}
 	article.Article.Cover = strings.TrimSpace(article.Article.Cover)
-	if article.Article.Cover == "" && article.Article.Cover == "" {
+	if article.Article.Cover == "" {
 		article.Article.Cover = s.findCover(article.Content.Html)
 	}
 	article.Article.Description = strings.TrimSpace(article.Article.Description)
-	if article.Article.Description == "" && article.Article.Description == "" {
+	if article.Article.Description == "" {
 		article.Article.Description = s.findDescription(article.Content.Html)
 	}
 	article.Article.SEOTitle = strings.TrimSpace(article.Article.SEOTitle)
-	if article.Article.SEOTitle == "" && article.Article.SEOTitle == "" {
+	if article.Article.SEOTitle == "" {
 		article.Article.SEOTitle = s.findTitle(article.Article.Title)
 	}
 	if dbArticle.ContentID != 0 {
@@ -124,7 +133,7 @@ func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish)
 		article.Content.ID = dbContent.ID
 	}
 	// save content
-	err := db.Table(article.Article.ContentTable).Save(article.Content).Error
+	err = db.Table(article.Article.ContentTable).Save(article.Content).Error
 	if err != nil {
 		return err
 	}
@@ -146,6 +155,7 @@ func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish)
 		ContentID:    article.Content.ID,
 		Tags:         article.Article.Tags,
 		SEOTitle:     article.Article.SEOTitle,
+		CategoryID:   article.Article.CategoryID,
 	}).Error
 	if err != nil {
 		return err
@@ -206,7 +216,6 @@ func (s *ArticleService) Publish(article *model.ArticlePublish) error {
 	} else {
 		s.ORM.DB.Model(article.Article).Updates(&model.Article{
 			Title: article.Article.Title,
-			CategoryID: article.Article.CategoryID,
 		})
 	}
 	tableName := s.contentTableName(article.Article.ID)
