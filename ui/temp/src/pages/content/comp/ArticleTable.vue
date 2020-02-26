@@ -86,7 +86,7 @@ export default {
       selectValues: []
     }
   },
-  created() {
+  mounted() {
     this.initSelectValues()
   },
   methods: {
@@ -141,6 +141,11 @@ export default {
         }
       }
       this.$emit("onselected", values, values.length == this.selectValues.length)
+    }
+  },
+  watch: {
+    data() {
+      this.initSelectValues()
     }
   }
 }

@@ -38,7 +38,16 @@ export default {
       }
     }
   },
+  mounted() {
+    this.loadArticle()
+  },
   methods: {
+    loadArticle() {
+      const id = this.$route.query.id
+      if (id) {
+        console.log('load')
+      }
+    },
     publishHandler() {
       this.save('publish')
     },

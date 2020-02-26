@@ -102,32 +102,24 @@
             :pagination="true"
             :column="column"
             :data="data"
-            selectKey="auth"
+            selectKey="id"
             hideHeader
             @onselected="selectedHandler"
             ref="dataTable"
             class="table table-hover table-vcenter font-size-sm"
           >
-            <template v-slot:auth="{item}" class="d-none d-sm-table-cell font-w600">{{item.auth}}</template>
-            <template v-slot:title="{item, index}">
-              <b-badge variant="success">未归类</b-badge>
-              <a
-                class="font-w600"
-                data-toggle="modal"
-                data-target="#one-inbox-message"
-                href="#"
-              >{{ item.title }}</a>
-              <div
-                class="text-muted mt-1"
-              >{{ index }} We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..We are glad you decided to go with a vip..</div>
+            <template v-slot:auth="{item}" class="d-none d-sm-table-cell font-w600">{{item.author_name}}</template>
+            <template v-slot:title="{item}">
+              <b-badge variant="success">{{item.category_name}}</b-badge>
+              <router-link class="font-w600 ml-1" :to="`/publish?id=${item.id}`">{{ item.title }}</router-link>
+              <div class="text-muted mt-1">{{item.description}}</div>
             </template>
-            <template v-slot:tags="{item, index}">
-              <i class="fa fa-tags mr-1"></i>
-              {{ index }},
-              <a href="#">计算机</a>, NPM, JAVA
+            <template v-slot:tags="{item}">
+              <i class="fa fa-tags mr-2"></i>
+              <a v-for="t of splitTags(item.tags)" href="#" class="mr-1" :key="t">{{t}}</a>
             </template>
-            <template v-slot:time="{item, index}">
-              <em>{{ index }} min ago</em>
+            <template v-slot:time="{item}">
+              <time :datetime="item.created_at">{{ moment(item.created_at).format('MM-DD h:mm')}}</time>
             </template>
           </ArticleTable>
         </div>
@@ -149,6 +141,8 @@
 <script>
 import ArticleTable from "./comp/ArticleTable";
 import CategoryModal from "./comp/CategoryModal";
+import { articlePage } from "@/api/article"
+import moment from "moment"
 
 export default {
   components: {
@@ -157,6 +151,7 @@ export default {
   },
   data() {
     return {
+      moment,
       categoryVisible: false,
       column: [
         {
@@ -175,7 +170,7 @@ export default {
           title: "标签",
           index: "tags",
           slot: "tags",
-          width: "120px",
+          width: "200px",
           class: "d-none d-xl-table-cell text-muted"
         },
         {
@@ -186,26 +181,7 @@ export default {
           class: "d-none d-xl-table-cell text-muted"
         }
       ],
-      data: [
-        {
-          auth: "Justin Hunt",
-          title: "Welcome to our service",
-          tags: "123",
-          time: "sdf"
-        },
-        {
-          auth: "Justin Hunt",
-          title: "Welcome to our service",
-          tags: "123",
-          time: "sdf"
-        },
-        {
-          auth: "Justin Hunt",
-          title: "Welcome to our service",
-          tags: "123",
-          time: "sdf"
-        }
-      ],
+      data: [],
       isSelectAll: false,
       deleteIds: [],
       hasCategoryData: false,
@@ -225,7 +201,15 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.getPageData()
+  },
   methods: {
+    getPageData() {
+      articlePage(1).then(res => {
+        this.data = res.page.list
+      })
+    },
     showCategory() {
       const nav = this.$refs.category;
       const clsList = nav.classList;
@@ -259,6 +243,9 @@ export default {
     },
     categoryInitedHandler(category) {
       this.hasCategoryData = category && category.length > 0
+    },
+    splitTags(tags) {
+      return tags.split(',')
     }
   }
 };

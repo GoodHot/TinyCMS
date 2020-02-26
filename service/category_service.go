@@ -3,12 +3,15 @@ package service
 import (
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	"github.com/importcjj/trie-go"
+	"strconv"
 )
 
 type CategoryService struct {
 	ArticleService *ArticleService `ioc:"auto"`
 	PageSize       int             `val:"${website.page_size}"`
 	ORM            *orm.ORM        `ioc:"auto"`
+	dataTree       *trie.Trie
 }
 
 func (s *CategoryService) Get(id int) (*model.Category, error) {
@@ -56,6 +59,31 @@ func (s *CategoryService) tree(parentId uint) []*CategoryTree {
 		trees = append(trees, tmp)
 	}
 	return trees
+}
+
+func (s *CategoryService) TrieGet(id uint) *model.Category {
+	if s.dataTree == nil {
+		s.dataTree = trie.New()
+		page, size := 1, 20
+		row := (page - 1) * size
+		var categorys []*model.Category
+		for ; ; {
+			s.ORM.DB.Limit(size).Offset(row).Find(&categorys)
+			if len(categorys) == 0 {
+				break
+			}
+			for _, cate := range categorys {
+				s.dataTree.Put(strconv.Itoa(int(cate.ID)), cate)
+			}
+			page++
+			row = (page - 1) * size
+		}
+	}
+	exists, result := s.dataTree.Match(strconv.Itoa(int(id)))
+	if !exists {
+		return nil
+	}
+	return result.Value.(*model.Category)
 }
 
 //func (s *ChannelService) Page(page, parentId int) *orm.Page {

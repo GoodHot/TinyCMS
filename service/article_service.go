@@ -14,6 +14,7 @@ import (
 
 type ArticleService struct {
 	CategoryService   *CategoryService `ioc:"auto"`
+	AdminService      *AdminService    `ioc:"auto"`
 	TagService        *TagService      `ioc:"auto"`
 	ORM               *orm.ORM         `ioc:"auto"`
 	PageSize          int              `val:"${website.page_size}"`
@@ -56,10 +57,11 @@ func (s *ArticleService) findDescription(html string) string {
 		s := s.tagRegexp.ReplaceAllString(m[1], "")
 		s = strings.TrimSpace(s)
 		if s != "" {
-			if len(s) > 150 {
-				s = s[0:150]
+			temp := []rune(s)
+			if len(temp) > 150 {
+				return string(temp[:150])
 			}
-			return s
+			return string(temp)
 		}
 	}
 	return ""
@@ -209,118 +211,10 @@ func (s *ArticleService) Publish(article *model.ArticlePublish) error {
 	return s.ORM.Tx(func(db *gorm.DB) error {
 		return s.saveArticle(db, article)
 	})
-	//channel, err := s.CategoryService.Get(int(article.Article.ChannelID))
-	//if err != nil {
-	//	return err
-	//}
-	//if channel == nil {
-	//	return errors.New("this channel not exists")
-	//}
-	//tableName := s.contentTableName(channel)
-	//err = s.createContentTable(tableName)
-	//if err != nil {
-	//	return err
-	//}
-	//return s.ORM.Tx(func(db *gorm.DB) error {
-	//	err := db.Table(tableName).Create(article.Content).Error
-	//	if err != nil {
-	//		return err
-	//	}
-	//	article.Article.ContentTable = s.contentTableName(channel)
-	//	article.Article.Views = 0
-	//	article.Article.ContentID = article.Content.ID
-	//	if len(article.Tags) > 0 {
-	//		tagStr := bytes.NewBufferString("")
-	//		for _, t := range article.Tags {
-	//			tag := s.TagService.GetByName(t.Name)
-	//			if tag.Name == "" {
-	//				t.ArticleCount = 0
-	//				db.Create(t)
-	//				tag = t
-	//			}
-	//			tagStr.WriteString(t.Name)
-	//			tagStr.WriteString(",")
-	//			err := db.Model(&tag).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
-	//			if err != nil {
-	//				return err
-	//			}
-	//			rel := &model.RelTagArticle{}
-	//			rel.ArticleID = article.Article.ID
-	//			rel.TagID = t.ID
-	//			err = db.Create(rel).Error
-	//			if err != nil {
-	//				return err
-	//			}
-	//		}
-	//		article.Article.Tags = tagStr.String()
-	//	}
-	//	db.Create(article.Article)
-	//	return nil
-	//})
 }
 
 func (s *ArticleService) Edit(article *model.ArticlePublish) error {
 	return nil
-	//articleDB := s.GetById(int(article.Article.ID))
-	//if articleDB == nil || articleDB.Title == "" {
-	//	return errors.New("article not exists")
-	//}
-	//s.ORM.Tx(func(db *gorm.DB) error {
-	//	err := db.Table(articleDB.ContentTable).Where("id = ?", articleDB.ContentID).Updates(map[string]interface{}{
-	//		"markdown": article.Content.Markdown,
-	//		"html":     article.Content.Html,
-	//	}).Error
-	//	if err != nil {
-	//		return err
-	//	}
-	//	tmp := article.Article
-	//
-	//	tags := s.TagService.GetByArticleID(int(article.Article.ID))
-	//	if tags != nil && len(tags) > 0 {
-	//		for _, v := range tags {
-	//			err := db.Model(v).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1)).Error
-	//			if err != nil {
-	//				return err
-	//			}
-	//		}
-	//	}
-	//	db.Unscoped().Where("article_id = ?", article.Article.ID).Delete(&model.RelTagArticle{})
-	//	if len(article.Tags) > 0 {
-	//		tagStr := bytes.NewBufferString("")
-	//		for _, t := range article.Tags {
-	//			tag := s.TagService.GetByName(t.Name)
-	//			if tag.Name == "" {
-	//				t.ArticleCount = 0
-	//				db.Create(t)
-	//				tag = t
-	//			}
-	//			err := db.Model(&tag).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
-	//			if err != nil {
-	//				return err
-	//			}
-	//			tagStr.WriteString(t.Name)
-	//			tagStr.WriteString(",")
-	//			rel := &model.RelTagArticle{}
-	//			rel.ArticleID = article.Article.ID
-	//			rel.TagID = tag.ID
-	//			err = db.Create(rel).Error
-	//			if err != nil {
-	//				return err
-	//			}
-	//		}
-	//		tmp.Tags = tagStr.String()
-	//	}
-	//	db.Model(tmp).Updates(map[string]interface{}{
-	//		"title":        tmp.Title,
-	//		"channel_id":   tmp.ChannelID,
-	//		"cover":        tmp.Cover,
-	//		"description":  tmp.Description,
-	//		"publish_time": tmp.PublishTime,
-	//		"tags":         tmp.Tags,
-	//	})
-	//	return nil
-	//})
-	//return nil
 }
 
 func (s *ArticleService) GetById(id int) *model.Article {
@@ -352,13 +246,29 @@ func (s *ArticleService) Page(page int, query ArticlePageQuery) *orm.Page {
 		where += " and channel_id = ?"
 		param = append(param, query.ChannelID)
 	}
-	return s.ORM.Page(orm.ORMPage{
+	var article []*model.Article
+	result := s.ORM.Page(orm.ORMPage{
 		PageNum:  page,
 		PageSize: s.PageSize,
-		Result:   &[]*model.Article{},
+		Result:   &article,
 		Where:    orm.Where(where, param...),
 		OrderBy:  "id desc",
 	})
+	if len(article) > 0 {
+		for _, v := range article {
+			admin := s.AdminService.TrieGet(v.AuthorID)
+			if admin != nil {
+				v.AuthorName = admin.Nickname
+			}
+			category := s.CategoryService.TrieGet(v.CategoryID)
+			if category != nil {
+				v.CategoryName = category.Name
+			} else {
+				v.CategoryName = "未归类"
+			}
+		}
+	}
+	return result
 }
 
 func (s *ArticleService) Delete(id int) error {

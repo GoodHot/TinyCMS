@@ -84,23 +84,24 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	}
 	// auth
 	//router.Any("/auth/init", s.AdminAuthCtrl.InitRole)
-	router.POST("/auth/login", s.AdminAuthCtrl.Login)
-	router.Any("/auth/info", s.AdminAuthCtrl.Info)
+	router.POST("/auth/login", s.AdminAuthCtrl.Login, s.AdminService)
+	router.Any("/auth/info", s.AdminAuthCtrl.Info, s.AdminService)
 
 	// channel
-	router.POST("/category", s.AdminCategoryCtrl.Save)
-	router.GET("/category/tree", s.AdminCategoryCtrl.Tree)
+	router.POST("/category", s.AdminCategoryCtrl.Save, s.AdminService)
+	router.GET("/category/tree", s.AdminCategoryCtrl.Tree, s.AdminService)
 	//router.GET("/channel/page_:page", s.AdminChannelCtrl.Page)
 
 	// tag
-	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search)
+	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search, s.AdminService)
 
 	// upload
-	router.POST("/upload", s.AdminUploadCtrl.Upload)
-	router.POST("/upload/markdown", s.AdminUploadCtrl.MarkdownUpload)
+	router.POST("/upload", s.AdminUploadCtrl.Upload, s.AdminService)
+	router.POST("/upload/markdown", s.AdminUploadCtrl.MarkdownUpload, s.AdminService)
 
 	// article
-	router.POST("/article", s.AdminArticleCtrl.Publish)
+	router.POST("/article", s.AdminArticleCtrl.Publish, s.AdminService)
+	router.GET("/article/page_:page", s.AdminArticleCtrl.Page, s.AdminService)
 
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)
@@ -119,8 +120,8 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 }
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {
-	echo.GET("/", buildHandlerFunc(s.IndexCtrl.Index))
-	echo.GET("/channel/:parent/:title", buildHandlerFunc(s.IndexCtrl.Channel))
+	echo.GET("/", buildHandlerFunc(s.IndexCtrl.Index, s.AdminService))
+	echo.GET("/channel/:parent/:title", buildHandlerFunc(s.IndexCtrl.Channel, s.AdminService))
 }
 
 func (c *Controller) registerAPI(group *echo.Group, prefix string) {
@@ -152,48 +153,55 @@ func (s *RouterRegister) OPTIONS(path string) {
 	})
 }
 
-func (s *RouterRegister) GET(path string, fn ControllerFunc) {
+func (s *RouterRegister) GET(path string, fn ControllerFunc, adminService *service.AdminService) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.GET(path, buildHandlerFunc(fn))
+	s.group.GET(path, buildHandlerFunc(fn, adminService))
 	fmt.Printf("Register Router[GET], Path: %v%v\n", s.prefix, path)
 }
 
-func (s *RouterRegister) POST(path string, fn ControllerFunc) {
+func (s *RouterRegister) POST(path string, fn ControllerFunc, adminService *service.AdminService) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.POST(path, buildHandlerFunc(fn))
+	s.group.POST(path, buildHandlerFunc(fn, adminService))
 	fmt.Printf("Register Router[POST], Path: %v%v\n", s.prefix, path)
 }
 
-func (s *RouterRegister) PUT(path string, fn ControllerFunc) {
+func (s *RouterRegister) PUT(path string, fn ControllerFunc, adminService *service.AdminService) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.PUT(path, buildHandlerFunc(fn))
+	s.group.PUT(path, buildHandlerFunc(fn, adminService))
 	fmt.Printf("Register Router[PUT], Path: %v%v\n", s.prefix, path)
 }
 
-func (s *RouterRegister) DELETE(path string, fn ControllerFunc) {
+func (s *RouterRegister) DELETE(path string, fn ControllerFunc, adminService *service.AdminService) {
 	if s.buildOption {
 		s.OPTIONS(path)
 	}
-	s.group.DELETE(path, buildHandlerFunc(fn))
+	s.group.DELETE(path, buildHandlerFunc(fn, adminService))
 	fmt.Printf("Register Router[DELETE], Path: %v%v\n", s.prefix, path)
 }
 
-func (s *RouterRegister) Any(path string, fn ControllerFunc) {
-	s.group.Any(path, buildHandlerFunc(fn))
+func (s *RouterRegister) Any(path string, fn ControllerFunc, adminService *service.AdminService) {
+	s.group.Any(path, buildHandlerFunc(fn, adminService))
 	fmt.Printf("Register Router[Any], Path: %v%v\n", s.prefix, path)
 }
 
-func buildHandlerFunc(fn ControllerFunc) echo.HandlerFunc {
+func buildHandlerFunc(fn ControllerFunc, adminService *service.AdminService) echo.HandlerFunc {
 	return func(e echo.Context) error {
 		ctx := new(ctrl.HTTPContext)
 		ctx.Context = e
 		ctx.Result = &ctrl.HTTPResult{Data: make(map[string]interface{})}
+		token := e.Request().Header.Get("ACCESS-TOKEN")
+		if token != "" {
+			admin, _ := adminService.CheckToken(token)
+			if admin != nil {
+				ctx.Admin = admin
+			}
+		}
 		return fn(ctx)
 	}
 }

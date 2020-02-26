@@ -17,6 +17,7 @@ type Article struct {
 	Title        string        `json:"title"`
 	SEOTitle     string        `json:"seo_title"`
 	CategoryID   uint          `json:"category_id"`
+	CategoryName string        `gorm:"-" json:"category_name"`
 	Description  string        `json:"description"`   // article description
 	Cover        string        `json:"cover"`         // conver image
 	ContentTable string        `json:"content_table"` // content table
@@ -25,6 +26,8 @@ type Article struct {
 	Status       ArticleStatus `json:"status"`        // status
 	Views        int           `json:"views"`         // page view count
 	Tags         string        `json:"tags"`          // article tags
+	AuthorID     uint          `json:"author"`        // article author
+	AuthorName   string        `gorm:"-" json:"author_name"`
 }
 
 type ArticleContent struct {

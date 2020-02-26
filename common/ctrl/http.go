@@ -1,6 +1,7 @@
 package ctrl
 
 import (
+	"github.com/GoodHot/TinyCMS/model"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"mime/multipart"
@@ -19,6 +20,7 @@ type HTTPResult struct {
 type HTTPContext struct {
 	Context echo.Context // echo上下文
 	Result  *HTTPResult
+	Admin   *model.Admin
 }
 
 func (s *HTTPContext) FormFile(name string) (*multipart.FileHeader, error) {

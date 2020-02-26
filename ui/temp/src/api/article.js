@@ -10,3 +10,10 @@ export function saveArticle (parameter) {
     data: parameter
   })
 }
+
+export function articlePage (page) {
+  return request({
+    url: `/article/page_${page}`,
+    method: 'get'
+  })
+}

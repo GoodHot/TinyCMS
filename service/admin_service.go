@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	"github.com/importcjj/trie-go"
 	uuid "github.com/satori/go.uuid"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -13,6 +15,7 @@ import (
 type AdminService struct {
 	ORM          *orm.ORM      `ioc:"auto"`
 	CacheService *CacheService `ioc:"auto"`
+	dataTree     *trie.Trie
 }
 
 func (s *AdminService) GetByUsername(username string) *model.Admin {
@@ -53,4 +56,29 @@ func (s *AdminService) CheckToken(token string) (*model.Admin, error) {
 		return nil, err
 	}
 	return admin, nil
+}
+
+func (s *AdminService) TrieGet(id uint) *model.Admin {
+	if s.dataTree == nil {
+		s.dataTree = trie.New()
+		page, size := 1, 20
+		row := (page - 1) * size
+		var admins []*model.Admin
+		for ; ; {
+			s.ORM.DB.Limit(size).Offset(row).Find(&admins)
+			if len(admins) == 0 {
+				break
+			}
+			for _, adm := range admins {
+				s.dataTree.Put(strconv.Itoa(int(adm.ID)), adm)
+			}
+			page++
+			row = (page - 1) * size
+		}
+	}
+	exists, result := s.dataTree.Match(strconv.Itoa(int(id)))
+	if !exists {
+		return nil
+	}
+	return result.Value.(*model.Admin)
 }

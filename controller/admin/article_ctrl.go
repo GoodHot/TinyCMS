@@ -13,6 +13,13 @@ type AdminArticleCtrl struct {
 	TagService     *service.TagService     `ioc:"auto"`
 }
 
+func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
+	page := ctx.ParamInt("page")
+	ctx.Put("page", s.ArticleService.Page(page, service.ArticlePageQuery{}))
+	return ctx.ResultOK()
+}
+
+
 type PublishForm struct {
 	ID          int      `json:"id"`
 	Title       string   `json:"title"`
@@ -58,6 +65,7 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 			Description: publish.Description,
 			Cover:       publish.Cover,
 			Status:      status,
+			AuthorID:    ctx.Admin.ID,
 		},
 		Tags: tags,
 		Content: &model.ArticleContent{
@@ -125,12 +133,6 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	//	s.ArticleService.Edit(articlePublish)
 	//}
 	//return ctx.ResultOK()
-}
-
-func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
-	page := ctx.ParamInt("page")
-	ctx.Put("page", s.ArticleService.Page(page, service.ArticlePageQuery{}))
-	return ctx.ResultOK()
 }
 
 func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
