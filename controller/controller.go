@@ -102,6 +102,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	// article
 	router.POST("/article", s.AdminArticleCtrl.Publish, s.AdminService)
 	router.GET("/article/page_:page", s.AdminArticleCtrl.Page, s.AdminService)
+	router.GET("/article/:id", s.AdminArticleCtrl.Get, s.AdminService)
 
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)

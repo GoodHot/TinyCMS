@@ -16,7 +16,7 @@
         <span v-if="remark" :class="`badge badge-pill badge-${remarkType}`">{{remark}}</span>
       </span>
     </span>
-    <TList v-if="children" :rowKey="rowKey" v-show="showChildren" :data="children" class="ml-3" @onclick="selectItem"></TList>
+    <TList v-if="children" :rowKey="rowKey" v-show="showChildren" :data="children" :selected="selected" class="ml-3" @onclick="selectItem"></TList>
   </li>
 </template>
 <script>
@@ -65,6 +65,10 @@ export default {
     },
     rowKey: {
       type: String
+    },
+    selected: {
+      type: [String, Number],
+      default: null
     }
   },
   data() {

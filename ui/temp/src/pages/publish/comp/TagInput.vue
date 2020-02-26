@@ -17,10 +17,21 @@
 <script>
 import { searchTag } from '@/api/tag'
 export default {
+  model: {
+    prop: 'tags',
+    event: 'change.tags'
+  },
+  props: {
+    tags: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
   data() {
     return {
       inputTag: '',
-      tags: [],
       showHint: false,
       hintList: [],
       hintSelect: 0,

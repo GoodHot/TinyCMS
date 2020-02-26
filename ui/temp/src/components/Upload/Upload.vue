@@ -1,13 +1,17 @@
 <template>
   <div class="t-upload-box" @click="chooseFile">
     <TIcon v-if="!imgSrc" icon="plus" />
-    <img v-if="imgSrc" :src="imgSrc" />
+    <img v-if="imgSrc" :src="assetsURL(imgSrc)" />
     <input type="file" class="d-none" ref="hiddenFile" @change="fileHandler" />
   </div>
 </template>
 <script>
 import { uploadFile } from '@/api/upload'
 export default {
+  model: {
+    prop: 'image',
+    event: 'change.image'
+  },
   props: {
     image: {
       type: String,
@@ -34,6 +38,11 @@ export default {
         this.imgSrc = this.assetsURL(res.path)
         this.$emit('uploaded', this.url)
       })
+    }
+  },
+  watch: {
+    image() {
+      this.imgSrc = JSON.parse(JSON.stringify(this.image))
     }
   }
 }

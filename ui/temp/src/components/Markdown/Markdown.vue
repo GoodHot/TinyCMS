@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     uploadFormat(files, response) {
-      console.log('fmt')
       const respJson = JSON.parse(response)
       const result = {
         msg: respJson.msg,
@@ -74,6 +73,11 @@ export default {
         markdown: this.contentEditor.getValue(),
         html: html
       }
+    }
+  },
+  watch: {
+    value(val) {
+      this.contentEditor.setValue(val)
     }
   }
 }

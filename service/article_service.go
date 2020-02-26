@@ -107,20 +107,20 @@ func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish)
 	db.Where("id = ?", article.Article.ID).Find(dbArticle)
 
 	article.Article.Cover = strings.TrimSpace(article.Article.Cover)
-	if dbArticle.Cover == "" && article.Article.Cover == "" {
+	if article.Article.Cover == "" && article.Article.Cover == "" {
 		article.Article.Cover = s.findCover(article.Content.Html)
 	}
 	article.Article.Description = strings.TrimSpace(article.Article.Description)
-	if dbArticle.Description == "" && article.Article.Description == "" {
+	if article.Article.Description == "" && article.Article.Description == "" {
 		article.Article.Description = s.findDescription(article.Content.Html)
 	}
 	article.Article.SEOTitle = strings.TrimSpace(article.Article.SEOTitle)
-	if dbArticle.SEOTitle == "" && article.Article.SEOTitle == "" {
+	if article.Article.SEOTitle == "" && article.Article.SEOTitle == "" {
 		article.Article.SEOTitle = s.findTitle(article.Article.Title)
 	}
 	if dbArticle.ContentID != 0 {
 		dbContent := &model.ArticleContent{}
-		db.Table(article.Article.ContentTable).Where("id = ?", dbArticle.ID).Find(dbContent)
+		db.Table(article.Article.ContentTable).Where("id = ?", dbArticle.ContentID).Find(dbContent)
 		article.Content.ID = dbContent.ID
 	}
 	// save content
@@ -201,7 +201,14 @@ func (s *ArticleService) saveTags(db *gorm.DB, article *model.ArticlePublish) er
 }
 
 func (s *ArticleService) Publish(article *model.ArticlePublish) error {
-	s.ORM.DB.Save(article.Article)
+	if article.Article.ID == 0 {
+		s.ORM.DB.Save(article.Article)
+	} else {
+		s.ORM.DB.Model(article.Article).Updates(&model.Article{
+			Title: article.Article.Title,
+			CategoryID: article.Article.CategoryID,
+		})
+	}
 	tableName := s.contentTableName(article.Article.ID)
 	err := s.createContentTable(tableName)
 	if err != nil {

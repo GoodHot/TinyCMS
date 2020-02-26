@@ -2,13 +2,13 @@
   <div class="t-publish-option">
     <div class="options">
       <b-dropdown :text="categoryName" variant="light" class="mr-2 float-left t-publish-option-category">
-        <TCategory ref="categoryList" @selectItem="selectItem"></TCategory>
+        <TCategory ref="categoryList" @selectItem="selectItem" :selected="data.categoryId"></TCategory>
       </b-dropdown>
       <b-button class="mr-2" variant="light" @click="$emit('showAdvance', $event)">
         <TIcon icon="settings" pack="si" />
         高级设置
       </b-button>
-      <TagInput ref="tags"></TagInput>
+      <TagInput ref="tags" v-model="data.tags"></TagInput>
     </div>
     <div>
       <b-button class="mr-2" variant="success" @click="$emit('onpublish', $event)">
@@ -28,6 +28,18 @@ import TagInput from './TagInput'
 export default {
   components:{
     TagInput
+  },
+  model: {
+    prop: 'data',
+    event: 'change.data'
+  },
+  props: {
+    data: {
+      type: Object,
+      default() {
+        return []
+      }
+    }
   },
   data() {
     return {

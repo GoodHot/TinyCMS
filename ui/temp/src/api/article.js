@@ -17,3 +17,10 @@ export function articlePage (page) {
     method: 'get'
   })
 }
+
+export function getArticleById (id) {
+  return request({
+    url: `/article/${id}`,
+    method: 'get'
+  })
+}

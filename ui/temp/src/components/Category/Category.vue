@@ -1,5 +1,5 @@
 <template>
-  <TList rowKey="id" v-if="category && category.length > 0" :data="category" @onclick="selectItem"></TList>
+  <TList rowKey="id" v-if="category && category.length > 0" :selected="selected" :data="category" @onclick="selectItem"></TList>
 </template>
 <script>
 import { categoryTree } from "@/api/category";
@@ -11,6 +11,10 @@ export default {
       default() {
         return null
       }
+    },
+    selected: {
+      type: [String, Number],
+      default: null
     }
   },
   data() {
@@ -24,7 +28,6 @@ export default {
   },
   methods: {
     reload() {
-      console.log(1)
       this.category = []
       this.getCategoryTree()
     },

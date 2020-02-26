@@ -7,14 +7,14 @@
             label="SEO标题"
             description="当不填写时，会自动解析标题名称"
           >
-            <b-form-input placeholder="SEO标题" v-model="seoTitle"></b-form-input>
+            <b-form-input placeholder="SEO标题" v-model="data.seoTitle"></b-form-input>
           </b-form-group>
           <b-form-group
             label="文章简介"
             description="当不填写时，会自动从文章中获取解析简介信息"
           >
             <b-form-textarea
-            v-model="description"
+            v-model="data.description"
               rows="3"
               max-rows="6"
             ></b-form-textarea>
@@ -24,7 +24,7 @@
             label="封面图"
             description="当不上传时，会自动获取文章中的第一张图片作为封面图"
           >
-            <TUpload @uploaded="uploadHandler"></TUpload>
+            <TUpload v-model="data.cover" @uploaded="uploadHandler"></TUpload>
           </b-form-group>
         </b-form>
       </div>
@@ -33,22 +33,27 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      cover: null,
-      description: '',
-      seoTitle: ''
+  model: {
+    prop: 'data',
+    event: 'change.data'
+  },
+  props: {
+    data: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   methods: {
     uploadHandler(src) {
-      this.cover = src
+      this.data.cover = src
     },
     getValue() {
       return {
-        cover: this.cover,
-        description: this.description,
-        seo_title: this.seoTitle
+        cover: this.data.cover,
+        description: this.data.description,
+        seo_title: this.data.seoTitle
       }
     }
   }

@@ -17,6 +17,7 @@
       :remarkType="item.remarkType"
       :row="item"
       :rowKey="rowKey"
+      :selected="selected"
       v-model="item.active"
       @onclick="selectItem"
     ></TListItem>
@@ -33,11 +34,35 @@ export default {
     },
     rowKey: {
       type: String
+    },
+    selected: {
+      type: [String, Number],
+      default: null
     }
+  },
+  mounted() {
+    this.checkActive()
   },
   methods: {
     selectItem(row) {
       this.$emit('onclick', row)
+    },
+    checkActive() {
+      if (!this.selected) {
+        return
+      }
+      for (let i=0;i<this.data.length;i++) {
+        const item = this.data[i]
+        item.active = item[this.rowKey] == this.selected
+        if (item.active) {
+          this.$emit('onclick', item)
+        }
+      }
+    }
+  },
+  watch: {
+    selected() {
+      this.checkActive()
     }
   }
 }
