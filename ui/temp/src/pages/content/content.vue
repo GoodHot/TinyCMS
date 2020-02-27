@@ -149,7 +149,7 @@
 <script>
 import ArticleTable from "./comp/ArticleTable";
 import CategoryModal from "./comp/CategoryModal";
-import { articlePage } from "@/api/article"
+import { articlePage, getArticleCount } from "@/api/article"
 import moment from "moment"
 
 export default {
@@ -211,8 +211,15 @@ export default {
   },
   mounted() {
     this.getPageData()
+    this.getArticleCount()
   },
   methods: {
+    getArticleCount() {
+      getArticleCount().then(res => {
+        this.defaultCategory[0].remark = `${res.category}篇`
+        this.defaultCategory[1].remark = `${res.draft}篇`
+      })
+    },
     getPageData() {
       articlePage(1).then(res => {
         this.data = res.page.list

@@ -190,6 +190,7 @@ func (s *ArticleService) saveTags(db *gorm.DB, article *model.ArticlePublish) er
 			t.ArticleCount = 0
 			db.Create(t)
 			tag = t
+			s.TagService.PutPrefix(tag)
 		} else {
 			t.ID = tag.ID
 		}
@@ -215,7 +216,8 @@ func (s *ArticleService) Publish(article *model.ArticlePublish) error {
 		s.ORM.DB.Save(article.Article)
 	} else {
 		s.ORM.DB.Model(article.Article).Updates(&model.Article{
-			Title: article.Article.Title,
+			Title:  article.Article.Title,
+			Status: article.Article.Status,
 		})
 	}
 	tableName := s.contentTableName(article.Article.ID)
@@ -268,7 +270,7 @@ func (s *ArticleService) Page(page int, query ArticlePageQuery) *orm.Page {
 		PageSize: s.PageSize,
 		Result:   &article,
 		Where:    orm.Where(where, param...),
-		OrderBy:  "id desc",
+		OrderBy:  "status desc, id desc",
 	})
 	if len(article) > 0 {
 		for _, v := range article {
@@ -291,4 +293,16 @@ func (s *ArticleService) Delete(id int) error {
 	model := &model.Article{}
 	model.ID = uint(id)
 	return s.ORM.DB.Delete(model).Error
+}
+
+func (s *ArticleService) NoCategoryCount() int {
+	count := 0
+	s.ORM.DB.Model(&model.Article{}).Where("category_id = 0").Count(&count)
+	return count
+}
+
+func (s *ArticleService) DraftCount() int {
+	count := 0
+	s.ORM.DB.Model(&model.Article{}).Where("status = ?", model.ArticleStatusDraft).Count(&count)
+	return count
 }

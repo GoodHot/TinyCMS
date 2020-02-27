@@ -3,11 +3,13 @@ package service
 import (
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	"github.com/armon/go-radix"
 )
 
 type TagService struct {
-	PageSize int      `val:"${website.page_size}"`
-	ORM      *orm.ORM `ioc:"auto"`
+	PageSize   int      `val:"${website.page_size}"`
+	ORM        *orm.ORM `ioc:"auto"`
+	prefixTree *radix.Tree
 }
 
 func (s *TagService) GetByName(name string) *model.Tag {
@@ -29,4 +31,46 @@ func (s *TagService) GetByArticleID(id int) []*model.Tag {
 	var tags []*model.Tag
 	s.ORM.DB.Where("id in (?)", ids).Find(&tags)
 	return tags
+}
+
+func (s *TagService) PutPrefix(tag *model.Tag) {
+	s.initPrefixTree()
+	s.prefixTree.Insert(tag.Name, tag)
+}
+
+func (s *TagService) initPrefixTree() {
+	if s.prefixTree != nil {
+		return
+	}
+	s.prefixTree = radix.New()
+	page, size := 1, 20
+	row := (page - 1) * size
+	var tags []*model.Tag
+	for ; ; {
+		s.ORM.DB.Limit(size).Offset(row).Find(&tags)
+		if len(tags) == 0 {
+			break
+		}
+		for _, tag := range tags {
+			s.prefixTree.Insert(tag.Name, tag)
+		}
+		page++
+		row = (page - 1) * size
+	}
+}
+
+func (s *TagService) PrefixFind(prefix string) []string {
+	s.initPrefixTree()
+	count := 0
+	var result []string
+	s.prefixTree.WalkPrefix(prefix, func(s string, v interface{}) bool {
+		if count == 8 {
+			return true
+		}
+		tag := v.(*model.Tag)
+		result = append(result, tag.Name)
+		count++
+		return false
+	})
+	return result
 }

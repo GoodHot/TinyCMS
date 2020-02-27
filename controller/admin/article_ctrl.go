@@ -78,6 +78,12 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminArticleCtrl) Count(ctx *ctrl.HTTPContext) error {
+	ctx.Put("category", s.ArticleService.NoCategoryCount())
+	ctx.Put("draft", s.ArticleService.DraftCount())
+	return ctx.ResultOK()
+}
+
 func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
 	id := ctx.ParamInt("id")
 	article := s.ArticleService.GetById(id)

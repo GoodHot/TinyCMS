@@ -24,3 +24,10 @@ export function getArticleById (id) {
     method: 'get'
   })
 }
+
+export function getArticleCount () {
+  return request({
+    url: '/article/count',
+    method: 'get'
+  })
+}
