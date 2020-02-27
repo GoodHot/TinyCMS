@@ -20,7 +20,7 @@
               </b-button>
             </b-button-group>
           </template>
-          <TCategory class="push" ref="categoryList" :defaultCategory="defaultCategory" @inited="categoryInitedHandler"></TCategory>
+          <TCategory class="push" ref="categoryList" :defaultCategory="defaultCategory" @inited="categoryInitedHandler" @selectItem="selectCategoryHandler"></TCategory>
           <div class="text-center push mt-3" v-if="!hasCategoryData">
             <b-button size="sm" variant="light" @click="categoryVisible = !categoryVisible">创建第一个分类</b-button>
           </div>
@@ -43,23 +43,22 @@
     <div class="col-md-7 col-xl-9">
       <TBlock title="全部文章">
         <template slot="options">
-          <b-button-group size="sm">
-            <b-button class="btn-block-option" variant="light" @click="$router.push('/publish')">
-              <TIcon icon="plus" />
-            </b-button>
-            <b-button class="btn-block-option" variant="light">
-              <TIcon icon="magnifier" pack="si" />
-            </b-button>
-            <b-button class="btn-block-option" variant="light">
-              <TIcon icon="arrow-left" pack="si" />
-            </b-button>
-            <b-button class="btn-block-option" variant="light">
-              <TIcon icon="arrow-right" pack="si" />
-            </b-button>
-            <b-button class="btn-block-option" variant="light">
-              <TIcon icon="refresh" pack="si" />
-            </b-button>
-          </b-button-group>
+          <b-button-toolbar>
+            <b-button-group size="sm" class="mr-1">
+              <b-button class="btn-block-option" variant="light" @click="$router.push('/publish')">
+                <TIcon icon="plus" />
+              </b-button>
+              <b-button class="btn-block-option" variant="light" @click="$router.push('/publish')">
+                <TIcon icon="refresh" pack="si" />
+              </b-button>
+            </b-button-group>
+            <b-input-group size="sm">
+              <b-form-input class="text-right" v-model="searchKeyword"></b-form-input>
+              <b-input-group-append>
+                <b-button variant="outline-secondary" @click="search"><TIcon icon="magnifier" pack="si" /></b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-button-toolbar>
         </template>
         <div class="d-flex justify-content-between push">
           <span>
@@ -76,35 +75,16 @@
               删除这{{deleteIds.length}}篇文章
             </b-button>
           </span>
-          <ul class="pagination pagination-sm" style="margin-bottom: 0">
-            <li class="page-item">
-              <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-label="Previous">上一页</a>
-            </li>
-            <li class="page-item active">
-              <a class="page-link" href="javascript:void(0)">1</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:void(0)">2</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:void(0)">3</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:void(0)">4</a>
-            </li>
-            <li class="page-item">
-              <a class="page-link" href="javascript:void(0)" aria-label="Next">下一页</a>
-            </li>
-          </ul>
         </div>
         <div class="pull-x">
           <ArticleTable
-            :pagination="true"
+            :pagination="articlePage"
             :column="column"
             :data="data"
             selectKey="id"
             hideHeader
             @onselected="selectedHandler"
+            @onpage="articlePageHandler"
             ref="dataTable"
             class="table table-hover table-vcenter font-size-sm"
           >
@@ -195,18 +175,31 @@ export default {
       hasCategoryData: false,
       defaultCategory: [
         {
+          id: "all",
+          title: "全部分类",
+          icon: "list-ol",
+          active: false
+        },
+        {
+          id: "category",
           title: "未归类",
           icon: "boxes",
           remark: "0篇",
           active: false
         },
         {
+          id: "draft",
           title: "草稿箱",
           icon: "file-signature",
           remark: "0篇",
           active: false
         }
-      ]
+      ],
+      articlePage: {},
+      articleQuery:{
+        page: 1
+      },
+      searchKeyword: ''
     };
   },
   mounted() {
@@ -214,16 +207,32 @@ export default {
     this.getArticleCount()
   },
   methods: {
+    search() {
+      this.articleQuery.page = 1
+      this.articleQuery.keyword = this.searchKeyword
+      this.getPageData()
+    },
     getArticleCount() {
       getArticleCount().then(res => {
-        this.defaultCategory[0].remark = `${res.category}篇`
-        this.defaultCategory[1].remark = `${res.draft}篇`
+        this.defaultCategory[0].remark = `${res.total}篇`
+        this.defaultCategory[1].remark = `${res.category}篇`
+        this.defaultCategory[2].remark = `${res.draft}篇`
       })
     },
     getPageData() {
-      articlePage(1).then(res => {
+      articlePage(this.articleQuery).then(res => {
         this.data = res.page.list
+        this.articlePage = {
+          pageNum: res.page.page_num,
+          pageSize: res.page.page_size,
+          totalPage: res.page.total_page,
+          totalCount: res.page.total_count,
+        }
       })
+    },
+    articlePageHandler(page) {
+      this.articleQuery.page = page
+      this.getPageData()
     },
     showCategory() {
       const nav = this.$refs.category;
@@ -241,6 +250,22 @@ export default {
     selectedHandler(vals, isAll) {
       this.deleteIds = vals;
       this.isSelectAll = isAll;
+    },
+    selectCategoryHandler(row) {
+      const query = {
+        page: this.articleQuery.page
+      }
+      if (row.id === 'category') {
+        query.category = -1
+      } else if (row.id === 'all') {
+        query.category = 0
+      } else if (row.id === 'draft') {
+        query.type = 2
+      } else {
+        query.category = row.id
+      }
+      this.articleQuery = query
+      this.getPageData()
     },
     submitCategory(bvModalEvt) {
       bvModalEvt.preventDefault();

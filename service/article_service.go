@@ -254,15 +254,30 @@ func (s *ArticleService) createContentTable(tableName string) error {
 }
 
 type ArticlePageQuery struct {
-	ChannelID int
+	Type       int
+	CategoryID int
+	Keyword    string
 }
 
-func (s *ArticleService) Page(page int, query ArticlePageQuery) *orm.Page {
+func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 	where := "1 = 1"
 	var param []interface{}
-	if query.ChannelID != 0 {
-		where += " and channel_id = ?"
-		param = append(param, query.ChannelID)
+	if query.CategoryID != 0 {
+		if query.CategoryID == -1 {
+			query.CategoryID = 0
+		}
+		where += " and category_id = ?"
+		param = append(param, query.CategoryID)
+	}
+	if query.Type != 0 {
+		where += " and status = ?"
+		param = append(param, query.Type)
+	}
+	query.Keyword = strings.TrimSpace(query.Keyword)
+	if query.Keyword != "" {
+		where += " and (title like ? or description like ?)"
+		param = append(param, "%" + query.Keyword + "%")
+		param = append(param, "%" + query.Keyword + "%")
 	}
 	var article []*model.Article
 	result := s.ORM.Page(orm.ORMPage{
@@ -270,7 +285,7 @@ func (s *ArticleService) Page(page int, query ArticlePageQuery) *orm.Page {
 		PageSize: s.PageSize,
 		Result:   &article,
 		Where:    orm.Where(where, param...),
-		OrderBy:  "status desc, id desc",
+		OrderBy:  "status desc, updated_at desc",
 	})
 	if len(article) > 0 {
 		for _, v := range article {
@@ -304,5 +319,11 @@ func (s *ArticleService) NoCategoryCount() int {
 func (s *ArticleService) DraftCount() int {
 	count := 0
 	s.ORM.DB.Model(&model.Article{}).Where("status = ?", model.ArticleStatusDraft).Count(&count)
+	return count
+}
+
+func (s *ArticleService) TotalCount() int {
+	count := 0
+	s.ORM.DB.Model(&model.Article{}).Count(&count)
 	return count
 }

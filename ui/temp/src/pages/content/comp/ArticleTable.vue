@@ -31,29 +31,23 @@
           </tr>
         </tbody>
       </table>
+      <div class="alert alert-secondary alert-dismissable text-center" v-if="!data || data.length === 0">
+          <h3 class="alert-heading font-w300 my-2">暂无数据</h3>
+          <b-button size="sm" variant="success">发布一篇文章</b-button>
+      </div>
     </div>
-    <nav v-if="pagination">
-      <ul class="pagination pagination-sm justify-content-end mt-2">
-        <li class="page-item">
-          <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-label="Previous">上一页</a>
-        </li>
-        <li class="page-item active">
-          <a class="page-link" href="javascript:void(0)">1</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="javascript:void(0)">2</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="javascript:void(0)">3</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="javascript:void(0)">4</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="javascript:void(0)" aria-label="Next">下一页</a>
-        </li>
-      </ul>
-    </nav>
+    <!-- <Tpagination v-if="pagination" :data="pagination"></Tpagination> -->
+    <b-pagination
+      class="justify-content-center"
+      v-model="pagination.pageNum"
+      :total-rows="pagination.totalPage"
+      per-page="1"
+      first-text="首页"
+      prev-text="上一页"
+      next-text="下一页"
+      last-text="尾页"
+      @change="pageChangeHandler"
+    ></b-pagination>
   </div>
 </template>
 <script>
@@ -90,6 +84,9 @@ export default {
     this.initSelectValues()
   },
   methods: {
+    pageChangeHandler(page) {
+      this.$emit('onpage', page)
+    },
     initSelectValues() {
       if (!this.selectKey || !this.data) {
         return 

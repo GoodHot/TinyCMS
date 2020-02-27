@@ -32,7 +32,7 @@
     "skin_template_dir": "resource/skin"
   },
   "website": {
-    "page_size": 20,
+    "page_size": 15,
     "article_table_size": 10
   }
 }

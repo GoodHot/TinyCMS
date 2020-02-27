@@ -15,7 +15,12 @@ type AdminArticleCtrl struct {
 
 func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
 	page := ctx.ParamInt("page")
-	ctx.Put("page", s.ArticleService.Page(page, service.ArticlePageQuery{}))
+	query := &service.ArticlePageQuery{
+		Type:       ctx.QueryParamInt("type"),
+		CategoryID: ctx.QueryParamInt("category"),
+		Keyword:    ctx.QueryParam("keyword"),
+	}
+	ctx.Put("page", s.ArticleService.Page(page, query))
 	return ctx.ResultOK()
 }
 
@@ -81,6 +86,7 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 func (s *AdminArticleCtrl) Count(ctx *ctrl.HTTPContext) error {
 	ctx.Put("category", s.ArticleService.NoCategoryCount())
 	ctx.Put("draft", s.ArticleService.DraftCount())
+	ctx.Put("total", s.ArticleService.TotalCount())
 	return ctx.ResultOK()
 }
 

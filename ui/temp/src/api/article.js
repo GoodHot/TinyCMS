@@ -11,9 +11,19 @@ export function saveArticle (parameter) {
   })
 }
 
-export function articlePage (page) {
+export function articlePage (query) {
+  let url = `/article/page_${query.page}?q=q`
+  if (query && query.type) {
+    url += `&type=${query.type}`
+  }
+  if (query && query.category) {
+    url += `&category=${query.category}`
+  }
+  if (query && query.keyword) {
+    url += `&keyword=${query.keyword}`
+  }
   return request({
-    url: `/article/page_${page}`,
+    url: url,
     method: 'get'
   })
 }
