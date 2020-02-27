@@ -4,21 +4,13 @@
       <table :class="'table table-borderless table-striped table-vcenter'">
         <thead v-if="!hideHeader">
           <tr>
-            <th v-if="selectKey" width="60px" class="text-center">
-              <TCheckbox type="secondary" name="selectAll" v-model="selectAllValue" @change="$selectAll" />
-              <b-form-checkbox
-                name="selectAll"
-              >
-                I accept the terms and use
-              </b-form-checkbox>
-            </th>
             <th :class="thClass(item)" v-for="item of column" :key="item.title">{{item.title}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(d, index) of data" :key="d.id">
+          <tr v-for="(d, index) of data" :key="index">
             <td v-if="selectKey" width="60px" class="text-center">
-              <b-form-checkbox :name="`select-${index}`" v-model="selectValues[index].checked" :ref="`selectItems`" @change="selectOne"></b-form-checkbox>
+              <b-form-checkbox :name="`checkBox${index}`" v-model="selectValues[index].checked" :ref="`selectItems`" @change="selectOne(index)"></b-form-checkbox>
             </td>
             <template v-for="col of column">
               <td :class="thClass(col)" :key="col.title" :width="col.width ? col.width : ''">
@@ -76,11 +68,10 @@ export default {
   },
   data() {
     return {
-      selectAllValue: false,
       selectValues: []
     }
   },
-  mounted() {
+  created() {
     this.initSelectValues()
   },
   methods: {
@@ -91,13 +82,15 @@ export default {
       if (!this.selectKey || !this.data) {
         return 
       }
+      const values = []
       for (let i in this.data) {
-        this.selectValues.push({
+        values.push({
           index: i,
           checked: false,
           value: this.data[i][this.selectKey]
         })
       }
+      this.selectValues = values
     },
     thClass(col) {
       let cls = ' '
@@ -118,17 +111,9 @@ export default {
       }
       this.onSelected()
     },
-    selectOne(rst) {
+    selectOne(index) {
+      this.selectValues[index].checked = !this.selectValues[index].checked
       this.onSelected()
-      if (!rst.checked) {
-        this.selectAllValue = false
-      }
-      for (let i in this.selectValues) {
-        if (!this.selectValues[i].checked) {
-          return 
-        }
-      }
-      this.selectAllValue = true
     },
     onSelected() {
       const values = new Array()

@@ -63,14 +63,14 @@
         <div class="d-flex justify-content-between push">
           <span>
             <b-button-group size="sm" class="mr-1">
-              <b-button variant="light">
+              <b-button variant="light" @click="selectAll(true)">
                 <TIcon class="text-primary" icon="check-circle" pack="far" />全选
               </b-button>
-              <b-button variant="light">
+              <b-button variant="light" @click="selectAll(false)" v-if="isSelectAll">
                 <TIcon class="text-primary" icon="circle" pack="far" />反选
               </b-button>
             </b-button-group>
-            <b-button variant="light" size="sm">
+            <b-button variant="light" size="sm" v-if="deleteIds && deleteIds.length > 0">
               <TIcon class="text-danger" icon="times" />
               删除这{{deleteIds.length}}篇文章
             </b-button>
@@ -220,6 +220,8 @@ export default {
       })
     },
     getPageData() {
+      this.deleteIds = []
+      this.isSelectAll = false
       articlePage(this.articleQuery).then(res => {
         this.data = res.page.list
         this.articlePage = {
