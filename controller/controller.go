@@ -94,6 +94,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 
 	// tag
 	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search, s.AdminService)
+	router.GET("/tag/hot", s.AdminTagCtrl.HotTag, s.AdminService)
 
 	// upload
 	router.POST("/upload", s.AdminUploadCtrl.Upload, s.AdminService)

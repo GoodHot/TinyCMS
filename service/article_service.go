@@ -257,6 +257,7 @@ type ArticlePageQuery struct {
 	Type       int
 	CategoryID int
 	Keyword    string
+	TagID      int
 }
 
 func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
@@ -276,8 +277,13 @@ func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 	query.Keyword = strings.TrimSpace(query.Keyword)
 	if query.Keyword != "" {
 		where += " and (title like ? or description like ?)"
-		param = append(param, "%" + query.Keyword + "%")
-		param = append(param, "%" + query.Keyword + "%")
+		param = append(param, "%"+query.Keyword+"%")
+		param = append(param, "%"+query.Keyword+"%")
+	}
+	if query.TagID != 0 {
+		articleIDs := s.TagService.getArticleIDs(query.TagID)
+		where += " and id in (?)"
+		param = append(param, articleIDs)
 	}
 	var article []*model.Article
 	result := s.ORM.Page(orm.ORMPage{

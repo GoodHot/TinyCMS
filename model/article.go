@@ -38,8 +38,8 @@ type ArticleContent struct {
 
 type Tag struct {
 	orm.Model
-	Name         string `gorm:"unique_index"`
-	ArticleCount int
+	Name         string `gorm:"unique_index" json:"name"`
+	ArticleCount int `json:"article_count"`
 }
 
 type RelTagArticle struct {

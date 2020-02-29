@@ -1,11 +1,15 @@
 import {request} from '@/utils/request'
 
-/**
- * @param {user: String, password: String} parameter 
- */
 export function searchTag (prefix) {
   return request({
     url: `/tag/search/${prefix}`,
+    method: 'get'
+  })
+}
+
+export function hotTags () {
+  return request({
+    url: '/tag/hot',
     method: 'get'
   })
 }

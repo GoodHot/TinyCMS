@@ -74,3 +74,19 @@ func (s *TagService) PrefixFind(prefix string) []string {
 	})
 	return result
 }
+
+func (s *TagService) GetHotTag(count int) []*model.Tag {
+	var tags []*model.Tag
+	s.ORM.DB.Where("article_count > ?", 0).Order("updated_at desc, article_count desc").Limit(count).Find(&tags)
+	return tags
+}
+
+func (s *TagService) getArticleIDs(id int) []uint {
+	var rels []*model.RelTagArticle
+	s.ORM.DB.Where("tag_id = ?", id).Find(&rels)
+	var ids []uint
+	for _, rel := range rels {
+		ids = append(ids, rel.ArticleID)
+	}
+	return ids
+}

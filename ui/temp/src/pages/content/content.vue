@@ -25,15 +25,8 @@
             <b-button size="sm" variant="light" @click="categoryVisible = !categoryVisible">创建第一个分类</b-button>
           </div>
         </TBlock>
-        <TBlock title="标签" icon="tags">
-          <template slot="options">
-            <b-button-group size="sm">
-              <b-button class="btn-block-option" variant="light">
-                <TIcon icon="settings" pack="si" />
-              </b-button>
-            </b-button-group>
-          </template>
-          <TList class="push"></TList>
+        <TBlock title="常用标签" icon="tags">
+          <TList class="push" rowKey="id" :data="hotTagList" @onclick="selectTagsItem"></TList>
           <div class="text-center push">
             <b-button size="sm" variant="light">查看所有标签</b-button>
           </div>
@@ -130,6 +123,7 @@
 import ArticleTable from "./comp/ArticleTable";
 import CategoryModal from "./comp/CategoryModal";
 import { articlePage, getArticleCount } from "@/api/article"
+import { hotTags } from "@/api/tag"
 import moment from "moment"
 
 export default {
@@ -176,7 +170,7 @@ export default {
       defaultCategory: [
         {
           id: "all",
-          title: "全部分类",
+          title: "全部文章",
           icon: "list-ol",
           active: false
         },
@@ -199,12 +193,15 @@ export default {
       articleQuery:{
         page: 1
       },
-      searchKeyword: ''
+      searchKeyword: '',
+      hotTagList: [],
+      tagRow: null
     };
   },
   mounted() {
     this.getPageData()
     this.getArticleCount()
+    this.getHotTags()
   },
   methods: {
     search() {
@@ -255,7 +252,7 @@ export default {
     },
     selectCategoryHandler(row) {
       const query = {
-        page: this.articleQuery.page
+        page: 1
       }
       if (row.id === 'category') {
         query.category = -1
@@ -288,6 +285,34 @@ export default {
     },
     splitTags(tags) {
       return tags.split(',')
+    },
+    selectTagsItem(row) {
+      if (this.tagRow) {
+        this.tagRow.active = false
+      }
+      this.tagRow = row
+      const query = {
+        page: 1,
+        tag: row.id
+      }
+      this.articleQuery = query
+      this.getPageData()
+    },
+    getHotTags() {
+      hotTags().then(res => {
+        const tags = []
+        for (let i in res.tags) {
+          const tag = res.tags[i]
+          tags.push({
+            id: tag.id,
+            title: tag.name,
+            remark: `${tag.article_count}篇`,
+            icon: 'tag',
+            active: false
+          })
+        }
+        this.hotTagList = tags
+      })
     }
   }
 };

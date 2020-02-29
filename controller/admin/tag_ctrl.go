@@ -14,3 +14,9 @@ func (s *AdminTagCtrl) Search(ctx *ctrl.HTTPContext) error {
 	ctx.Put("result", s.TagService.PrefixFind(prefix))
 	return ctx.ResultOK()
 }
+
+func (s *AdminTagCtrl) HotTag(ctx *ctrl.HTTPContext) error {
+	tags := s.TagService.GetHotTag(10)
+	ctx.Put("tags", tags)
+	return ctx.ResultOK()
+}

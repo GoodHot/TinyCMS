@@ -22,6 +22,9 @@ export function articlePage (query) {
   if (query && query.keyword) {
     url += `&keyword=${query.keyword}`
   }
+  if (query && query.tag) {
+    url += `&tag=${query.tag}`
+  }
   return request({
     url: url,
     method: 'get'

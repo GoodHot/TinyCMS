@@ -19,6 +19,7 @@ func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
 		Type:       ctx.QueryParamInt("type"),
 		CategoryID: ctx.QueryParamInt("category"),
 		Keyword:    ctx.QueryParam("keyword"),
+		TagID:      ctx.QueryParamInt("tag"),
 	}
 	ctx.Put("page", s.ArticleService.Page(page, query))
 	return ctx.ResultOK()
