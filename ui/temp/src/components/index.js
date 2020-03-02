@@ -8,6 +8,9 @@ import TMarkdown from './Markdown/Markdown'
 import TCategory from './Category/Category'
 import TUpload from './Upload/Upload'
 import Tpagination from './Pagination/Pagination'
+import TTable from './Table/Table'
+import TTree from './Tree/Tree'
+import TTreeChild from './Tree/TreeChild'
 
 export default {
   TNavigation,
@@ -19,5 +22,8 @@ export default {
   TMarkdown,
   TCategory,
   TUpload,
-  Tpagination
+  Tpagination,
+  TTable,
+  TTree,
+  TTreeChild
 }
