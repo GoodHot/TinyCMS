@@ -20,6 +20,7 @@ type Controller struct {
 	AdminArticleCtrl  *admin.AdminArticleCtrl  `ioc:"auto"`
 	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
 	AdminDictCtrl     *admin.AdminDictCtrl     `ioc:"auto"`
+	RoleAuthCtrl      *admin.RoleAuthCtrl      `ioc:"auto"`
 	SkinCtrl          *web.SkinCtrl            `ioc:"auto"`
 	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
 	AdminService      *service.AdminService    `ioc:"auto"`
@@ -83,7 +84,6 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 		buildOption: true,
 	}
 	// auth
-	//router.Any("/auth/init", s.AdminAuthCtrl.InitRole)
 	router.POST("/auth/login", s.AdminAuthCtrl.Login, s.AdminService)
 	router.Any("/auth/info", s.AdminAuthCtrl.Info, s.AdminService)
 
@@ -105,6 +105,10 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.GET("/article/page_:page", s.AdminArticleCtrl.Page, s.AdminService)
 	router.GET("/article/:id", s.AdminArticleCtrl.Get, s.AdminService)
 	router.GET("/article/count", s.AdminArticleCtrl.Count, s.AdminService)
+
+	// role
+	router.GET("/role/permission", s.RoleAuthCtrl.AllPermission, s.AdminService)
+	router.Any("/role/init", s.RoleAuthCtrl.InitRole, s.AdminService)
 
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)

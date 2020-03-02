@@ -8,7 +8,6 @@ import (
 )
 
 type AdminAuthCtrl struct {
-	RoleService  *service.RoleService  `ioc:"auto"`
 	AdminService *service.AdminService `ioc:"auto"`
 }
 
@@ -44,10 +43,5 @@ func (s *AdminAuthCtrl) Info(ctx *ctrl.HTTPContext) error {
 		return ctx.ResultErrStatus(http.StatusUnauthorized, "please login")
 	}
 	ctx.Put("info", admin)
-	return ctx.ResultOK()
-}
-
-func (s *AdminAuthCtrl) InitRole(ctx *ctrl.HTTPContext) error {
-	s.RoleService.Init()
 	return ctx.ResultOK()
 }

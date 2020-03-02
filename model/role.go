@@ -16,7 +16,8 @@ type RelRolePermission struct {
 
 type Permission struct {
 	orm.Model
-	Code           string `json:"code"` // 唯一识别码
-	PermissionName string `json:"permission_name"`// 权限名称
-	PID            uint   // 上级ID
+	Code           string        `json:"code"`            // 唯一识别码
+	PermissionName string        `json:"permission_name"` // 权限名称
+	PID            uint          // 上级ID
+	Child          []*Permission `gorm:"-" json:"child"`
 }

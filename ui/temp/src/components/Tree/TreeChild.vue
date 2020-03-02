@@ -5,7 +5,7 @@
       {{data.name}}
     </b-form-checkbox>
     <div class="t-tree-child" v-show="showChild">
-      <TTree :data="data.child" isChild :expand="expand"></TTree>
+      <TTreeChild ref="childs" v-for="item of data.child" :key="item.name" :data="item" :expand="expand" @select="selectHandler"></TTreeChild>
     </div>
   </div>
 </template>
@@ -45,6 +45,29 @@ export default {
   methods: {
     checkHandler(checked) {
       this.$emit('select', {checked, data: this.data})
+      if (this.data.child) {
+        this.selectAll(checked)
+      }
+    },
+    selectHandler(data) {
+      this.$emit('select', data)
+    },
+    selectAll(status) {
+      this.data.checked = status
+      console.log(this.data)
+      // if (this.data.child) {
+      //   for (let i in this.data.child) {
+      //     const c = this.data.child[i]
+      //     console.log('c', c)
+      //     c.checked = status
+      //   }
+      // }
+      if (this.data.child) {
+        for (let i in this.$refs.childs) {
+          const child = this.$refs.childs[i]
+          child.selectAll(status)
+        }
+      }
     }
   }
 }

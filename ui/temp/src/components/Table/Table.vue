@@ -30,6 +30,7 @@
     </div>
     <!-- <Tpagination v-if="pagination" :data="pagination"></Tpagination> -->
     <b-pagination
+      v-if="pagination"
       class="justify-content-center"
       v-model="pagination.pageNum"
       :total-rows="pagination.totalPage"

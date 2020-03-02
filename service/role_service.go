@@ -26,45 +26,70 @@ func (s *RoleService) Init() {
 		RoleID:   role.ID,
 	})
 
-	content := &model.Permission{
-		Code:           "content",
-		PermissionName: "内容管理",
+	article := &model.Permission{
+		Code:           "article",
+		PermissionName: "文章管理",
 		PID:            0,
 	}
-	s.ORM.DB.Save(content)
+	s.ORM.DB.Save(article)
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_publish",
+		Code:           "article_publish",
 		PermissionName: "发布文章",
-		PID:            content.ID,
+		PID:            article.ID,
 	})
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_edit",
+		Code:           "article_edit",
 		PermissionName: "编辑文章",
-		PID:            content.ID,
+		PID:            article.ID,
 	})
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_delete",
+		Code:           "article_delete",
 		PermissionName: "删除文章",
-		PID:            content.ID,
+		PID:            article.ID,
 	})
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_list",
+		Code:           "article_list",
 		PermissionName: "查询文章列表",
-		PID:            content.ID,
+		PID:            article.ID,
 	})
+
+	category := &model.Permission{
+		Code:           "category",
+		PermissionName: "分类管理",
+		PID:            0,
+	}
+	s.ORM.DB.Save(category)
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_channel_edit",
+		Code:           "category_edit",
 		PermissionName: "编辑分类",
-		PID:            content.ID,
+		PID:            category.ID,
 	})
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_channel_delete",
+		Code:           "category_delete",
 		PermissionName: "删除分类",
-		PID:            content.ID,
+		PID:            category.ID,
 	})
 	s.ORM.DB.Save(&model.Permission{
-		Code:           "content_channel_save",
+		Code:           "category_save",
 		PermissionName: "增加分类",
-		PID:            content.ID,
+		PID:            category.ID,
 	})
+	s.ORM.DB.Save(&model.Permission{
+		Code:           "category_query",
+		PermissionName: "查询分类",
+		PID:            category.ID,
+	})
+}
+
+func (s *RoleService) AllPermission() []*model.Permission {
+	var parent []*model.Permission
+	s.ORM.DB.Where("p_id = ?", 0).Find(&parent)
+	if parent != nil && len(parent) > 0 {
+		for _, p := range parent {
+			var child []*model.Permission
+			s.ORM.DB.Where("p_id = ?", p.ID).Find(&child)
+			p.Child = child
+		}
+	}
+	return parent
 }

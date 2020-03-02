@@ -12,13 +12,17 @@
         {{form.role_name.msg}}
       </b-form-invalid-feedback>
     </b-form-group>
-    <b-form-group label="角色名称" >
-      <TTree :data="roleTree" expand></TTree>
+    <b-form-group label="拥有权限" >
+      <PermissionList></PermissionList>
     </b-form-group>
   </b-form>
 </template>
 <script>
+import PermissionList from './PermissionList'
 export default {
+  components: {
+    PermissionList
+  },
   data() {
     return {
       form: {
@@ -30,48 +34,7 @@ export default {
           value: '',
           require: '请输入角色名称'
         }
-      },
-      roleTree: [
-        {
-          name: 'content',
-          value: 111,
-        },
-        {
-          name: 'content1',
-          value: 222,
-          checked: true
-        },
-        {
-          name: 'content2',
-          value: 333,
-          child: [
-            {
-              name: 'content',
-              value: 111,
-            },
-            {
-              name: 'content1',
-              value: 222,
-              checked: true,
-              child: [
-                {
-                  name: 'content',
-                  value: 111,
-                },
-                {
-                  name: 'content1',
-                  value: 222,
-                  checked: true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          name: 'content3',
-          value: 444,
-        },
-      ]
+      }
     }
   }
 }
