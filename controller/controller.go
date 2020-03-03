@@ -20,7 +20,7 @@ type Controller struct {
 	AdminArticleCtrl  *admin.AdminArticleCtrl  `ioc:"auto"`
 	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
 	AdminDictCtrl     *admin.AdminDictCtrl     `ioc:"auto"`
-	RoleAuthCtrl      *admin.RoleAuthCtrl      `ioc:"auto"`
+	RoleAuthCtrl      *admin.RoleCtrl      `ioc:"auto"`
 	SkinCtrl          *web.SkinCtrl            `ioc:"auto"`
 	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
 	AdminService      *service.AdminService    `ioc:"auto"`
@@ -109,6 +109,8 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	// role
 	router.GET("/role/permission", s.RoleAuthCtrl.AllPermission, s.AdminService)
 	router.Any("/role/init", s.RoleAuthCtrl.InitRole, s.AdminService)
+	router.POST("/role", s.RoleAuthCtrl.Save, s.AdminService)
+	router.GET("/role/:page", s.RoleAuthCtrl.Page, s.AdminService)
 
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)

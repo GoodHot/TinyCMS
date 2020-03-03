@@ -1,13 +1,18 @@
 package service
 
 import (
+	"errors"
+	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	"github.com/jinzhu/gorm"
 )
 
 type RoleService struct {
 	ORM          *orm.ORM      `ioc:"auto"`
 	AdminService *AdminService `ioc:"auto"`
+	PageSize     int           `val:"${website.page_size}"`
+	permissions  map[uint]*model.Permission
 }
 
 func (s *RoleService) Init() {
@@ -92,4 +97,94 @@ func (s *RoleService) AllPermission() []*model.Permission {
 		}
 	}
 	return parent
+}
+
+func (s *RoleService) Save(role model.Role, permissions []*model.Permission) error {
+	exists := &model.Role{}
+	s.ORM.DB.Where("code = ?", role.Code).Find(exists)
+	if exists.ID != 0 {
+		return errors.New(strs.Fmt("角色编码：%s 已经存在", role.Code))
+	}
+	return s.ORM.Tx(func(db *gorm.DB) error {
+		if err := db.Save(&role).Error; err != nil {
+			return err
+		}
+		for _, per := range permissions {
+			rel := model.RelRolePermission{
+				RoleID:     role.ID,
+				Permission: per.ID,
+			}
+			if err := db.Save(&rel).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}
+
+func (s *RoleService) Page(page int) *orm.Page {
+	var roles []*model.Role
+	result := s.ORM.Page(orm.ORMPage{
+		PageNum:  page,
+		PageSize: s.PageSize,
+		Result:   &roles,
+		OrderBy:  "is_super desc, id desc",
+	})
+	if roles != nil && len(roles) > 0 {
+		s.getRelsPermission(&roles)
+	}
+	return result
+}
+
+func (s *RoleService) getRelsPermission(roles *[]*model.Role) {
+	for _, role := range *roles {
+		s.getRelPermission(role)
+	}
+}
+
+func (s *RoleService) getRelPermission(role *model.Role) {
+	var rels []*model.RelRolePermission
+	s.ORM.DB.Where("role_id = ?", role.ID).Find(&rels)
+	if rels == nil || len(rels) == 0 {
+		return
+	}
+	permissions := role.Permissions
+	if permissions == nil {
+		role.Permissions = make(map[string][]*model.Permission)
+	}
+	maps := s.permissionMap()
+	for _, rel := range rels {
+		value := maps[rel.Permission]
+		if value.Parent != nil {
+			parentMaps := role.Permissions[value.Parent.PermissionName]
+			if parentMaps == nil {
+				parentMaps = []*model.Permission{}
+			}
+			parentMaps = append(parentMaps, value)
+			role.Permissions[value.Parent.PermissionName] = parentMaps
+		}
+	}
+}
+
+func (s *RoleService) permissionMap() map[uint]*model.Permission {
+	if s.permissions != nil {
+		return s.permissions
+	}
+	var pers []*model.Permission
+	s.ORM.DB.Find(&pers)
+	maps := make(map[uint]*model.Permission)
+	for _, parent := range pers {
+		if parent.PID == 0 {
+			maps[parent.ID] = parent
+		}
+	}
+	for _, child := range pers {
+		if child.PID == 0 {
+			continue
+		}
+		maps[child.ID] = child
+		child.Parent = maps[child.PID]
+	}
+	s.permissions = maps
+	return maps
 }

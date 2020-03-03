@@ -46,7 +46,7 @@ func (s *AdminService) GenToken(admin *model.Admin) {
 	token := strings.ReplaceAll(uid.String(), "-", "")
 	cacheKey := "token:" + token
 	admin.Token = token
-	s.CacheService.Set(cacheKey, admin, 30*time.Minute)
+	s.CacheService.Set(cacheKey, admin, 60*time.Minute)
 }
 
 func (s *AdminService) CheckToken(token string) (*model.Admin, error) {

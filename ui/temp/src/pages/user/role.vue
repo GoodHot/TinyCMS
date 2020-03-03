@@ -13,9 +13,9 @@
           {{item.role_name}}
         </template>
         <template v-slot:permission="{item}">
-          <div v-for="per of item.permission" :key="per.code" class="mb-2">
-            <b-badge variant="primary">{{per.permission_name}}</b-badge>
-            <b-badge class="ml-2" variant="info" v-for="cl of per.children" :key="cl.code">{{cl.permission_name}}</b-badge>
+          <div v-for="(val, key) of item.permissions" :key="key" class="mb-2">
+            <b-badge variant="primary">{{key}}</b-badge>
+            <b-badge class="ml-2" variant="info" v-for="per of val" :key="per.id">{{per.permission_name}}</b-badge>
           </div>
         </template>
         <template v-slot:action>
@@ -31,20 +31,23 @@
       size="lg"
       title="创建角色"
       no-close-on-backdrop
+      @ok="submitRole"
       ok-title="保存"
       cancel-title="关闭"
     >
-      <RoleModal ref="categoryModal"></RoleModal>
+      <RoleModal ref="roleModal" @savedRole="savedRoleHandler"></RoleModal>
     </b-modal>
   </TBlock>
 </template>
 <script>
 import RoleModal from './comps/RoleModal'
+import {pageRole} from '@/api/role'
 export default {
   components: {
     RoleModal
   },
   mounted() {
+    this.loadPage()
   },
   data() {
     return {
@@ -87,104 +90,29 @@ export default {
           class: 'd-none d-xl-table-cell text-muted'
         }
       ],
-      data: [
-        {
-          id: 123,
-          code: 'super',
-          role_name: '超级管理员',
-          admin_count: 123,
-          permission: [
-            {
-              code: 'content',
-              permission_name: '内容管理',
-              children: [
-                {
-                  code: 'content_publish',
-                  permission_name: '发布文章'
-                },
-                {
-                  code: 'content_edit',
-                  permission_name: '编辑文章'
-                },
-                {
-                  code: 'content_delete',
-                  permission_name: '删除文章'
-                },
-                {
-                  code: 'content_list',
-                  permission_name: '查询文章列表'
-                }
-              ]
-            },
-            {
-              code: 'user',
-              permission_name: '用户管理',
-              children: [
-                {
-                  code: 'user_edit',
-                  permission_name: '编辑用户'
-                },
-                {
-                  code: 'user_delete',
-                  permission_name: '删除用户'
-                },
-                {
-                  code: 'user_list',
-                  permission_name: '查询用户列表'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 125,
-          code: 'super',
-          role_name: '超级管理员',
-          admin_count: 123,
-          permission: [
-            {
-              code: 'content',
-              permission_name: '内容管理',
-              children: [
-                {
-                  code: 'content_publish',
-                  permission_name: '发布文章'
-                },
-                {
-                  code: 'content_edit',
-                  permission_name: '编辑文章'
-                },
-                {
-                  code: 'content_delete',
-                  permission_name: '删除文章'
-                },
-                {
-                  code: 'content_list',
-                  permission_name: '查询文章列表'
-                }
-              ]
-            },
-            {
-              code: 'user',
-              permission_name: '用户管理',
-              children: [
-                {
-                  code: 'user_edit',
-                  permission_name: '编辑用户'
-                },
-                {
-                  code: 'user_delete',
-                  permission_name: '删除用户'
-                },
-                {
-                  code: 'user_list',
-                  permission_name: '查询用户列表'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      data: []
+    }
+  },
+  methods: {
+    loadPage() {
+      pageRole(1).then(res => {
+        console.log(res)
+        this.data = res.page.list
+      })
+    },
+    submitRole(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.$refs.roleModal.submit();
+      return false;
+    },
+    savedRoleHandler() {
+      this.$bvToast.toast('创建角色成功', {
+        title: '提示',
+        variant: 'info',
+        solid: true
+      })
+      this.roleVisible = false
+      this.loadPage()
     }
   }
 }
