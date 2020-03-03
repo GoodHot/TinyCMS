@@ -13,6 +13,12 @@
           {{item.role_name}}
         </template>
         <template v-slot:permission="{item}">
+          <div v-if="item.is_super">
+            <b-badge :id="`superTip_${item.id}`" variant="dark">超级管理员</b-badge>
+            <b-tooltip :target="`superTip_${item.id}`">
+              超级管理员拥有所有权限
+            </b-tooltip>
+          </div>
           <div v-for="(val, key) of item.permissions" :key="key" class="mb-2">
             <b-badge variant="primary">{{key}}</b-badge>
             <b-badge class="ml-2" variant="info" v-for="per of val" :key="per.id">{{per.permission_name}}</b-badge>
