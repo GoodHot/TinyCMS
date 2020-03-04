@@ -33,16 +33,21 @@ func (s *RoleCtrl) Save(ctx *ctrl.HTTPContext) error {
 	if err := ctx.Bind(form); err != nil {
 		return ctx.ResultErr(err.Error())
 	}
-	if form.Permission == nil || len(form.Permission) == 0 {
+	var dbRole *model.Role
+	if form.ID != 0 {
+		dbRole, _ = s.RoleService.Get(int(form.ID))
+	}
+	if (dbRole != nil && !dbRole.IsSuper) && (form.Permission == nil || len(form.Permission) == 0) {
 		return ctx.ResultErr("请选择角色拥有权限")
 	}
+	isSuper := dbRole != nil && dbRole.IsSuper
 	role := model.Role{
 		Model: orm.Model{
 			ID: form.ID,
 		},
 		Code:     form.Code,
 		RoleName: form.Name,
-		IsSuper:  false,
+		IsSuper:  isSuper,
 	}
 	var permission []*model.Permission
 	for _, p := range form.Permission {

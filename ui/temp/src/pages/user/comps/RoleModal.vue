@@ -65,11 +65,11 @@ export default {
     submit() {
       const rst = valid.check(this.form)
       this.form = rst.values
-      const permission = []
+      let permission = []
       if (!this.isSuper) {
-        this.$refs.permissionList.getValue()
+        permission = this.$refs.permissionList.getValue()
       }
-      if (!permission || permission == 0) {
+      if (!this.isSuper && (!permission || permission == 0)) {
         this.form.permission.valid = false
         this.form.permission.msg = "请选择角色拥有权限"
         rst.valid = false
@@ -84,7 +84,7 @@ export default {
         id: this.form.id.value,
         code: this.form.code.value,
         name: this.form.role_name.value,
-        permission: this.form.permission.value
+        permission: permission
       }
       saveRole(param).then(() => {
         this.$emit('savedRole')

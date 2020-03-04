@@ -113,7 +113,7 @@ export default {
       return false;
     },
     savedRoleHandler() {
-      this.$bvToast.toast('创建角色成功', {
+      this.$bvToast.toast('角色设置成功', {
         title: '提示',
         variant: 'info',
         solid: true
