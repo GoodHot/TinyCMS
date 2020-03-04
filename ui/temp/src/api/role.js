@@ -17,7 +17,15 @@ export function saveRole (param) {
 
 export function pageRole (page) {
   return request({
-    url: `/role/${page}`,
+    url: `/role/page_${page}`,
     method: 'get'
   })
 }
+
+export function getRole (id) {
+  return request({
+    url: `/role/${id}`,
+    method: 'get'
+  })
+}
+

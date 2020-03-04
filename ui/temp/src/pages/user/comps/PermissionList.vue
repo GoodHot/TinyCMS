@@ -7,6 +7,7 @@
         v-model="option.checked"
         inline
         @change="checkboxChangeHandler(option, item.values)"
+        :disabled="isSuper"
       >
         {{ option.text }}
       </b-form-checkbox>
@@ -17,6 +18,18 @@
 import {allPermission} from '@/api/role'
 
 export default {
+  props: {
+    checkedValues: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    isSuper: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       column: [
@@ -89,7 +102,6 @@ export default {
     },
     getValue() {
       const ids = []
-      console.log(ids)
       for (let i in this.data) {
         for (let j in this.data[i].values) {
           const per = this.data[i].values[j]
@@ -99,6 +111,21 @@ export default {
         }
       }
       return ids
+    }
+  },
+  watch: {
+    checkedValues(val) {
+      console.log('ck', val)
+      console.log('dt', this.data)
+      for (let i in this.data) {
+        for (let j in this.data[i].values) {
+          for (let k in val) {
+            if (this.data[i].values[j].value === val[k]) {
+              this.data[i].values[j].checked = true
+            }
+          }
+        }
+      }
     }
   }
 }

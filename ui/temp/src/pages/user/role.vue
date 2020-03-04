@@ -24,9 +24,9 @@
             <b-badge class="ml-2" variant="info" v-for="per of val" :key="per.id">{{per.permission_name}}</b-badge>
           </div>
         </template>
-        <template v-slot:action>
+        <template v-slot:action="{item}">
           <b-button-group size="sm">
-            <b-button variant="light"><TIcon icon="edit" pack="far" /> 编辑</b-button>
+            <b-button variant="light" @click="editRole(item.id)"><TIcon icon="edit" pack="far" /> 编辑</b-button>
             <b-button variant="light"><TIcon icon="trash-alt" pack="far" /> 删除</b-button>
           </b-button-group>
         </template>
@@ -38,10 +38,11 @@
       title="创建角色"
       no-close-on-backdrop
       @ok="submitRole"
+      @hide="roleModalHide"
       ok-title="保存"
       cancel-title="关闭"
     >
-      <RoleModal ref="roleModal" @savedRole="savedRoleHandler"></RoleModal>
+      <RoleModal ref="roleModal" :editId="editId" @savedRole="savedRoleHandler"></RoleModal>
     </b-modal>
   </TBlock>
 </template>
@@ -57,6 +58,7 @@ export default {
   },
   data() {
     return {
+      editId: 0,
       roleVisible: false,
       column: [
         {
@@ -102,13 +104,12 @@ export default {
   methods: {
     loadPage() {
       pageRole(1).then(res => {
-        console.log(res)
         this.data = res.page.list
       })
     },
     submitRole(bvModalEvt) {
-      bvModalEvt.preventDefault();
-      this.$refs.roleModal.submit();
+      bvModalEvt.preventDefault()
+      this.$refs.roleModal.submit()
       return false;
     },
     savedRoleHandler() {
@@ -119,6 +120,13 @@ export default {
       })
       this.roleVisible = false
       this.loadPage()
+    },
+    editRole(id) {
+      this.roleVisible = true
+      this.editId = id
+    },
+    roleModalHide() {
+      this.editId = 0
     }
   }
 }

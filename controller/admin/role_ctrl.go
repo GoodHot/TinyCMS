@@ -22,6 +22,7 @@ func (s *RoleCtrl) InitRole(ctx *ctrl.HTTPContext) error {
 }
 
 type RoleForm struct {
+	ID         uint   `json:"id"`
 	Code       string `json:"code"`
 	Name       string `json:"name"`
 	Permission []uint `json:"permission"`
@@ -36,6 +37,9 @@ func (s *RoleCtrl) Save(ctx *ctrl.HTTPContext) error {
 		return ctx.ResultErr("请选择角色拥有权限")
 	}
 	role := model.Role{
+		Model: orm.Model{
+			ID: form.ID,
+		},
 		Code:     form.Code,
 		RoleName: form.Name,
 		IsSuper:  false,
@@ -56,5 +60,15 @@ func (s *RoleCtrl) Save(ctx *ctrl.HTTPContext) error {
 func (s *RoleCtrl) Page(ctx *ctrl.HTTPContext) error {
 	page := ctx.ParamInt("page")
 	ctx.Put("page", s.RoleService.Page(page))
+	return ctx.ResultOK()
+}
+
+func (s *RoleCtrl) Get(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	role, err := s.RoleService.Get(id)
+	if err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	ctx.Put("role", role)
 	return ctx.ResultOK()
 }

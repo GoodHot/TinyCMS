@@ -101,11 +101,17 @@ func (s *RoleService) AllPermission() []*model.Permission {
 
 func (s *RoleService) Save(role model.Role, permissions []*model.Permission) error {
 	exists := &model.Role{}
-	s.ORM.DB.Where("code = ?", role.Code).Find(exists)
+	s.ORM.DB.Where("code = ? and id != ?", role.Code, role.ID).Find(exists)
 	if exists.ID != 0 {
 		return errors.New(strs.Fmt("角色编码：%s 已经存在", role.Code))
 	}
+	if role.IsSuper {
+		return s.ORM.DB.Save(&role).Error
+	}
 	return s.ORM.Tx(func(db *gorm.DB) error {
+		if role.ID > 0 {
+			db.Unscoped().Where("role_id = ?", role.ID).Delete(&model.RelRolePermission{})
+		}
 		if err := db.Save(&role).Error; err != nil {
 			return err
 		}
@@ -187,4 +193,14 @@ func (s *RoleService) permissionMap() map[uint]*model.Permission {
 	}
 	s.permissions = maps
 	return maps
+}
+
+func (s *RoleService) Get(id int) (*model.Role, error) {
+	var role model.Role
+	s.ORM.DB.Where("id = ?", id).First(&role)
+	if &role == nil {
+		return nil, errors.New("角色不存在")
+	}
+	s.getRelPermission(&role)
+	return &role, nil
 }
