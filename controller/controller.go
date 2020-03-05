@@ -87,6 +87,9 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.POST("/auth/login", s.AdminAuthCtrl.Login, s.AdminService)
 	router.Any("/auth/info", s.AdminAuthCtrl.Info, s.AdminService)
 
+	// admin
+	router.GET("/admin/all", s.AdminAuthCtrl.All, s.AdminService)
+
 	// channel
 	router.POST("/category", s.AdminCategoryCtrl.Save, s.AdminService)
 	router.GET("/category/tree", s.AdminCategoryCtrl.Tree, s.AdminService)

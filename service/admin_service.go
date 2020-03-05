@@ -15,6 +15,7 @@ import (
 type AdminService struct {
 	ORM          *orm.ORM      `ioc:"auto"`
 	CacheService *CacheService `ioc:"auto"`
+	RoleService  *RoleService  `ioc:"auto"`
 	dataTree     *trie.Trie
 }
 
@@ -81,4 +82,16 @@ func (s *AdminService) TrieGet(id uint) *model.Admin {
 		return nil
 	}
 	return result.Value.(*model.Admin)
+}
+
+func (s *AdminService) All() []*model.Admin {
+	var result []*model.Admin
+	s.ORM.DB.Find(&result)
+	if result != nil && len(result) > 0 {
+		for _, item := range result {
+			role, _ := s.RoleService.Get(int(item.RoleID))
+			item.Role = role
+		}
+	}
+	return result
 }

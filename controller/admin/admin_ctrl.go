@@ -45,3 +45,8 @@ func (s *AdminAuthCtrl) Info(ctx *ctrl.HTTPContext) error {
 	ctx.Put("info", admin)
 	return ctx.ResultOK()
 }
+
+func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
+	ctx.Put("admins", s.AdminService.All())
+	return ctx.ResultOK()
+}

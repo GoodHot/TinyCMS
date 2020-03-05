@@ -1,35 +1,35 @@
 <template>
-  <div class="block">
-    <div class="block-header">
-      <h3 class="block-title">超级管理员</h3>
-      <div class="block-options">
-        <a class="btn-block-option">
-          <TIcon icon="settings" pack="si" />
-        </a>
-        <a class="btn-block-option js-tooltip-enabled">
-          <TIcon icon="trash" pack="si" @click="confirmDelete" />
-        </a>
-      </div>
+  <div class="block text-center">
+    <div :class="'block-content block-content-full ribbon ribbon-left ribbon-modern ' + (admin.role.is_super ? 'ribbon-primary':'ribbon-info')">
+        <div class="ribbon-box">
+            <i class="fab fa-black-tie"></i> {{admin.role.role_name}}
+        </div>
+        <div class="px-2">
+          <img
+            class="img-avatar img-avatar96 img-avatar-thumb"
+            src="http://ww1.sinaimg.cn/mw1024/00745YaMgy1gbyi3gl2mhj33402c0hdw.jpg"
+            alt
+          />
+        </div>
+        <div class="block-content-full pt-2">
+            <div class="font-size-h4 font-w600 mb-0">{{ admin.nickname }}({{ admin.username }})</div>
+            <div class="font-size-h5 text-muted">{{admin.resume}}</div>
+        </div>
     </div>
-    <div
-      class="block-content block-content-full text-center bg-image"
-      style="background-image: url('http://wx1.sinaimg.cn/mw600/798cfa5bly1gbybogzyiuj20b406qt8u.jpg');"
-    >
-      <img
-        class="img-avatar img-avatar96 img-avatar-thumb"
-        src="http://ww1.sinaimg.cn/mw1024/00745YaMgy1gbyi3gl2mhj33402c0hdw.jpg"
-        alt
-      />
-    </div>
-    <div class="block-content font-size-sm" style="height: 120px">
-      <p>
-        <slot></slot>
-      </p>
+    <div class="block-content block-content-full bg-body-light">
+      <b-button variant="outline-secondary" size="sm" v-b-tooltip.hover title="查看拥有权限"><TIcon icon="address-card" pack="far" /></b-button>
+      <b-button variant="outline-secondary" size="sm" class="mx-1" v-b-tooltip.hover title="设置账号信息"><TIcon icon="settings" pack="si" /></b-button>
+      <b-button variant="outline-secondary" size="sm" v-b-tooltip.hover title="删除用户"><TIcon icon="trash" pack="si" /></b-button>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    admin: {
+      type: Object
+    }
+  },
   methods: {
     confirmDelete() {
       this.$dialog.confirm()

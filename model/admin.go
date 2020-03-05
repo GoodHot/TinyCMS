@@ -14,4 +14,5 @@ type Admin struct {
 	Avatar     string `gorm:"type:varchar(200)" json:"avatar"`
 	RoleID     uint   `json:"role_id"`
 	Token      string `gorm:"-" json:"token"`
+	Role       *Role  `gorm:"-" json:"role"`
 }
