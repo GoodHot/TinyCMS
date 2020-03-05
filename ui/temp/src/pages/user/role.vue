@@ -35,7 +35,7 @@
     <b-modal
       v-model="roleVisible"
       size="lg"
-      title="创建角色"
+      title="设置角色"
       no-close-on-backdrop
       @ok="submitRole"
       @hide="roleModalHide"
