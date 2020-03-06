@@ -29,3 +29,9 @@ export function getRole (id) {
   })
 }
 
+export function getAllRole () {
+  return request({
+    url: '/role/all',
+    method: 'get'
+  })
+}

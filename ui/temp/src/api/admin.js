@@ -9,3 +9,11 @@ export function getAllAdmin () {
     method: 'get'
   })
 }
+
+export function saveAdmin (param) {
+  return request({
+    url: '/admin',
+    method: 'post',
+    data: param
+  })
+}

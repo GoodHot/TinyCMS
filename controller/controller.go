@@ -20,7 +20,7 @@ type Controller struct {
 	AdminArticleCtrl  *admin.AdminArticleCtrl  `ioc:"auto"`
 	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
 	AdminDictCtrl     *admin.AdminDictCtrl     `ioc:"auto"`
-	RoleAuthCtrl      *admin.RoleCtrl      `ioc:"auto"`
+	RoleAuthCtrl      *admin.RoleCtrl          `ioc:"auto"`
 	SkinCtrl          *web.SkinCtrl            `ioc:"auto"`
 	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
 	AdminService      *service.AdminService    `ioc:"auto"`
@@ -89,6 +89,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 
 	// admin
 	router.GET("/admin/all", s.AdminAuthCtrl.All, s.AdminService)
+	router.POST("/admin", s.AdminAuthCtrl.Save, s.AdminService)
 
 	// channel
 	router.POST("/category", s.AdminCategoryCtrl.Save, s.AdminService)
@@ -115,6 +116,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.POST("/role", s.RoleAuthCtrl.Save, s.AdminService)
 	router.GET("/role/page_:page", s.RoleAuthCtrl.Page, s.AdminService)
 	router.GET("/role/:id", s.RoleAuthCtrl.Get, s.AdminService)
+	router.GET("/role/all", s.RoleAuthCtrl.All, s.AdminService)
 
 	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
 	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)

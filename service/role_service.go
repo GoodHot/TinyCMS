@@ -204,3 +204,9 @@ func (s *RoleService) Get(id int) (*model.Role, error) {
 	s.getRelPermission(&role)
 	return &role, nil
 }
+
+func (s *RoleService) All() []*model.Role {
+	var roles []*model.Role
+	s.ORM.DB.Order("id asc").Find(&roles)
+	return roles
+}

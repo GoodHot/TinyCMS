@@ -2,6 +2,8 @@ package admin
 
 import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
+	"github.com/GoodHot/TinyCMS/model"
+	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/service"
 	"net/http"
 	"time"
@@ -48,5 +50,37 @@ func (s *AdminAuthCtrl) Info(ctx *ctrl.HTTPContext) error {
 
 func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
 	ctx.Put("admins", s.AdminService.All())
+	return ctx.ResultOK()
+}
+
+type AdminForm struct {
+	ID       uint   `json:"id"`
+	Nickname string `json:"nickname"`
+	Password string `json:"password"`
+	UserName string `json:"user_name"`
+	RoleID   uint    `json:"role_id"`
+	Resume   string `json:"resume"`
+	Avatar   string `json:"avatar"`
+}
+
+func (s *AdminAuthCtrl) Save(ctx *ctrl.HTTPContext) error {
+	form := new(AdminForm)
+	if err := ctx.Bind(form); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	admin := &model.Admin{
+		Model: orm.Model{
+			ID: form.ID,
+		},
+		Nickname:   form.Nickname,
+		Username:   form.UserName,
+		Password:   form.Password,
+		Resume:     form.Resume,
+		Avatar:     form.Avatar,
+		RoleID:     form.RoleID,
+	}
+	if err := s.AdminService.Save(admin); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
 	return ctx.ResultOK()
 }

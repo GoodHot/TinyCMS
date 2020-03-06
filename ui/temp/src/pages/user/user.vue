@@ -1,33 +1,52 @@
 <template>
   <div class="row">
-    <div class="col-4 push">
-      <div class="input-group">
-          <input type="text" class="form-control form-control-sm" placeholder="用户名搜索">
-          <div class="input-group-append">
-              <span class="input-group-text">
-                  <TIcon icon="search" />
-              </span>
+    <div class="col-12">
+      <TBlock>
+        <div class="row">
+          <div class="col-6 push">
+            <b-input-group size="sm">
+              <b-form-input></b-form-input>
+              <b-input-group-append>
+                <b-button variant="outline-secondary"><TIcon icon="search" /></b-button>
+              </b-input-group-append>
+            </b-input-group>
           </div>
-      </div>
-    </div>
-    <div class="col-8 push">
-      <b-button variant="success" size="sm"><TIcon icon="plus" /> 创建新用户</b-button>
-      <b-button variant="secondary" class="ml-1" size="sm" @click="$router.push('/role')"><TIcon icon="user" pack="si" /> 角色管理</b-button>
+          <div class="col-6 push">
+            <b-button variant="success" size="sm" @click="userlVisit=true"><TIcon icon="plus" /> 创建新用户</b-button>
+            <b-button variant="secondary" class="ml-1" size="sm" @click="$router.push('/role')"><TIcon icon="user" pack="si" /> 角色管理</b-button>
+          </div>
+        </div>
+      </TBlock>
     </div>
     <div class="col-sm-6 col-xl-4" v-for="item of admins" :key="item.id">
       <UserCard :admin="item"></UserCard>
     </div>
+    <b-modal
+      v-model="userlVisit"
+      size="lg"
+      title="设置角色"
+      no-close-on-backdrop
+      @ok="submitUser"
+      ok-title="保存"
+      cancel-title="关闭"
+    >
+      <UserModal ref="userMoadl" @savedUser="savedUserHandler"></UserModal>
+    </b-modal>
   </div>
 </template>
 <script>
 import {getAllAdmin} from "@/api/admin"
 import UserCard from "./comps/UserCard";
+import UserModal from "./comps/UserModal";
+
 export default {
   components: {
-    UserCard
+    UserCard,
+    UserModal
   },
   data() {
     return {
+      userlVisit: false,
       admins: []
     }
   },
@@ -39,6 +58,14 @@ export default {
       getAllAdmin().then(res => {
         this.admins = res.admins
       })
+    },
+    submitUser(bvModalEvt) {
+      bvModalEvt.preventDefault()
+      this.$refs.userMoadl.submit()
+    },
+    savedUserHandler() {
+      this.loadData()
+      this.userlVisit = false
     }
   }
 };

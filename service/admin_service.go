@@ -3,6 +3,8 @@ package service
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"errors"
+	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/importcjj/trie-go"
@@ -94,4 +96,14 @@ func (s *AdminService) All() []*model.Admin {
 		}
 	}
 	return result
+}
+
+func (s *AdminService) Save(admin *model.Admin) error {
+	var exists model.Admin
+	s.ORM.DB.Where("username = ?", admin.Username).First(&exists)
+	if exists.ID != 0 {
+		return errors.New(strs.Fmt("用户名'%s'已存在", admin.Username))
+	}
+	admin.Password = s.encrptyPwd(admin.Password)
+	return s.ORM.DB.Save(admin).Error
 }

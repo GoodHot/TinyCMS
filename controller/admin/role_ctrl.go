@@ -68,6 +68,11 @@ func (s *RoleCtrl) Page(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *RoleCtrl) All(ctx *ctrl.HTTPContext) error {
+	ctx.Put("roles", s.RoleService.All())
+	return ctx.ResultOK()
+}
+
 func (s *RoleCtrl) Get(ctx *ctrl.HTTPContext) error {
 	id := ctx.ParamInt("id")
 	role, err := s.RoleService.Get(id)
