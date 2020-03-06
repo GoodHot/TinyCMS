@@ -59,12 +59,23 @@ func (s *AdminAuthCtrl) Get(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminAuthCtrl) Delete(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	if uint(id) == ctx.Admin.ID {
+		return ctx.ResultErr("不允许删除自己")
+	}
+	if err := s.AdminService.Delete(id); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	return ctx.ResultOK()
+}
+
 type AdminForm struct {
 	ID       uint   `json:"id"`
 	Nickname string `json:"nickname"`
 	Password string `json:"password"`
 	UserName string `json:"user_name"`
-	RoleID   uint    `json:"role_id"`
+	RoleID   uint   `json:"role_id"`
 	Resume   string `json:"resume"`
 	Avatar   string `json:"avatar"`
 }
@@ -78,12 +89,12 @@ func (s *AdminAuthCtrl) Save(ctx *ctrl.HTTPContext) error {
 		Model: orm.Model{
 			ID: form.ID,
 		},
-		Nickname:   form.Nickname,
-		Username:   form.UserName,
-		Password:   form.Password,
-		Resume:     form.Resume,
-		Avatar:     form.Avatar,
-		RoleID:     form.RoleID,
+		Nickname: form.Nickname,
+		Username: form.UserName,
+		Password: form.Password,
+		Resume:   form.Resume,
+		Avatar:   form.Avatar,
+		RoleID:   form.RoleID,
 	}
 	if err := s.AdminService.Save(admin); err != nil {
 		return ctx.ResultErr(err.Error())

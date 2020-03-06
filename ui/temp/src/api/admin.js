@@ -24,3 +24,10 @@ export function getAdmin (id) {
     method: 'get'
   })
 }
+
+export function deleteAdmin (id) {
+  return request({
+    url: `/admin/${id}`,
+    method: 'delete'
+  })
+}

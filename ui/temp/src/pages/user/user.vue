@@ -19,7 +19,7 @@
       </TBlock>
     </div>
     <div class="col-sm-6 col-xl-4" v-for="item of admins" :key="item.id">
-      <UserCard :admin="item" @onedit="oneditHandler"></UserCard>
+      <UserCard :admin="item" @onedit="oneditHandler" @ondeleted="ondeletedHandler"></UserCard>
     </div>
     <b-modal
       v-model="userlVisit"
@@ -75,6 +75,9 @@ export default {
     },
     userModalHide() {
       this.editId = 0
+    },
+    ondeletedHandler() {
+      this.loadData()
     }
   }
 };

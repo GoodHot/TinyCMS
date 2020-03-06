@@ -19,7 +19,7 @@
     <div class="block-content block-content-full bg-body-light">
       <b-button variant="outline-secondary" size="sm" v-b-tooltip.hover title="查看拥有权限" @click="permissionVisible = true"><TIcon icon="address-card" pack="far" /></b-button>
       <b-button variant="outline-secondary" size="sm" class="mx-1" v-b-tooltip.hover title="设置账号信息" @click="$emit('onedit', admin.id)"><TIcon icon="settings" pack="si" /></b-button>
-      <b-button variant="outline-secondary" size="sm" v-b-tooltip.hover title="删除用户"><TIcon icon="trash" pack="si" /></b-button>
+      <b-button variant="outline-secondary" size="sm" v-b-tooltip.hover title="删除用户" @click="deleteUser(admin.id)"><TIcon icon="trash" pack="si" /></b-button>
     </div>
     <b-modal
       v-model="permissionVisible"
@@ -33,6 +33,7 @@
 <script>
 import PermissionModal from './PermissionModal'
 import defaultAvatar from '@/assets/img/default.jpg'
+import {deleteAdmin} from '@/api/admin'
 
 export default {
   props: {
@@ -52,6 +53,26 @@ export default {
   methods: {
     confirmDelete() {
       this.$dialog.confirm()
+    },
+    deleteUser(id){
+      this.$bvModal.msgBoxConfirm('确定要删除该用户吗？删除后不可恢复', {
+        title: '请确认',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: '确定删除',
+        cancelTitle: '再想想',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+      .then(value => {
+        if (value) {
+          deleteAdmin(id).then(() => {
+            this.$emit('ondeleted')
+          })
+        }
+      })
     }
   }
 }

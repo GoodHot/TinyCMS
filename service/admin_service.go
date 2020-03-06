@@ -118,3 +118,12 @@ func (s *AdminService) Get(id int) *model.Admin {
 	s.ORM.DB.Where("id = ?", id).Find(&admin)
 	return &admin
 }
+
+func (s *AdminService) Delete(id int) error {
+	count := 0
+	s.ORM.DB.Model(&model.Admin{}).Count(&count)
+	if count < 2 {
+		return errors.New("不允许删除最后一个用户")
+	}
+	return s.ORM.DB.Where("id = ?", id).Delete(&model.Admin{}).Error
+}
