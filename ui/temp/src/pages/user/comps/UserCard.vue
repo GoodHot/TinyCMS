@@ -7,7 +7,7 @@
         <div class="px-2">
           <img
             class="img-avatar img-avatar96 img-avatar-thumb"
-            src="http://ww1.sinaimg.cn/mw1024/00745YaMgy1gbyi3gl2mhj33402c0hdw.jpg"
+            :src="admin.avatar ? assetsURL(admin.avatar): defaultAvatar"
             alt
           />
         </div>
@@ -32,6 +32,8 @@
 </template>
 <script>
 import PermissionModal from './PermissionModal'
+import defaultAvatar from '@/assets/img/default.jpg'
+
 export default {
   props: {
     admin: {
@@ -43,7 +45,8 @@ export default {
   },
   data() {
     return {
-      permissionVisible: false
+      permissionVisible: false,
+      defaultAvatar
     }
   },
   methods: {
