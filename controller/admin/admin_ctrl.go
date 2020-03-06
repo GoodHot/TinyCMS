@@ -53,6 +53,12 @@ func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminAuthCtrl) Get(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	ctx.Put("admin", s.AdminService.Get(id))
+	return ctx.ResultOK()
+}
+
 type AdminForm struct {
 	ID       uint   `json:"id"`
 	Nickname string `json:"nickname"`

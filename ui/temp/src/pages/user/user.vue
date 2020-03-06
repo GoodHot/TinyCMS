@@ -19,7 +19,7 @@
       </TBlock>
     </div>
     <div class="col-sm-6 col-xl-4" v-for="item of admins" :key="item.id">
-      <UserCard :admin="item"></UserCard>
+      <UserCard :admin="item" @onedit="oneditHandler"></UserCard>
     </div>
     <b-modal
       v-model="userlVisit"
@@ -27,10 +27,11 @@
       title="设置角色"
       no-close-on-backdrop
       @ok="submitUser"
+      @hide="userModalHide"
       ok-title="保存"
       cancel-title="关闭"
     >
-      <UserModal ref="userMoadl" @savedUser="savedUserHandler"></UserModal>
+      <UserModal ref="userMoadl" :editId="editId" @savedUser="savedUserHandler"></UserModal>
     </b-modal>
   </div>
 </template>
@@ -46,6 +47,7 @@ export default {
   },
   data() {
     return {
+      editId: 0,
       userlVisit: false,
       admins: []
     }
@@ -66,6 +68,13 @@ export default {
     savedUserHandler() {
       this.loadData()
       this.userlVisit = false
+    },
+    oneditHandler(id) {
+      this.userlVisit = true
+      this.editId = id
+    },
+    userModalHide() {
+      this.editId = 0
     }
   }
 };

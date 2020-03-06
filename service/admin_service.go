@@ -100,10 +100,21 @@ func (s *AdminService) All() []*model.Admin {
 
 func (s *AdminService) Save(admin *model.Admin) error {
 	var exists model.Admin
-	s.ORM.DB.Where("username = ?", admin.Username).First(&exists)
+	s.ORM.DB.Where("username = ? and id != ?", admin.Username, admin.ID).First(&exists)
 	if exists.ID != 0 {
 		return errors.New(strs.Fmt("用户名'%s'已存在", admin.Username))
 	}
-	admin.Password = s.encrptyPwd(admin.Password)
+	if admin.ID > 0 && admin.Password == "no_change_password!@#" {
+		adm := s.Get(int(admin.ID))
+		admin.Password = adm.Password
+	} else {
+		admin.Password = s.encrptyPwd(admin.Password)
+	}
 	return s.ORM.DB.Save(admin).Error
+}
+
+func (s *AdminService) Get(id int) *model.Admin {
+	var admin model.Admin
+	s.ORM.DB.Where("id = ?", id).Find(&admin)
+	return &admin
 }

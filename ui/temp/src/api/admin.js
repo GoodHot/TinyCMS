@@ -17,3 +17,10 @@ export function saveAdmin (param) {
     data: param
   })
 }
+
+export function getAdmin (id) {
+  return request({
+    url: `/admin/${id}`,
+    method: 'get'
+  })
+}

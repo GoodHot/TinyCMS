@@ -31,7 +31,7 @@
       </b-form-invalid-feedback>
     </b-form-group>
     <b-form-group label="上传头像">
-      <TUpload @uploaded="avatarUploaded"></TUpload>
+      <TUpload @uploaded="avatarUploaded" :image="form.avatar.value"></TUpload>
       <b-form-invalid-feedback :state="form.avatar.valid">
         {{form.avatar.msg}}
       </b-form-invalid-feedback>
@@ -41,12 +41,21 @@
 <script>
 import valid from '@/utils/valid'
 import {getAllRole} from '@/api/role'
-import {saveAdmin} from '@/api/admin'
+import {saveAdmin, getAdmin} from '@/api/admin'
 
 export default {
+  props: {
+    editId: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       form: {
+        id: {
+          value: null
+        },
         nickname: {
           value: '',
           require: '请输入用户昵称'
@@ -75,6 +84,7 @@ export default {
   },
   mounted() {
     this.loadRoles()
+    this.loadEditUser()
   },
   methods: {
     submit() {
@@ -84,6 +94,7 @@ export default {
         return false
       }
       const param = {
+        id: this.form.id.value,
         nickname: this.form.nickname.value,
         password: this.form.password.value,
         user_name: this.form.username.value,
@@ -113,6 +124,21 @@ export default {
     },
     avatarUploaded(url) {
       this.form.avatar.value = url
+    },
+    loadEditUser() {
+      if (this.editId === 0) {
+        return
+      }
+      getAdmin(this.editId).then(res => {
+        const adm = res.admin
+        this.form.id.value = adm.id
+        this.form.nickname.value = adm.nickname
+        this.form.username.value = adm.username
+        this.form.password.value = 'no_change_password!@#'
+        this.form.resume.value = adm.resume
+        this.form.avatar.value = adm.avatar
+        this.form.role.value = adm.role_id
+      })
     }
   }
 }
