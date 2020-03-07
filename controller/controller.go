@@ -111,6 +111,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.GET("/article/page_:page", s.AdminArticleCtrl.Page, s.AdminService)
 	router.GET("/article/:id", s.AdminArticleCtrl.Get, s.AdminService)
 	router.GET("/article/count", s.AdminArticleCtrl.Count, s.AdminService)
+	router.DELETE("/article", s.AdminArticleCtrl.Delete, s.AdminService)
 
 	// role
 	router.GET("/role/permission", s.RoleAuthCtrl.AllPermission, s.AdminService)

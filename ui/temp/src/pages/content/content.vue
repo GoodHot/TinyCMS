@@ -63,7 +63,7 @@
                 <TIcon class="text-primary" icon="circle" pack="far" />反选
               </b-button>
             </b-button-group>
-            <b-button variant="light" size="sm" v-if="deleteIds && deleteIds.length > 0">
+            <b-button variant="light" size="sm" v-if="deleteIds && deleteIds.length > 0" @click="deleteArticleHandler">
               <TIcon class="text-danger" icon="times" />
               删除这{{deleteIds.length}}篇文章
             </b-button>
@@ -122,7 +122,7 @@
 <script>
 import ArticleTable from "./comp/ArticleTable";
 import CategoryModal from "./comp/CategoryModal";
-import { articlePage, getArticleCount } from "@/api/article"
+import { articlePage, getArticleCount, deleteArticles } from "@/api/article"
 import { hotTags } from "@/api/tag"
 import moment from "moment"
 
@@ -312,6 +312,31 @@ export default {
           })
         }
         this.hotTagList = tags
+      })
+    },
+    deleteArticleHandler() {
+      this.$bvModal.msgBoxConfirm(`确定要删除这${this.deleteIds.length}篇文章吗？删除后不可恢复`, {
+        title: '请确认',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: '确定删除',
+        cancelTitle: '再想想',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+      .then(value => {
+        if (value) {
+          deleteArticles({
+            ids: this.deleteIds
+          }).then(() => {
+            this.getPageData()
+            this.getArticleCount()
+            this.getHotTags()
+            this.$refs.categoryList.reload()
+          })
+        }
       })
     }
   }

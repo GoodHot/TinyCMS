@@ -120,9 +120,16 @@ func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+type DeleteArticle struct {
+	IDS []int `json:"ids"`
+}
+
 func (s *AdminArticleCtrl) Delete(ctx *ctrl.HTTPContext) error {
-	id := ctx.ParamInt("id")
-	if err := s.ArticleService.Delete(id); err != nil {
+	ids := new(DeleteArticle)
+	if err := ctx.Bind(ids); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	if err := s.ArticleService.Delete(ids.IDS); err != nil {
 		return ctx.ResultErr(err.Error())
 	}
 	return ctx.ResultOK()

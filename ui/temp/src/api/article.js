@@ -44,3 +44,11 @@ export function getArticleCount () {
     method: 'get'
   })
 }
+
+export function deleteArticles (ids) {
+  return request({
+    url: '/article',
+    method: 'delete',
+    data: ids
+  })
+}

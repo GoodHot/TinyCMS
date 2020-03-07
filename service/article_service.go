@@ -310,10 +310,41 @@ func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 	return result
 }
 
-func (s *ArticleService) Delete(id int) error {
-	model := &model.Article{}
-	model.ID = uint(id)
-	return s.ORM.DB.Delete(model).Error
+func (s *ArticleService) Delete(ids []int) error {
+	return s.ORM.Tx(func(db *gorm.DB) error {
+		for _, id := range ids {
+			article := s.GetById(id)
+			if article == nil || article.ID == 0 {
+				continue
+			}
+			err := db.Where("id = ?", id).Delete(&model.Article{}).Error
+			if err != nil {
+				return err
+			}
+			tags := s.TagService.GetByArticleID(id)
+			if tags != nil && len(tags) > 0 {
+				for _, tag := range tags {
+					err := db.Model(&model.Tag{}).Where("id in (?)", tag.ID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1)).Error
+					if err != nil {
+						return err
+					}
+				}
+			}
+			err = db.Table(article.ContentTable).Where("id = ?", article.ContentID).Delete(&model.ArticleContent{}).Error
+			if err != nil {
+				return err
+			}
+			err = db.Unscoped().Where("article_id = ?", id).Delete(&model.RelTagArticle{}).Error
+			if err != nil {
+				return err
+			}
+			err = db.Model(&model.Category{}).Where("id = ?", article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1)).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 func (s *ArticleService) NoCategoryCount() int {
