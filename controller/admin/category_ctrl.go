@@ -26,6 +26,16 @@ func (s *AdminCategoryCtrl) Tree(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminCategoryCtrl) Get(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	category, err := s.CategoryService.Get(id)
+	if err != nil {
+		return ctx.ResultErr(err.Error())
+	}
+	ctx.Put("category", category)
+	return ctx.ResultOK()
+}
+
 //func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {
 //	parentId := ctx.QueryParamInt("parentId")
 //	page := ctx.ParamInt("page")

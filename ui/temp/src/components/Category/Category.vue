@@ -23,7 +23,7 @@ export default {
       selectRow: null
     }
   },
-  beforeMount() {
+  mounted() {
     this.getCategoryTree()
   },
   methods: {

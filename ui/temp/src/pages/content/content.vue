@@ -15,7 +15,7 @@
               >
                 <TIcon icon="plus" />
               </b-button>
-              <b-button class="btn-block-option" variant="light">
+              <b-button class="btn-block-option" variant="light" @click="$router.push('/category')">
                 <TIcon icon="settings" pack="si" />
               </b-button>
             </b-button-group>
@@ -25,7 +25,7 @@
             <b-button size="sm" variant="light" @click="categoryVisible = !categoryVisible">创建第一个分类</b-button>
           </div>
         </TBlock>
-        <TBlock title="常用标签" icon="tags">
+        <TBlock title="常用标签" icon="tags" v-if="!hotTagList || hotTagList.length > 0">
           <TList class="push" rowKey="id" :data="hotTagList" @onclick="selectTagsItem"></TList>
           <div class="text-center push">
             <b-button size="sm" variant="light">查看所有标签</b-button>

@@ -25,7 +25,6 @@
       </table>
       <div class="alert alert-secondary alert-dismissable text-center" v-if="!data || data.length === 0">
           <h3 class="alert-heading font-w300 my-2">暂无数据</h3>
-          <b-button size="sm" variant="success">发布一篇文章</b-button>
       </div>
     </div>
     <!-- <Tpagination v-if="pagination" :data="pagination"></Tpagination> -->

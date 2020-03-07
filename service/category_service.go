@@ -21,12 +21,6 @@ func (s *CategoryService) Get(id int) (*model.Category, error) {
 }
 
 func (s *CategoryService) Save(category *model.Category) error {
-	if category.ID == 0 {
-		return s.ORM.DB.Create(category).Error
-	}
-	tmp, _ := s.Get(int(category.ID))
-	category.Sort = tmp.Sort
-	category.ParentId = tmp.ParentId
 	return s.ORM.DB.Save(category).Error
 }
 
@@ -43,7 +37,7 @@ type CategoryTree struct {
 
 func (s *CategoryService) tree(parentId uint) []*CategoryTree {
 	var channels []*model.Category
-	s.ORM.DB.Where("parent_id = ?", parentId).Find(&channels)
+	s.ORM.DB.Where("parent_id = ?", parentId).Order("sort desc, id desc").Find(&channels)
 	if len(channels) == 0 {
 		return nil
 	}

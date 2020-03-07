@@ -14,3 +14,10 @@ export function saveCategory (parameter) {
     data: parameter
   })
 }
+
+export function getCategory (id) {
+  return request({
+    url: `/category/${id}`,
+    method: 'get'
+  })
+}

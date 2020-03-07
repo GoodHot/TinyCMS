@@ -7,7 +7,7 @@ type Category struct {
 	Name         string      `json:"name"`
 	Path         string      `json:"path"`
 	SEOTitle     string      `json:"seo_title"`
-	Desccription string      `json:"desccription"`
+	Description  string      `json:"description"`
 	Keyword      string      `json:"keyword"`
 	Remark       string      `json:"remark"`
 	Icon         string      `json:"icon"`
