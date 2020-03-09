@@ -6,7 +6,7 @@
         <h2><a href="#">{{.Title}}</a></h2>
         <time class="article-card-time" datetime="{{.CreatedAt}}">{{timeFmt .CreatedAt}}</time>
         <div class="article-card-tags">
-            {{$cn := getChannel .ChannelID}}
+            {{$cn := getCategory .CategoryID}}
             <a href="#"><span class="badge badge-pill badge-secondary">{{$cn.Name}}</span></a>
             {{$tags := split .Tags}}
             {{range $i, $t := $tags}}

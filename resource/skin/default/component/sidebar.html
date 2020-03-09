@@ -22,18 +22,18 @@
     <div class="sidebar-body">
         <ul class="sidebar-nav">
             <li class="nav-label mg-b-15">Browse Components</li>
-            {{$channels := channelTree}}
+            {{$channels := categoryTree}}
             {{$link := .parentLink}}
             {{$channelId := .channelId}}
             {{range $i, $channel := $channels}}
             <li class="nav-item show">
-                <a href="javascript:void(0)" class="nav-link with-sub {{if eq $link $channel.Channel.Title}}active{{end}}">
-                    {{noescape $channel.Icon}}
-                    {{$channel.Title}}
+                <a href="javascript:void(0)" class="nav-link with-sub {{if eq $link $channel.Channel.Name}}active{{end}}">
+                    {{noescape $channel.Channel.Icon}}
+                    {{$channel.Name}}
                 </a>
                 <nav class="nav">
                     {{range $j, $child := $channel.Children}}
-                    <a class="{{if eq $channelId $child.Value}}active{{end}}" href="/channel/{{$channel.Channel.Title}}/{{$child.Channel.Title}}">{{$child.Title}}</a>
+                    <a class="{{if eq $channelId $child.Channel.ID}}active{{end}}" href="/channel/{{$channel.Channel.Name}}/{{$child.Channel.Name}}">{{$child.Name}}</a>
                     {{end}}
                 </nav>
             </li>

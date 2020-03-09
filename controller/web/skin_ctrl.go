@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/common/times"
+	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
 	"html/template"
 	"io"
@@ -44,17 +45,17 @@ func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interfa
 				}
 				return dict.Value
 			},
-			//"channelTree": func() []*service.ChannelTree {
-			//	channels := s.ChannelService.Tree()
-			//	return channels
-			//},
-			//"getChannel": func(cid uint) *model.Channel {
-			//	channel, err := s.ChannelService.Get(int(cid))
-			//	if err != nil {
-			//		return &model.Channel{}
-			//	}
-			//	return channel
-			//},
+			"categoryTree": func() []*service.CategoryTree {
+				channels := s.CategoryService.Tree()
+				return channels
+			},
+			"getCategory": func(cid uint) *model.Category {
+				channel, err := s.CategoryService.Get(int(cid))
+				if err != nil {
+					return &model.Category{}
+				}
+				return channel
+			},
 			"split": func(str string) []string {
 				return strings.Split(str, ",")
 			},

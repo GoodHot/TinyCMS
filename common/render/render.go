@@ -156,6 +156,10 @@ func (*HTMLRenderer) templateName(layout, page string) string {
 func (s *HTMLRenderer) Init(funcMap template.FuncMap) {
 	s.tmpl = template.New("TinyCMS").Funcs(funcMap)
 	s.tmplCacheMap = make(map[string]string)
-	s.loadComponent()
-	s.loadPage()
+	if err := s.loadComponent(); err != nil {
+		fmt.Println(err)
+	}
+	if err := s.loadPage(); err != nil {
+		fmt.Println(err)
+	}
 }
