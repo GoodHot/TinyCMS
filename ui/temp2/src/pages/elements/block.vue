@@ -117,17 +117,19 @@
         </t-block>
       </b-col>
     </b-row>
-    <h2 class="content-heading">Themes</h2>
+    <h2 class="content-heading">Block Options</h2>
     <b-row>
       <b-col cols="6">
         <t-block title="Title" subtitle="subtitle" theme border>
           <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
           <template slot="options">
-            <b-button><t-icon icon="size-fullscreen" pack="si" /></b-button>
-            <b-button><t-icon icon="pin" pack="si" /></b-button>
-            <b-button><t-icon icon="refresh" pack="si" /></b-button>
-            <b-button><t-icon icon="arrow-up" pack="si" /></b-button>
-            <b-button><t-icon icon="close" pack="si" /></b-button>
+            <b-button-group>
+              <b-button size="sm" variant="light"><t-icon icon="size-fullscreen" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="pin" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="refresh" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="arrow-up" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="close" pack="si" /></b-button>
+            </b-button-group>
           </template>
         </t-block>
       </b-col>
@@ -135,11 +137,99 @@
         <t-block title="Title" subtitle="subtitle" theme border titleRight>
           <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
           <template slot="options">
-            <b-button><t-icon icon="size-fullscreen" pack="si" /></b-button>
-            <b-button><t-icon icon="pin" pack="si" /></b-button>
-            <b-button><t-icon icon="refresh" pack="si" /></b-button>
-            <b-button><t-icon icon="arrow-up" pack="si" /></b-button>
-            <b-button><t-icon icon="close" pack="si" /></b-button>
+            <b-button-group>
+              <b-button size="sm" variant="light"><t-icon icon="size-fullscreen" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="pin" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="refresh" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="arrow-up" pack="si" /></b-button>
+              <b-button size="sm" variant="light"><t-icon icon="close" pack="si" /></b-button>
+            </b-button-group>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+              <b-button size="sm" variant="outline-secondary" class="mr-1">OK</b-button> 
+              <b-button size="sm" variant="outline-primary">Cancle</b-button>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border titleRight>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+              <b-button size="sm" variant="outline-secondary" class="mr-1">OK</b-button> 
+              <b-button size="sm" variant="outline-primary">Cancle</b-button>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+            <t-block-option-item class="text-danger">Special!</t-block-option-item>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border titleRight>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+              <t-block-option-item class="text-success">Looking Good!</t-block-option-item>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+            <t-block-option-item>
+              <b-alert show variant="warning" class="py-2 mb-0">This is an alert!</b-alert>
+            </t-block-option-item>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border titleRight>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+            <t-block-option-item>
+              <b-alert show variant="warning" class="py-2 mb-0">This is an alert!</b-alert>
+            </t-block-option-item>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+            <t-block-option-item>
+              <b-badge variant="primary" pill>15</b-badge>
+            </t-block-option-item>
+            <t-block-option-item>
+              <b-badge variant="success">yes</b-badge>
+            </t-block-option-item>
+            <t-block-option-item>
+              <b-badge variant="warning"><t-icon icon="exclamation-triangle" /></b-badge>
+            </t-block-option-item>
+          </template>
+        </t-block>
+      </b-col>
+      <b-col cols="6">
+        <t-block title="Title" subtitle="subtitle" theme border titleRight>
+          <p>Potenti elit lectus augue eget iaculis vitae etiam, ullamcorper etiam bibendum ad feugiat magna accumsan dolor, nibh molestie cras hac ac ad massa, fusce ante convallis ante urna molestie vulputate bibendum tempus ante justo arcu erat accumsan adipiscing risus, libero condimentum venenatis sit nisl nisi ultricies sed, fames aliquet consectetur consequat nostra molestie neque nullam scelerisque neque commodo turpis quisque etiam egestas vulputate massa, curabitur tellus massa venenatis congue dolor enim integer luctus, nisi suscipit gravida fames quis vulputate nisi viverra luctus id leo dictum lorem, inceptos nibh orci.</p>
+          <template slot="options">
+            <t-block-option-item>
+              <b-badge variant="primary" pill>15</b-badge>
+            </t-block-option-item>
+            <t-block-option-item>
+              <b-badge variant="success">yes</b-badge>
+            </t-block-option-item>
+            <t-block-option-item>
+              <b-badge variant="warning"><t-icon icon="exclamation-triangle" /></b-badge>
+            </t-block-option-item>
           </template>
         </t-block>
       </b-col>
