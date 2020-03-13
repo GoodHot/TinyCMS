@@ -18,5 +18,17 @@ export const PropTypes = {
         default: def
       }
     }
+  },
+  Array: {
+    type: Array,
+    default() {
+      return null
+    },
+    def(def) {
+      return {
+        type: Array,
+        default: def
+      }
+    }
   }
 }

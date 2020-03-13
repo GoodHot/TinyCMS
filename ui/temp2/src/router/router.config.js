@@ -19,6 +19,11 @@ export const routerMap = [
         path: '/elements/block',
         name: 'block',
         component: () => import('@/pages/elements/block'),
+      },
+      {
+        path: '/elements/navigation',
+        name: 'navigation',
+        component: () => import('@/pages/elements/navigation'),
       }
     ]
   }
