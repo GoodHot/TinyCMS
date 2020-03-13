@@ -6,6 +6,7 @@ import { BootstrapVue } from 'bootstrap-vue'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@/assets/css/dashmix.css'
 import '@/assets/css/xwork.css'
+import '@/assets/css/style.scss'
 import Components from './components'
 
 Vue.config.productionTip = false

@@ -1,7 +1,13 @@
 export const PropTypes = {
   Boolean: {
     type: Boolean,
-    default: false
+    default: false,
+    def(def) {
+      return {
+        type: Boolean,
+        default: def
+      }
+    }
   },
   String: {
     type: String,

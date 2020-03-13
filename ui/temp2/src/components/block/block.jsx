@@ -11,7 +11,11 @@ const Block = {
     titleRight: PropTypes.Boolean,
     theme: PropTypes.String.def('none'), // 'primary-light', 'primary-dark', 'primary-darker', 'gd-dusk', 'gd-fruit', 'gd-aqua', 'gd-sublime', 'gd-sea', 'gd-leaf', 'gd-lake', 'gd-sun', 'default', 'default-light', 'default-dark', 'default-darker', 'xwork', 'xwork-light', 'xwork-dark', 'xwork-darker', 'xmodern', 'xmodern-light', 'xmodern-dark', 'xmodern-darker', 'xeco', 'xeco-light', 'xeco-dark', 'xeco-darker', 'xsmooth', 'xsmooth-light', 'xsmooth-dark', 'xsmooth-darker', 'xinspire', 'xinspire-light', 'xinspire-dark', 'xinspire-darker', 'success', 'info', 'warning', 'danger', 'gray', 'muted', 'gray-darker', 'black', 
     href: PropTypes.String,
-    linkTheme: PropTypes.String // 'rotate', 'pop', 'shadow'
+    linkTheme: PropTypes.String, // 'rotate', 'pop', 'shadow'
+    contentVisible: PropTypes.Boolean.def(true),
+    loading: PropTypes.Boolean,
+    fullscreen: PropTypes.Boolean,
+    pinned: PropTypes.Boolean
   },
   computed: {
     classes() {
@@ -22,97 +26,51 @@ const Block = {
           'block-bordered': this.border,
           'block-rounded': this.rounded,
           'block-transparent': this.transparent,
+          'block-mode-loading': this.loading,
+          'block-mode-fullscreen': this.fullscreen,
+          'block-mode-pinned': this.pinned,
           [`block-link-${this.linkTheme}`]: this.linkTheme
         }
       ]
-    },
-    headerClasses() {
-      return [
-        'block-header',
-        {
-          'block-header-rtl': this.titleRight,
-          [`bg-${this.theme}`]: this.theme && this.theme != 'none',
-          'block-header-default': !this.theme
-        }
-      ]
-    },
-    renderBody () {
-      return (
-        <div>
-          <div class={this.headerClasses}>
-            <h3 class="block-title" v-if={this.title || this.subtitle}>
-              {this.title}
-              <small v-if={this.subtitle}>{this.subtitle}</small>
-            </h3>
-            <div class="block-options" v-if={this.$slots.options}>
-              <slot name="options"></slot>
-            </div>
-          </div>
-          <div class="block-content">
-            <slot></slot>
-          </div>
-          <div v-if={this.$slots.footer} class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-            <slot name="footer"></slot>
-          </div>
-        </div>
-      )
     }
   },
+  watch: {
+  },
   render () {
-    let title = null
-    if (this.title || this.subtitle) {
-      let subtitle = null
-      if (this.subtitle) {
-        subtitle = (
-          <small> {this.subtitle} </small>
-        )
-      }
-      title = (
-        <h3 class="block-title">
-          {this.title} 
-          {subtitle}
-        </h3>
-      )
-    }
-    let options = null
-    if (this.$slots.options) {
-      options = (
-        <div class="block-options" v-if={this.$slots.options}>
-          {this.$slots.options}
-        </div>
-      )
-    }
-    let footer = null
-    if (this.$slots.footer) {
-      footer = (
-        <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-          {this.$slots.footer}
-        </div>
-      )
-    }
-    const body = (
-      <div>
-        <div class={this.headerClasses}>
-          {title}
-          {options}
-        </div>
-        <div class="block-content">
+    const blockContent = (
+      <t-block-content
+        title={this.title}
+        subtitle={this.subtitle}
+        border={this.border}
+        rounded={this.rounded}
+        transparent={this.transparent}
+        titleRight={this.titleRight}
+        theme={this.theme}
+        linkTheme={this.linkTheme}
+        contentVisible={this.contentVisible}
+        loading={this.loading}
+      >
+        <template slot="default">
           {this.$slots.default}
-        </div>
-        {footer}
-      </div>
+        </template>
+        <template slot="options">
+          {this.$slots.options}
+        </template>
+        <template slot="footer">
+          {this.$slots.footer}
+        </template>
+      </t-block-content>
     )
-    console.log(this.href)
     if (!this.href) {
       return (
         <div class={this.classes}>
-          {body}
+          {blockContent}
         </div>
       )
     }
     return (
       <a class={this.classes} href={this.href}>
-        {body}
+        {blockContent}
       </a>
     )
   }
