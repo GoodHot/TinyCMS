@@ -42,11 +42,11 @@ export default {
   computed: {
     classes () {
       return [
-        'push p-3',
+        'push',
         {
           'rounded': this.rounded,
           'bg-sidebar-dark': this.theme === 'dark',
-          'bg-white': this.theme === 'light'
+          'bg-white': this.theme === 'light',
         }
       ]
     },

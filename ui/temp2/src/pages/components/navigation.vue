@@ -40,6 +40,7 @@
         :data="navigation"
         :layout="options.layout"
         :showEvent="options.showEvent"
+        class="p-3"
       >
       </t-navigation>
     </b-col>

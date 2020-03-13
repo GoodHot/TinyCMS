@@ -1,6 +1,6 @@
 <template>
   <!-- sidebar-mini -->
-  <div id="page-container" class="sidebar-o sidebar-dark side-scroll page-header-fixed page-header-dark">
+  <div id="page-container" class="sidebar-o sidebar-dark side-scroll page-header-fixed page-header-dark sidebar-mini">
     <Nav></Nav>
     <Header></Header>
     <main id="main-container">

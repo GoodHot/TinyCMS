@@ -25,41 +25,48 @@
       </div>
     </div>
     <div class="content-side content-side-full">
-      <ul class="nav-main">
-        <li class="nav-main-item open">
-          <a class="nav-main-link nav-main-link-submenu" href="#">
-            <t-icon class="nav-main-link-icon" icon="campground" />
-            <span class="nav-main-link-name">控件</span>
-          </a>
-          <ul class="nav-main-submenu">
-            <li class="nav-main-item">
-              <a class="nav-main-link" href>
-                <span class="nav-main-link-name">图标</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-main-item open">
-          <a
-            class="nav-main-link nav-main-link-submenu"
-            data-toggle="submenu"
-            aria-haspopup="true"
-            aria-expanded="true"
-            href="#"
-          >
-            <t-icon class="nav-main-link-icon" icon="car-battery" />
-            <span class="nav-main-link-name">组件</span>
-          </a>
-          <ul class="nav-main-submenu">
-            <li class="nav-main-item">
-              <a class="nav-main-link" href>
-                <span class="nav-main-link-name">导航菜单</span>
-                <span class="nav-main-link-badge badge badge-pill badge-success">new</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <t-navigation
+        :horizontal="false"
+        theme="dark"
+        rounded
+        :data="navigation"
+      >
+      </t-navigation>
     </div>
   </nav>
 </template>
+<script>
+export default {
+  data () {
+    return {
+      navigation: [
+        {
+          title: '控件',
+          icon: 'campground',
+          active: true,
+          child: [
+            {
+              title: '图标',
+              to: '/elements/icon'
+            },
+            {
+              title: 'Block',
+              to: '/elements/block'
+            }
+          ]
+        },
+        {
+          title: '组件',
+          icon: 'car-battery',
+          child: [
+            {
+              title: '导航条',
+              to: '/components/navigation'
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+</script>

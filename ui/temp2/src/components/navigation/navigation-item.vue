@@ -1,7 +1,7 @@
 <template>
-<li :class="'nav-main-item ' + (isOpen ? 'open' : '')">
+<li :class="liClasses">
   <a :class="linkClasses" href="javascript:void(0)" @click="navClick">
-    <t-icon class="nav-main-link-icon" :icon="icon" :pack="iconPack" />
+    <t-icon class="nav-main-link-icon" v-if="icon" :icon="icon" :pack="iconPack" />
     <span class="nav-main-link-name">{{title}}</span>
     <b-badge class="nav-main-link-badge" v-if="badgeText" pill :variant="badgeTheme">{{ badgeText }}</b-badge>
   </a>
@@ -47,6 +47,14 @@ export default {
     }
   },
   computed: {
+    liClasses () {
+      return [
+        'nav-main-item',
+        {
+          'open': this.isOpen || this.active
+        }
+      ]
+    },
     linkClasses () {
       return [
         'nav-main-link',
@@ -57,10 +65,16 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.isOpen = this.active
+  },
   methods: {
     navClick () {
       if (!this.horizontal || (this.showEvent === 'click' && this.child && this.child.length > 0)) {
         this.isOpen = !this.isOpen
+        if (!this.isOpen) {
+          this.active = false
+        }
         this.$emit("onopen", this)
         return
       }
@@ -71,6 +85,7 @@ export default {
       }
     },
     $close () {
+      this.active = false
       this.isOpen = false
     }
   }
