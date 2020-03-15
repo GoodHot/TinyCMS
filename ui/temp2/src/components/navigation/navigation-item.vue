@@ -20,6 +20,7 @@
       :child="item.child"
       :showEvent="showEvent"
       :horizontal="horizontal"
+      :blockIsHead="blockIsHead"
       @onopen="onopenHandler"
     >
     </t-navigation-item>
@@ -41,7 +42,8 @@ export default {
     icon: PropTypes.String,
     iconPack: PropTypes.String.def('fa'),
     child: PropTypes.Array,
-    showEvent: PropTypes.String.def('hover')
+    showEvent: PropTypes.String.def('hover'),
+    blockIsHead: PropTypes.Boolean
   },
   data () {
     return {
@@ -72,7 +74,7 @@ export default {
   },
   methods: {
     navClick () {
-      if (!this.horizontal || (this.showEvent === 'click' && this.child && this.child.length > 0)) {
+      if (this.blockIsHead || !this.horizontal || (this.showEvent === 'click' && this.child && this.child.length > 0)) {
         this.isOpen = !this.isOpen
         if (!this.isOpen) {
           this.active = false
@@ -85,6 +87,9 @@ export default {
       } else {
         this.$router.push(this.to)
       }
+    },
+    onopenHandler () {
+
     },
     $close () {
       this.active = false

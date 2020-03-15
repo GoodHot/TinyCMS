@@ -1,9 +1,9 @@
 <template>
   <div :class="classes">
     <div class="d-lg-none">
-      <b-button block variant="light" class="d-flex justify-content-between align-items-center">Menu - Hover Normal <t-icon icon="bars" /></b-button>
+      <b-button block variant="light" @click="blockShow=!blockShow" class="d-flex justify-content-between align-items-center">Navigation <t-icon icon="bars" /></b-button>
     </div>
-    <div class="d-none d-lg-block mt-2 mt-lg-0">
+    <div :class="contentClasses">
       <ul :class="ulClasses">
         <t-navigation-item
           ref="navItems"
@@ -20,6 +20,7 @@
           :child="item.child"
           :showEvent="showEvent"
           :horizontal="horizontal"
+          :blockIsHead="!blockShow"
           @onopen="onopenHandler"
         >
         </t-navigation-item>
@@ -39,6 +40,11 @@ export default {
     layout: PropTypes.String.def('left'),
     showEvent: PropTypes.String.def('hover')
   },
+  data () {
+    return {
+      blockShow: true
+    }
+  },
   computed: {
     classes () {
       return [
@@ -47,6 +53,14 @@ export default {
           'rounded': this.rounded,
           'bg-sidebar-dark': this.theme === 'dark',
           'bg-white': this.theme === 'light',
+        }
+      ]
+    },
+    contentClasses () {
+      return [
+        'd-lg-block mt-2 mt-lg-0',
+        {
+          'd-none': this.blockShow
         }
       ]
     },
