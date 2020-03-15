@@ -19,6 +19,8 @@
       :iconPack="item.iconPack"
       :child="item.child"
       :showEvent="showEvent"
+      :horizontal="horizontal"
+      @onopen="onopenHandler"
     >
     </t-navigation-item>
   </ul>

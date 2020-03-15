@@ -27,7 +27,6 @@
     <div class="content-side content-side-full">
       <t-navigation
         :horizontal="false"
-        theme="dark"
         rounded
         :data="navigation"
       >
