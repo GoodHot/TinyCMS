@@ -4,6 +4,7 @@ import blockContent from './block/block-content'
 import block from './block/block'
 import navigation from './navigation/navigation'
 import navigationItem from './navigation/navigation-item'
+import layout from './layout/layout'
 
 export default {
   't-icon': icon,
@@ -11,5 +12,6 @@ export default {
   't-block-option-item': blockOptionItem,
   't-block-content': blockContent,
   't-navigation': navigation,
-  't-navigation-item': navigationItem
+  't-navigation-item': navigationItem,
+  't-layout': layout
 }

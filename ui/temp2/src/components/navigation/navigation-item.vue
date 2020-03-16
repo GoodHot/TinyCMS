@@ -31,6 +31,10 @@
 import {PropTypes} from '@/utils/types'
 
 export default {
+  model: {
+    prop: 'active',
+    event: 'activeChange'
+  },
   props: {
     horizontal: PropTypes.Boolean.def(true),
     active: PropTypes.Boolean,
@@ -55,7 +59,7 @@ export default {
       return [
         'nav-main-item',
         {
-          'open': this.isOpen || this.active
+          'open': this.isOpen
         }
       ]
     },
@@ -63,7 +67,7 @@ export default {
       return [
         'nav-main-link',
         {
-          'active': this.active,
+          'active': this.isOpen,
           'nav-main-link-submenu': this.child && this.child.length > 0
         }
       ]
@@ -74,25 +78,24 @@ export default {
   },
   methods: {
     navClick () {
-      if (this.blockIsHead || !this.horizontal || (this.showEvent === 'click' && this.child && this.child.length > 0)) {
-        this.isOpen = !this.isOpen
-        if (!this.isOpen) {
-          this.active = false
+      if (this.child && this.child.length > 0) {
+        if (!this.horizontal || this.showEvent === 'click') {
+          this.isOpen = !this.isOpen
+          this.$emit("onopen", this)
+          return
         }
-        this.$emit("onopen", this)
-        return
-      }
-      if (this.href) {
-        window.location = this.href
       } else {
-        this.$router.push(this.to)
+        if (this.href) {
+          window.location = this.href
+        } else {
+          this.$router.push(this.to)
+        }
       }
     },
     onopenHandler () {
 
     },
     $close () {
-      this.active = false
       this.isOpen = false
     }
   }

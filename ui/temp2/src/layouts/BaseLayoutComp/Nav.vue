@@ -61,6 +61,10 @@ export default {
             {
               title: '导航条',
               to: '/components/navigation'
+            },
+            {
+              title: '布局',
+              to: '/components/layout'
             }
           ]
         }
