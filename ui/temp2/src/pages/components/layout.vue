@@ -1,10 +1,5 @@
 <template>
-  <div class="layout-class">
+  <div>
     <t-layout></t-layout>
   </div>
 </template>
-<style scoped>
-.layout-class {
-  position: relative;
-}
-</style>

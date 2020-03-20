@@ -9,3 +9,26 @@
     opacity: .9;
   }
 }
+
+.t-layout {
+  &-container {
+    background: #f00;
+    position: relative;
+  }
+  &-side {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1034;
+    width: 100%;
+    height: 100%;
+    background-color: #0f0;
+    overflow-y: auto;
+    -webkit-transform: translateX(100%) translateY(0) translateZ(0);
+    transform: translateX(100%) translateY(0) translateZ(0);
+    opacity: 0;
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
+  }
+}
