@@ -112,6 +112,8 @@ const navChild = [
 export default {
   data() {
     return {
+      title: '导航条',
+      description: '导航条API',
       col: 9,
       options: {
         horizontal: true,

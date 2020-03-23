@@ -404,6 +404,8 @@
 export default {
   data() {
     return {
+      title: 'Block',
+      description: 'Block使用方式',
       api: {
         contentVisible: true,
         loading: false,

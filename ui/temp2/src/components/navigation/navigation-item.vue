@@ -1,6 +1,7 @@
 <template>
 <li :class="liClasses">
-  <a :class="linkClasses" href="javascript:void(0)" @click="navClick">
+  <span v-if="type === 'heading'">{{ title }}</span>
+  <a :class="linkClasses" href="javascript:void(0)" @click="navClick" v-else>
     <t-icon class="nav-main-link-icon" v-if="icon" :icon="icon" :pack="iconPack" />
     <span class="nav-main-link-name">{{title}}</span>
     <b-badge class="nav-main-link-badge" v-if="badgeText" pill :variant="badgeTheme">{{ badgeText }}</b-badge>
@@ -47,7 +48,8 @@ export default {
     iconPack: PropTypes.String.def('fa'),
     child: PropTypes.Array,
     showEvent: PropTypes.String.def('hover'),
-    blockIsHead: PropTypes.Boolean
+    blockIsHead: PropTypes.Boolean,
+    type: PropTypes.String,
   },
   data () {
     return {
@@ -57,9 +59,10 @@ export default {
   computed: {
     liClasses () {
       return [
-        'nav-main-item',
         {
-          'open': this.isOpen
+          'open': this.isOpen,
+          'nav-main-heading': this.type === 'heading',
+          'nav-main-item': this.type !== 'heading'
         }
       ]
     },

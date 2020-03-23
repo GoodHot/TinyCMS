@@ -121,21 +121,6 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.GET("/role/page_:page", s.RoleAuthCtrl.Page, s.AdminService)
 	router.GET("/role/:id", s.RoleAuthCtrl.Get, s.AdminService)
 	router.GET("/role/all", s.RoleAuthCtrl.All, s.AdminService)
-
-	//router.DELETE("/channel/:id", s.AdminChannelCtrl.Delete)
-	//router.GET("/channel/:id", s.AdminChannelCtrl.Get)
-	// articcle
-	//router.POST("/article/publish", c.AdminArticleCtrl.Publish)
-	//router.GET("/article/page_:page", c.AdminArticleCtrl.Page)
-	//router.GET("/article/:id", c.AdminArticleCtrl.Get)
-	//router.DELETE("/article/:id", c.AdminArticleCtrl.Delete)
-	// upload
-	//router.POST("/upload", c.AdminUploadCtrl.Upload)
-	//router.POST("/upload/base64", c.AdminUploadCtrl.UploadBase64)
-	// dict
-	//router.GET("/dict/init", c.AdminDictCtrl.Init)
-	//router.GET("/dict/all", c.AdminDictCtrl.All)
-	//router.PUT("/dict", c.AdminDictCtrl.Edit)
 }
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {

@@ -21,6 +21,7 @@
           :showEvent="showEvent"
           :horizontal="horizontal"
           :blockIsHead="!blockShow"
+          :type="item.type"
           @onopen="onopenHandler"
         >
         </t-navigation-item>

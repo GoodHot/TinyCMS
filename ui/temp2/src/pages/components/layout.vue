@@ -84,6 +84,12 @@ export default {
     contentMode (mode) {
       this.$emit('contentMode', mode)
     }
+  },
+  data () {
+    return {
+      title: '布局',
+      description: '页面布局API'
+    }
   }
 }
 </script>

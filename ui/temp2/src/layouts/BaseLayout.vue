@@ -74,21 +74,15 @@
     </template>
 
 
-    <div class="bg-body-light">
+    <div class="bg-body-light" v-if="title">
       <div class="content content-full">
-        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-          <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Layout API</h1>
-          <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item">Layout</li>
-              <li class="breadcrumb-item active" aria-current="page">API</li>
-            </ol>
-          </nav>
-        </div>
+        <h1 class="font-size-h2 mb-2">{{ title }}</h1>
+        <h2 class="font-size-lg font-w400 text-muted mb-0">{{ description }}</h2>
       </div>
     </div>
-    <div class="content">
+    <div :class="!contentSide ? 'content' : ''">
       <router-view
+        ref="routerView"
         @sidebarVisiable="onSidebarVisiable"
         @sidebarPosition="onSidebarPosition"
         @sidebarMin="onSidebarMin"
@@ -106,6 +100,16 @@
 </template>
 <script>
 export default {
+  mounted () {
+    this.title = this.$refs.routerView.title
+    this.description = this.$refs.routerView.description
+    this.contentSide = this.$refs.routerView.contentSide
+  },
+  updated () {
+    this.title = this.$refs.routerView.title
+    this.description = this.$refs.routerView.description
+    this.contentSide = this.$refs.routerView.contentSide
+  },
   methods: {
     onSidebarVisiable (type) {
       this.sidebarShow = type
@@ -143,6 +147,9 @@ export default {
   },
   data() {
     return {
+      title: '',
+      description: '',
+      contentSide: false,
       sidebarShow: true,
       sidebarPosition: 'left',
       sidebarMin: false,
@@ -153,8 +160,18 @@ export default {
       headerGlass: false,
       headerTheme: 'dark',
       footerMode: 'static',
-      contentMode: 'narrow',
+      contentMode: 'full',
       navigation: [
+        {
+          title: '控制台',
+          icon: 'cursor',
+          iconPack: 'si',
+          to: '/'
+        },
+        {
+          title: 'TOOL',
+          type: 'heading'
+        },
         {
           title: "控件",
           icon: "campground",
