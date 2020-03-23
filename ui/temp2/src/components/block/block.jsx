@@ -26,7 +26,7 @@ const Block = {
           'block-bordered': this.border,
           'block-rounded': this.rounded,
           'block-transparent': this.transparent,
-          'block-mode-loading': this.loading,
+          // 'block-mode-loading': this.loading,
           'block-mode-fullscreen': this.fullscreen,
           'block-mode-pinned': this.pinned,
           [`block-link-${this.linkTheme}`]: this.linkTheme

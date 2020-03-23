@@ -1,24 +1,191 @@
 <template>
-  <div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-fixed page-header-dark main-content-narrow">
-    <Nav></Nav>
-    <Header></Header>
-    <main id="main-container">
-      <div class="content content-full bg-body-dark" >
-        <router-view />
+  <t-layout
+    :sidebarShow="sidebarShow"
+    :sidebarPosition="sidebarPosition"
+    :sidebarMin="sidebarMin"
+    :sidebarTheme="sidebarTheme"
+    :sideVisiable="sideVisiable"
+    :sideHoverMode="sideHoverMode"
+    :headerMode="headerMode"
+    :headerGlass="headerGlass"
+    :headerTheme="headerTheme"
+    :footerMode="footerMode"
+    :contentMode="contentMode"
+    @onSideHide="sideVisiable = false"
+  >
+
+
+    <template slot="nav">
+      <div class="bg-header-dark">
+        <div class="content-header bg-white-10">
+          <a class="link-fx font-w600 font-size-lg text-white" href="index.html">
+            <span class="smini-visible">
+              <span class="text-white-75">D</span>
+              <span class="text-white">x</span>
+            </span>
+            <span class="smini-hidden">
+              <span class="text-white">Dash</span>
+              <span class="text-white-75">mix</span>
+              <span class="text-white font-size-base font-w400">2.3</span>
+            </span>
+          </a>
+          <div>
+            <a class="js-class-toggle text-white-75" href="javascript:void(0)" @click="sidebarTheme = sidebarTheme === 'dark' ? 'light': 'dark'">
+              <t-icon :icon="sidebarTheme === 'dark' ? 'toggle-off': 'toggle-on'" />
+            </a>
+            <a class="d-lg-none text-white ml-2" href="javascript:void(0)" >
+              <t-icon icon="times-circle" />
+            </a>
+          </div>
+        </div>
       </div>
-    </main>
-    <Footer></Footer>
-  </div>
+      <div class="content-side content-side-full">
+        <t-navigation :horizontal="false" rounded :data="navigation" :theme="sidebarTheme"></t-navigation>
+      </div>
+    </template>
+    
+    
+    <template slot="header">
+      <div class="content-header">
+        <div>
+          <b-button variant="dual" class="mr-1" @click="sidebarShow = !sidebarShow" ><t-icon size="fw" icon="bars" /></b-button>
+          <b-button variant="dual"><t-icon size="fw" icon="search" /> <span class="ml-1 d-none d-sm-inline-block">Search</span></b-button>
+        </div>
+      </div>
+    </template>
+
+
+    <template slot="footer">
+      <div class="content py-0">
+        <div class="row font-size-sm">
+            <div class="col-sm-6 order-sm-2 mb-1 mb-sm-0 text-center text-sm-right">
+                Crafted with <i class="fa fa-heart text-danger"></i> by <a class="font-w600" href="https://1.envato.market/ydb" target="_blank">pixelcave</a>
+            </div>
+            <div class="col-sm-6 order-sm-1 text-center text-sm-left">
+                <a class="font-w600" href="https://1.envato.market/r6y" target="_blank">Dashmix 2.3</a> &copy; <span data-toggle="year-copy"></span>
+            </div>
+        </div>
+      </div>
+    </template>
+
+
+    <template slot="side">
+      aaaaa
+    </template>
+
+
+    <div class="bg-body-light">
+      <div class="content content-full">
+        <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
+          <h1 class="flex-sm-fill font-size-h2 font-w400 mt-2 mb-0 mb-sm-2">Layout API</h1>
+          <nav class="flex-sm-00-auto ml-sm-3" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">Layout</li>
+              <li class="breadcrumb-item active" aria-current="page">API</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <router-view
+        @sidebarVisiable="onSidebarVisiable"
+        @sidebarPosition="onSidebarPosition"
+        @sidebarMin="onSidebarMin"
+        @sidebarTheme="onSidebarTheme"
+        @sideVisiable="onSideVisiable"
+        @sideHoverMode="onSideHoverMode"
+        @headerMode="onHeaderMode"
+        @headerGlass="onHeaderGlass"
+        @headerTheme="onHeaderTheme"
+        @footerMode="onFooterMode"
+        @contentMode="onContentMode"
+      />
+    </div>
+  </t-layout>
 </template>
 <script>
-import Nav from './BaseLayoutComp/Nav'
-import Header from './BaseLayoutComp/Header'
-import Footer from './BaseLayoutComp/Footer'
 export default {
-  components: {
-    Nav,
-    Header,
-    Footer
+  methods: {
+    onSidebarVisiable (type) {
+      this.sidebarShow = type
+    },
+    onSidebarPosition (pos) {
+      this.sidebarPosition = pos
+    },
+    onSidebarMin (type) {
+      this.sidebarMin = type
+    },
+    onSidebarTheme (theme) {
+      this.sidebarTheme = theme
+    },
+    onSideVisiable (type) {
+      this.sideVisiable = type
+    },
+    onSideHoverMode (type) {
+      this.sideHoverMode = type
+    },
+    onHeaderMode (mode) {
+      this.headerMode = mode
+    },
+    onHeaderGlass (type) {
+      this.headerGlass = type
+    },
+    onHeaderTheme (theme) {
+      this.headerTheme = theme
+    },
+    onFooterMode (mode) {
+      this.footerMode = mode
+    },
+    onContentMode (mode) {
+      this.contentMode = mode
+    }
+  },
+  data() {
+    return {
+      sidebarShow: true,
+      sidebarPosition: 'left',
+      sidebarMin: false,
+      sidebarTheme: 'light',
+      sideVisiable: false,
+      sideHoverMode: false,
+      headerMode: 'fixed',
+      headerGlass: false,
+      headerTheme: 'dark',
+      footerMode: 'static',
+      contentMode: 'narrow',
+      navigation: [
+        {
+          title: "控件",
+          icon: "campground",
+          active: true,
+          child: [
+            {
+              title: "图标",
+              to: "/elements/icon"
+            },
+            {
+              title: "Block",
+              to: "/elements/block"
+            }
+          ]
+        },
+        {
+          title: "组件",
+          icon: "car-battery",
+          child: [
+            {
+              title: "导航条",
+              to: "/components/navigation"
+            },
+            {
+              title: "布局",
+              to: "/components/layout"
+            }
+          ]
+        }
+      ]
+    };
   }
-}
+};
 </script>

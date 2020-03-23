@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <b-overlay :show="loading" rounded="sm">
     <div :class="headerClasses">
-      <h3 class="block-title" v-if="title || subtitle">
+      <h3 class="block-title" v-if="title || subtitle ">
         {{title}}
         <small v-if="subtitle">{{subtitle}}</small>
       </h3>
@@ -15,9 +15,7 @@
     <div v-if="$slots.footer" class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
       <slot name="footer"></slot>
     </div>
-    <div class="block-loading-mode" v-if="loading">
-    </div>
-  </div>
+  </b-overlay>
 </template>
 <script>
 import {PropTypes} from '@/utils/types'
