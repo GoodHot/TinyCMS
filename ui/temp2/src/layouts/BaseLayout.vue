@@ -185,7 +185,7 @@ export default {
           to: '/article'
         },
         {
-          title: '分类标签',
+          title: '分类和标签',
           icon: 'tag',
           iconPack: 'si',
           to: '/category'
@@ -258,6 +258,10 @@ export default {
             {
               title: "布局",
               to: "/components/layout"
+            },
+            {
+              title: "Nestable",
+              to: "/components/nestable"
             }
           ]
         }

@@ -39,6 +39,11 @@ export const routerMap = [
         path: '/components/layout',
         name: 'layout',
         component: () => import('@/pages/components/layout'),
+      },
+      {
+        path: '/components/nestable',
+        name: 'nestable',
+        component: () => import('@/pages/components/nestable'),
       }
     ]
   }
