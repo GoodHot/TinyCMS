@@ -20,18 +20,18 @@
         <div class="content-header bg-white-10">
           <a class="link-fx font-w600 font-size-lg text-white" href="index.html">
             <span class="smini-visible">
-              <span class="text-white-75">D</span>
-              <span class="text-white">x</span>
+              <span class="text-white-75">T</span>
+              <span class="text-white">in</span>
             </span>
             <span class="smini-hidden">
-              <span class="text-white">Dash</span>
-              <span class="text-white-75">mix</span>
-              <span class="text-white font-size-base font-w400">2.3</span>
+              <span class="text-white">Tiny</span>
+              <span class="text-white-75">CMS</span>
+              <span class="text-white font-size-base font-w400 ml-1">1.0</span>
             </span>
           </a>
           <div>
             <a class="js-class-toggle text-white-75" href="javascript:void(0)" @click="sidebarTheme = sidebarTheme === 'dark' ? 'light': 'dark'">
-              <t-icon :icon="sidebarTheme === 'dark' ? 'toggle-off': 'toggle-on'" />
+              <t-icon :icon="sidebarTheme === 'dark' ? 'toggle-on': 'toggle-off'" />
             </a>
             <a class="d-lg-none text-white ml-2" href="javascript:void(0)" >
               <t-icon icon="times-circle" />
@@ -167,6 +167,66 @@ export default {
           icon: 'cursor',
           iconPack: 'si',
           to: '/'
+        },
+        {
+          title: 'CONTENT',
+          type: 'heading'
+        },
+        {
+          title: '发布文章',
+          icon: 'note',
+          iconPack: 'si',
+          to: '/content'
+        },
+        {
+          title: '文章管理',
+          icon: 'book-open',
+          iconPack: 'si',
+          to: '/article'
+        },
+        {
+          title: '分类标签',
+          icon: 'tag',
+          iconPack: 'si',
+          to: '/category'
+        },
+        {
+          title: 'SETTINGS',
+          type: 'heading'
+        },
+        {
+          title: '自定义标签',
+          icon: 'pin',
+          iconPack: 'si',
+          to: '/content'
+        },
+        {
+          title: '皮肤管理',
+          icon: 'magic-wand',
+          iconPack: 'si',
+          to: '/content'
+        },
+        {
+          title: '资源管理',
+          icon: 'paper-clip',
+          iconPack: 'si',
+          to: '/content'
+        },
+        {
+          title: 'SYSTEM',
+          type: 'heading'
+        },
+        {
+          title: '系统设置',
+          icon: 'equalizer',
+          iconPack: 'si',
+          to: '/content'
+        },
+        {
+          title: '用户管理',
+          icon: 'users',
+          iconPack: 'si',
+          to: '/content'
         },
         {
           title: 'TOOL',
