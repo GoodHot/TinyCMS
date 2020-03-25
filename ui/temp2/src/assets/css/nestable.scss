@@ -96,8 +96,12 @@
     margin-right: .2rem;
     line-height: 1.2rem;
     outline: none;
-    &:focus {
+    &:focus,
+    &:active {
       box-shadow: none;
+      background: transparent;
+      border: 0;
+      color: #000;
     }
   }
 }

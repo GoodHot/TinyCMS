@@ -93,7 +93,7 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.GET("/admin/:id", s.AdminAuthCtrl.Get, s.AdminService)
 	router.DELETE("/admin/:id", s.AdminAuthCtrl.Delete, s.AdminService)
 
-	// channel
+	// category
 	router.POST("/category", s.AdminCategoryCtrl.Save, s.AdminService)
 	router.GET("/category/tree", s.AdminCategoryCtrl.Tree, s.AdminService)
 	router.GET("/category/:id", s.AdminCategoryCtrl.Get, s.AdminService)

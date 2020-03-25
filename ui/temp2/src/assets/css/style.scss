@@ -12,3 +12,20 @@
 .nav-main-link-name {
   font-weight: normal;
 }
+
+.t-category-list {
+  .nestable-item-content {
+    width: 100%;
+    display: inline-block;
+    background: #f9fafc;
+    border: 0;
+    &:hover {
+      background: #eff2f8;
+    }
+    .expand {
+      display: none;
+      // line-height: 64px;
+      // font-size: 2.5rem;
+    }
+  }
+}
