@@ -46,5 +46,17 @@ export const routerMap = [
         component: () => import('@/pages/components/nestable'),
       }
     ]
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: () => import('@/layouts/AuthLayout'),
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import('@/pages/auth/login'),
+      }
+    ]
   }
 ]

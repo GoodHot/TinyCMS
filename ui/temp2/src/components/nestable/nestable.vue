@@ -43,6 +43,7 @@ export default {
         } else {
           v.hide = false
           v.expand = '-'
+          v.children = []
         }
       });
     },
@@ -64,6 +65,13 @@ export default {
         item.hide = true
         item.expand = '+'
       }
+    }
+  },
+  watch: {
+    data (val) {
+      const value = JSON.parse(JSON.stringify(val))
+      this.initVal(value)
+      this.nestableItems = value
     }
   }
 }
