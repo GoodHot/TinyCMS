@@ -36,6 +36,15 @@ func (s *AdminCategoryCtrl) Get(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminCategoryCtrl) Page(ctx *ctrl.HTTPContext) error {
+	page := ctx.ParamInt("page")
+	query := &service.CategoryQuery{
+		Keyword: ctx.QueryParam("keyword"),
+	}
+	ctx.Put("page", s.CategoryService.Page(page, query))
+	return ctx.ResultOK()
+}
+
 //func (s *AdminChannelCtrl) Page(ctx *ctrl.HTTPContext) error {
 //	parentId := ctx.QueryParamInt("parentId")
 //	page := ctx.ParamInt("page")

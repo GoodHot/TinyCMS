@@ -188,7 +188,7 @@ export default {
           title: '分类和标签',
           icon: 'tag',
           iconPack: 'si',
-          to: '/category'
+          to: '/category/1'
         },
         {
           title: 'SETTINGS',

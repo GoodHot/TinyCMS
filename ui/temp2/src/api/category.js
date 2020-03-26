@@ -21,3 +21,10 @@ export function getCategory (id) {
     method: 'get'
   })
 }
+
+export function getCategoryByPage (page, keyword) {
+  return request({
+    url: `/category/page_${page}?keyword=${keyword}`,
+    method: 'get'
+  })
+}

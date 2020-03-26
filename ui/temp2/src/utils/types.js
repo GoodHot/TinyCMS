@@ -30,5 +30,17 @@ export const PropTypes = {
         default: def
       }
     }
+  },
+  Object: {
+    type: Object,
+    default () {
+      return null
+    },
+    def (def) {
+      return {
+        type: Object,
+        default: def
+      }
+    }
   }
 }

@@ -6,6 +6,8 @@ import navigation from './navigation/navigation'
 import navigationItem from './navigation/navigation-item'
 import layout from './layout/layout'
 import nestable from './nestable/nestable'
+import formtable from './formtable/formtable'
+import table from './table/table'
 
 export default {
   't-icon': icon,
@@ -15,5 +17,7 @@ export default {
   't-navigation': navigation,
   't-navigation-item': navigationItem,
   't-layout': layout,
-  't-nestable': nestable
+  't-nestable': nestable,
+  't-formtable': formtable,
+  't-table': table
 }
