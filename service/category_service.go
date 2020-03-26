@@ -38,7 +38,7 @@ type CategoryTree struct {
 
 func (s *CategoryService) tree(parentId uint) []*CategoryTree {
 	var channels []*model.Category
-	s.ORM.DB.Where("parent_id = ?", parentId).Order("sort desc, id desc").Find(&channels)
+	s.ORM.DB.Where("parent_id = ?", parentId).Order("sort asc, id desc").Find(&channels)
 	if len(channels) == 0 {
 		return nil
 	}
@@ -102,4 +102,11 @@ func (s *CategoryService) Page(page int, query *CategoryQuery) *orm.Page {
 		OrderBy:  "sort desc, id desc",
 	})
 	return result
+}
+
+func (s *CategoryService) Sort(id uint, pid uint, sort int) error {
+	data := make(map[string]interface{})
+	data["sort"] = sort
+	data["parent_id"] = pid
+	return s.ORM.DB.Model(&model.Category{}).Where("id = ?", id).Updates(data).Error
 }

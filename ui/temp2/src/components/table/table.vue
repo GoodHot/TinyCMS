@@ -50,7 +50,6 @@ export default {
   },
   data () {
     return {
-      selectRows: [],
       items: [],
       isSelectAll: false
     }
@@ -78,11 +77,6 @@ export default {
       this.items.map(item => {
         item.checked = checked
       })
-      if (checked) {
-        this.selectRows = this.items
-      } else {
-        this.selectRows = []
-      }
       this.onSelect()
     },
     selectOne (checked, item) {
@@ -98,19 +92,16 @@ export default {
       if (checkedCount === this.items.length ) {
         this.isSelectAll = true
       }
-      if (checked) {
-        this.selectRows.push(item)
-      } else {
-        this.selectRows.map((one, i) => {
-          if (one[this.rowKey] === item[this.rowKey]) {
-            this.selectRows.splice(i, 1)
-          }
-        })
-      }
       this.onSelect()
     },
     onSelect () {
-      this.$emit('onselect', this.isSelectAll, this.selectRows)
+      const rows = []
+      this.items.map(item => {
+        if (item.checked) {
+          rows.push(item)
+        }
+      })
+      this.$emit('onselect', this.isSelectAll, rows)
     },
     refreshData (val) {
       const items = JSON.parse(JSON.stringify(val))

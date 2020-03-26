@@ -28,3 +28,11 @@ export function getCategoryByPage (page, keyword) {
     method: 'get'
   })
 }
+
+export function categorySort (param) {
+  return request({
+    url: '/category/sort',
+    method: 'post',
+    data: param
+  })
+}

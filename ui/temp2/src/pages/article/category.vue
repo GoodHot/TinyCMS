@@ -2,8 +2,8 @@
   <t-block title="所有分类" theme rounded>
     <div class="push d-flex justify-content-between ">
       <div>
-        <b-button size="sm" variant="light" class="mr-1" v-if="selectRows.length > 0"><t-icon icon="times" class="text-danger" /> 删除</b-button>
-        <b-button size="sm" class="mr-1"><t-icon icon="sort-amount-down" /> 设置排序</b-button>
+        <b-button size="sm" variant="light" class="mr-1" v-if="selectRows.length > 0"><t-icon icon="times" class="text-danger" /> 删除这{{ selectRows.length }}个分类</b-button>
+        <b-button size="sm" class="mr-1" @click="$refs.categorySortModal.show()"><t-icon icon="sort-amount-down" /> 设置排序</b-button>
         <b-button size="sm" variant="success"><t-icon icon="plus" /> 创建分类</b-button>
       </div>
       <div>
@@ -26,12 +26,17 @@
         </b-button-group>
       </template>
     </t-table>
+    <category-sort-modal ref="categorySortModal"></category-sort-modal>
   </t-block>
 </template>
 <script>
 import { getCategoryByPage } from '@/api/category'
+import CategorySortModal from './modal/categorySort'
 
 export default {
+  components: {
+    CategorySortModal
+  },
   data () {
     return {
       title: '分类和标签管理',
@@ -70,7 +75,7 @@ export default {
       ],
       data: [],
       pagination: {
-        total: 0,
+        total: 1,
         current: 1,
         baseURL: '/#/category/'
       },

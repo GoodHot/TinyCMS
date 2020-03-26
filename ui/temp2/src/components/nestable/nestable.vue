@@ -1,10 +1,12 @@
 <template>
-<vue-nestable v-model="nestableItems" @input="inputHandler" @change="changeHandler" ref="nestable">
-  <vue-nestable-handle slot-scope="{ item }" :item="item">
-    <b-button class="expand" variant="none" v-if="item.children && item.children.length > 0" @click="expandHandler(item)">{{ item.expand }}</b-button>
-    <slot v-bind:item="item"></slot>
-  </vue-nestable-handle>
-</vue-nestable>
+<b-overlay :show="loading" rounded="sm">
+  <vue-nestable v-model="nestableItems" @input="inputHandler" @change="changeHandler" ref="nestable">
+    <vue-nestable-handle slot-scope="{ item }" :item="item">
+      <b-button class="expand" variant="none" v-if="item.children && item.children.length > 0" @click="expandHandler(item)">{{ item.expand }}</b-button>
+      <slot v-bind:item="item"></slot>
+    </vue-nestable-handle>
+  </vue-nestable>
+</b-overlay>
 </template>
 <script>
 import { VueNestable, VueNestableHandle } from 'vue-nestable'
@@ -21,7 +23,8 @@ export default {
     VueNestableHandle
   },
   props: {
-    data: PropTypes.Array
+    data: PropTypes.Array,
+    loading: PropTypes.Boolean
   },
   data () {
     return {
@@ -51,7 +54,7 @@ export default {
       this.$emit('data.change', val)
     },
     changeHandler (val, opt) {
-      console.log(val, opt)
+      this.$emit('change', val, opt)
     },
     expandHandler (item) {
       const nestable = this.$refs.nestable
