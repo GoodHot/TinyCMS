@@ -8,6 +8,8 @@ import layout from './layout/layout'
 import nestable from './nestable/nestable'
 import formtable from './formtable/formtable'
 import table from './table/table'
+import form from './form/form'
+import imageUpload from './upload/imageUpload'
 
 export default {
   't-icon': icon,
@@ -19,5 +21,7 @@ export default {
   't-layout': layout,
   't-nestable': nestable,
   't-formtable': formtable,
-  't-table': table
+  't-table': table,
+  't-form': form,
+  't-image-upload': imageUpload
 }

@@ -1,35 +1,74 @@
 <template>
   <b-modal v-model="visible" title="分类" ok-title="确定" cancel-title="取消" size="lg" no-close-on-backdrop @ok="okHandler">
-    <b-form>
-      <b-form-group label="分类名称:">
-        <b-form-input placeholder="这个分类叫什么名字？" :state="true"></b-form-input>
-      </b-form-group>
-      <b-form-group
-        label="路径:"
-        description="分类路径为URL展示路径，不可重复，只允许输入字母和数字，尽量使用简单易懂的单词或拼音"
-      >
-        <b-form-input placeholder="好的路径有利于SEO哦"></b-form-input>
-      </b-form-group>
-      <b-form-group label="SEO标题:">
-        <b-form-input placeholder="针对标题的SEO优化, SEO标题可以和分类名称组合使用"></b-form-input>
-      </b-form-group>
-      <b-form-group label="关键字:">
-        <b-form-input placeholder="合理的关键字对SEO帮助很大"></b-form-input>
-      </b-form-group>
-      <b-form-group label="描述:">
-        <b-form-textarea rows="3" max-rows="6"  placeholder="SEO中的Description"></b-form-textarea>
-      </b-form-group>
-      <b-form-group label="备注:">
-        <b-form-textarea rows="3" max-rows="6"></b-form-textarea>
-      </b-form-group>
-    </b-form>
+    <t-form :form="form" ref="categoryForm">
+    </t-form>
   </b-modal>
 </template>
 <script>
+import { vType } from '@/utils/valid'
+
 export default {
   data () {
     return {
       visible: false,
+      form: [
+        {
+          name: 'name',
+          value: '',
+          type: 'input',
+          label: '分类名称',
+          placeholder: '这个分类叫什么名字？',
+          valid: [vType.require('请输入分类名称'), vType.length(1, 255, '分类名称长度为1~255个字符')]
+        },
+        {
+          name: 'path',
+          value: '',
+          type: 'input',
+          label: '路径',
+          placeholder: '好的路径有利于SEO哦',
+          valid: [vType.require('请输入分类路径'), vType.regex('^[a-zA-Z0-9\\-]+$', '路径只能为字母和数字或横杠(-)'), vType.length(1, 255, '路径长度为1~255个字符')]
+        },
+        {
+          name: 'seo_title',
+          value: '',
+          type: 'input',
+          label: 'SEO标题',
+          placeholder: '用于SEO的标题，可以配合分类名称一起使用',
+          valid: [vType.length(1, 255, 'SEO标题长度为1~255个字符')]
+        },
+        {
+          name: 'keyword',
+          value: '',
+          type: 'input',
+          label: '关键字',
+          placeholder: '好的关键字可以提升SEO效果',
+          valid: [vType.length(1, 255, '关键字长度为1~255个字符')]
+        },
+        {
+          name: 'desccription',
+          value: '',
+          type: 'textarea',
+          label: '描述',
+          placeholder: '输入分类的描述',
+          valid: [vType.length(1, 255, '描述长度为1~255个字符')]
+        },
+        {
+          name: 'remark',
+          value: '',
+          type: 'textarea',
+          label: '备注',
+          placeholder: '',
+          valid: [vType.length(1, 255, '备注长度为1~255个字符')]
+        },
+        {
+          name: 'icon',
+          value: '',
+          type: 'imageUpload',
+          label: '图标',
+          placeholder: '上传分类图标',
+          valid: [vType.require('请上传分类图标')]
+        }
+      ]
     }
   },
   methods: {
@@ -38,6 +77,7 @@ export default {
     },
     okHandler (env) {
       env.preventDefault()
+      this.$refs.categoryForm.submit()
     }
   }
 }
