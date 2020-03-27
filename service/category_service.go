@@ -4,6 +4,7 @@ import (
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/importcjj/trie-go"
+	"github.com/jinzhu/gorm"
 	"strconv"
 	"strings"
 )
@@ -99,14 +100,30 @@ func (s *CategoryService) Page(page int, query *CategoryQuery) *orm.Page {
 		PageSize: s.PageSize,
 		Result:   &category,
 		Where:    orm.Where(where, param...),
-		OrderBy:  "sort desc, id desc",
+		OrderBy:  "id desc",
 	})
 	return result
 }
 
-func (s *CategoryService) Sort(id uint, pid uint, sort int) error {
-	data := make(map[string]interface{})
-	data["sort"] = sort
-	data["parent_id"] = pid
-	return s.ORM.DB.Model(&model.Category{}).Where("id = ?", id).Updates(data).Error
+type CategorySort struct {
+	ParentID uint `json:"parent_id"`
+	Sort     []struct {
+		ID    uint `json:"id"`
+		Index int  `json:"index"`
+	} `json:"sort"`
+}
+
+func (s *CategoryService) Sort(sort *CategorySort) error {
+	return s.ORM.Tx(func(db *gorm.DB) error {
+		data := make(map[string]interface{})
+		for _, item := range sort.Sort {
+			data["sort"] = item.Index
+			data["parent_id"] = sort.ParentID
+			err := s.ORM.DB.Model(&model.Category{}).Where("id = ?", item.ID).Updates(data).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }

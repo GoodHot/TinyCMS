@@ -1,5 +1,5 @@
 <template>
-  <b-modal v-model="visible" @shown="shownHandler" title="分类排序" ok-title="确定" cancel-title="取消" @ok="okHandler">
+  <b-modal v-model="visible" @shown="shownHandler" title="分类排序" ok-title="确定" cancel-title="取消" ok-only>
     <b-alert show><t-icon icon="hand-rock" pack="far" /> 点击分类拖拽排序</b-alert>
     <t-nestable :data="data" :loading="loading" @change="changeHandler">
       <template v-slot:default="props">
@@ -35,31 +35,37 @@ export default {
     shownHandler () {
       this.loadTree()
     },
-    okHandler (env) {
-      env.preventDefault()
-      console.log(this.data)
-    },
     changeHandler (val, opt) {
       const pathTo = opt.pathTo
       if (!pathTo) {
         return
       }
-      let sort = pathTo[pathTo.length -1]
       let tmpArr = null
-      for (let i = 0; i < pathTo.length - 1; i++) {
+      for (let i = 0; i < pathTo.length - 1; i++ ) {
         if (i == 0) {
           tmpArr = opt.items[pathTo[i]]
         } else {
-          tmpArr = tmpArr.children[pathTo[i]]
+          tmpArr = tmpArr.children
         }
       }
-      const param = {
-        id: val.id,
-        parent_id: tmpArr ? tmpArr.id : 0,
-        sort: sort
+      let pid = 0
+      if (!tmpArr) {
+        tmpArr = opt.items
+      } else {
+        pid = tmpArr.id
+        tmpArr = tmpArr.children
       }
-      console.log(param)
-      this.loading = true
+      const sort = []
+      tmpArr.map((item, index) => {
+        sort.push({
+          id: item.id,
+          index
+        })
+      })
+      const param = {
+        parent_id: pid,
+        sort
+      }
       categorySort(param).then(() => {
         this.loading = false
       })

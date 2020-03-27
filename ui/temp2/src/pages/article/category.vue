@@ -4,7 +4,7 @@
       <div>
         <b-button size="sm" variant="light" class="mr-1" v-if="selectRows.length > 0"><t-icon icon="times" class="text-danger" /> 删除这{{ selectRows.length }}个分类</b-button>
         <b-button size="sm" class="mr-1" @click="$refs.categorySortModal.show()"><t-icon icon="sort-amount-down" /> 设置排序</b-button>
-        <b-button size="sm" variant="success"><t-icon icon="plus" /> 创建分类</b-button>
+        <b-button size="sm" variant="success" @click="$refs.categoryModal.show()"><t-icon icon="plus" /> 创建分类</b-button>
       </div>
       <div>
         <b-input-group>
@@ -27,15 +27,18 @@
       </template>
     </t-table>
     <category-sort-modal ref="categorySortModal"></category-sort-modal>
+    <category-modal ref="categoryModal"></category-modal>
   </t-block>
 </template>
 <script>
 import { getCategoryByPage } from '@/api/category'
 import CategorySortModal from './modal/categorySort'
+import categoryModal from './modal/categoryModal'
 
 export default {
   components: {
-    CategorySortModal
+    CategorySortModal,
+    categoryModal
   },
   data () {
     return {

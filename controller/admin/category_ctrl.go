@@ -45,17 +45,11 @@ func (s *AdminCategoryCtrl) Page(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
-type CategorySort struct {
-	ID       uint `json:"id"`
-	ParentID uint `json:"parent_id"`
-	Sort     int  `json:"sort"`
-}
-
 func (s *AdminCategoryCtrl) Sort(ctx *ctrl.HTTPContext) error {
-	sort := new(CategorySort)
+	sort := new(service.CategorySort)
 	if err := ctx.Bind(sort); err != nil {
 		return ctx.ResultErr(err.Error())
 	}
-	s.CategoryService.Sort(sort.ID, sort.ParentID, sort.Sort)
+	s.CategoryService.Sort(sort)
 	return ctx.ResultOK()
 }
