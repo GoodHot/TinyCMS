@@ -24,14 +24,17 @@ export default {
     }
   },
   mounted () {
-    const temp = JSON.parse(JSON.stringify(this.form))
-    temp.map(item => {
-      item.validState = null
-      item.validMsg = ''
-    })
-    this.items = temp
+    this.loadData(this.form)
   },
   methods: {
+    loadData (val) {
+      const temp = JSON.parse(JSON.stringify(val))
+      temp.map(item => {
+        item.validState = null
+        item.validMsg = ''
+      })
+      this.items = temp
+    },
     validation (item) {
       valid.valid(item)
     },
@@ -51,6 +54,11 @@ export default {
         data[item.name] = item.value
       })
       callback(data)
+    }
+  },
+  watch: {
+    form (val) {
+      this.loadData(val)
     }
   }
 }

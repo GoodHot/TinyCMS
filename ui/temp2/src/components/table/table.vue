@@ -104,11 +104,13 @@ export default {
       this.$emit('onselect', this.isSelectAll, rows)
     },
     refreshData (val) {
+      this.isSelectAll = false
       const items = JSON.parse(JSON.stringify(val))
       items.map(item => {
         item.checked = false
       })
       this.items = items
+      this.$emit('onselect', this.isSelectAll, [])
     },
     pageChangeHandler (page) {
       this.$emit('onpage', page)

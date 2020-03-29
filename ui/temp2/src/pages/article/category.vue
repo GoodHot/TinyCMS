@@ -22,7 +22,7 @@
       <template v-slot:action=" {item} = props">
         <b-button-group size="sm">
           <b-button variant="light" @click="deleteItem(item.id)"><t-icon icon="times" class="text-danger" /> 删除</b-button>
-          <b-button variant="light"><t-icon icon="edit" class="text-primary" /> 编辑</b-button>
+          <b-button variant="light" @click="$refs.categoryModal.edit(item.id)"><t-icon icon="edit" class="text-primary" /> 编辑</b-button>
         </b-button-group>
       </template>
     </t-table>
@@ -105,8 +105,8 @@ export default {
       this.pagination.current = page
       this.loadCategory()
     },
-    onsaveHandler (type) {
-      alert(`${type}分类成功`)
+    onsaveHandler () {
+      alert(`保存分类成功`)
       this.loadCategory()
     }
   }

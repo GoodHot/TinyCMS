@@ -31,6 +31,7 @@ export const vType = {
 export const valid = {
   valid (item) {
     if (!item.valid) {
+      item.validState = true
       return
     }
     let errCount = 0

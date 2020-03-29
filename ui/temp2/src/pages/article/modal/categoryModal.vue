@@ -8,7 +8,7 @@
 </template>
 <script>
 import { vType } from '@/utils/valid'
-import { saveCategory } from '@/api/category'
+import { saveCategory, getCategory } from '@/api/category'
 
 export default {
   data () {
@@ -16,6 +16,11 @@ export default {
       visible: false,
       loading: false,
       form: [
+        {
+          name: 'id',
+          value: 0,
+          type: 'hidden'
+        },
         {
           name: 'name',
           value: '',
@@ -49,7 +54,7 @@ export default {
           valid: [vType.length(1, 255, '关键字长度为1~255个字符')]
         },
         {
-          name: 'desccription',
+          name: 'description',
           value: '',
           type: 'textarea',
           label: '描述',
@@ -77,7 +82,30 @@ export default {
   },
   methods: {
     show () {
+      this.cleanForm()
       this.visible = true
+    },
+    cleanForm () {
+      const temp = []
+      this.form.map(item => {
+        item.value = null
+        temp.push(item)
+      })
+      this.form = temp
+    },
+    edit (id) {
+      this.visible = true
+      this.loading = true
+      getCategory(id).then(res => {
+        const category = res.category
+        const temp = []
+        this.form.map(item => {
+          item.value = category[item.name]
+          temp.push(item)
+        })
+        this.form = temp
+        this.loading = false
+      })
     },
     okHandler (env) {
       env.preventDefault()
@@ -86,7 +114,7 @@ export default {
         this.$refs.categoryForm.submit(data => {
           saveCategory(data).then(() => {
             this.loading = false
-            this.$emit('onsave', 'insert')
+            this.$emit('onsave')
             this.visible = false
           })
         })
