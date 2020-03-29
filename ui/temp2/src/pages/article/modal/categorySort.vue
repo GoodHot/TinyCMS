@@ -3,7 +3,7 @@
     <b-alert show><t-icon icon="hand-rock" pack="far" /> 点击分类拖拽排序</b-alert>
     <t-nestable :data="data" :loading="loading" @change="changeHandler">
       <template v-slot:default="props">
-        <img :src="assetsURL(props.item.icon)" width="20" height="20" class="mr-2" /> {{ props.item.id }} {{ props.item.name }}
+        <img :src="assetsURL(props.item.category.icon)" width="20" height="20" class="mr-2" /> {{ props.item.name }}
         <span class="float-right"><t-icon icon="hand-rock" pack="far" /></span>
       </template>
     </t-nestable>

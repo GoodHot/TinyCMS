@@ -42,6 +42,7 @@ export const valid = {
           errCount ++
           item.validState = false,
           item.validMsg = rule.msg
+          return
         }
       } else {
         console.error('找不到验证方式：' + rule.type)

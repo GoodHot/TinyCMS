@@ -35,10 +35,22 @@ export default {
     validation (item) {
       valid.valid(item)
     },
-    submit () {
+    validate () {
+      let hasErr = false
       this.items.map(item => {
         valid.valid(item)
+        if (!item.validState) {
+          hasErr = true
+        }
       })
+      return !hasErr
+    },
+    submit (callback) {
+      const data = {}
+      this.items.map(item => {
+        data[item.name] = item.value
+      })
+      callback(data)
     }
   }
 }

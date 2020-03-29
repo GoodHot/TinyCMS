@@ -1,16 +1,20 @@
 <template>
-  <b-modal v-model="visible" title="分类" ok-title="确定" cancel-title="取消" size="lg" no-close-on-backdrop @ok="okHandler">
-    <t-form :form="form" ref="categoryForm">
-    </t-form>
+  <b-modal v-model="visible" title="分类" ok-title="确定" cancel-title="取消" size="lg" no-close-on-backdrop @ok="okHandler" :ok-disabled="loading">
+    <b-overlay :show="loading" rounded="sm">
+      <t-form :form="form" ref="categoryForm">
+      </t-form>
+    </b-overlay>
   </b-modal>
 </template>
 <script>
 import { vType } from '@/utils/valid'
+import { saveCategory } from '@/api/category'
 
 export default {
   data () {
     return {
       visible: false,
+      loading: false,
       form: [
         {
           name: 'name',
@@ -77,7 +81,16 @@ export default {
     },
     okHandler (env) {
       env.preventDefault()
-      this.$refs.categoryForm.submit()
+      if (this.$refs.categoryForm.validate()) {
+        this.loading = true
+        this.$refs.categoryForm.submit(data => {
+          saveCategory(data).then(() => {
+            this.loading = false
+            this.$emit('onsave', 'insert')
+            this.visible = false
+          })
+        })
+      }
     }
   }
 }

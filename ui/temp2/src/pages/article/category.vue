@@ -27,7 +27,7 @@
       </template>
     </t-table>
     <category-sort-modal ref="categorySortModal"></category-sort-modal>
-    <category-modal ref="categoryModal"></category-modal>
+    <category-modal ref="categoryModal" @onsave="onsaveHandler"></category-modal>
   </t-block>
 </template>
 <script>
@@ -103,6 +103,10 @@ export default {
     },
     onpageHandler (page) {
       this.pagination.current = page
+      this.loadCategory()
+    },
+    onsaveHandler (type) {
+      alert(`${type}分类成功`)
       this.loadCategory()
     }
   }

@@ -51,7 +51,7 @@ export default {
       uploadFile(file).then(res => {
         this.url = res.path
         this.imgSrc = this.assetsURL(res.path)
-        this.$emit('uploaded', this.url)
+        this.$emit('change.image', this.url)
       })
     }
   },
