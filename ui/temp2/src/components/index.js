@@ -10,6 +10,7 @@ import formtable from './formtable/formtable'
 import table from './table/table'
 import form from './form/form'
 import imageUpload from './upload/imageUpload'
+import datePick from './date_pick/datePick'
 
 export default {
   't-icon': icon,
@@ -23,5 +24,6 @@ export default {
   't-formtable': formtable,
   't-table': table,
   't-form': form,
-  't-image-upload': imageUpload
+  't-image-upload': imageUpload,
+  't-date-pick': datePick
 }

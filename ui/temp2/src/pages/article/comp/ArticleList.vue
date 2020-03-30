@@ -5,60 +5,96 @@
         Article List
       </b-button>
     </div>
-    <div class="d-md-block push d-none">
+    <div class="d-md-block push d-none t-article-list">
       <b-button block variant="hero-success" class="mb-3"><t-icon icon="plus" class="mr-1" /> 发布新文章</b-button>
 
-      <b-input-group class="mb-3">
-        <b-form-input class="border-0" placeholder="文章搜索"></b-form-input>
-        <b-input-group-append>
-          <b-button class="bg-white px-3" variant="light" size="sm" text="Button"><t-icon size="fw" icon="search" /></b-button>
-        </b-input-group-append>
-      </b-input-group>
-
-      <div class="d-flex justify-content-between mb-2">
-        <b-dropdown text="Sort by" variant="link" size="sm">
-          <b-dropdown-item href="#"><t-icon icon="sort-amount-down" size="fw" class="mr-1" />Newest</b-dropdown-item>
-          <b-dropdown-item href="#"><t-icon icon="sort-amount-up" size="fw" class="mr-1" />Oldest</b-dropdown-item>
-        </b-dropdown>
-        <b-dropdown id="dropdown-1" text="Filter by" variant="link" size="sm" class="m-md-2">
-          <b-dropdown-item>First Action</b-dropdown-item>
-          <b-dropdown-item>Second Action</b-dropdown-item>
-        </b-dropdown>
+      <div class="mb-3">
+        <b-input-group>
+          <b-form-input v-model="search.keyword" class="border-0" placeholder="文章搜索" :disabled="advancedSearch"></b-form-input>
+          <b-input-group-append>
+            <b-button class="bg-white px-3" variant="light" size="sm" text="Button" :disabled="advancedSearch"><t-icon size="fw" icon="search" /></b-button>
+            <b-button class="bg-white px-3" variant="light" size="sm" text="Button" @click="advancedSearch = !advancedSearch">高级搜索</b-button>
+          </b-input-group-append>
+        </b-input-group>
+        <b-form class="p-3 bg-white" style="border-top: 1px solid #f8f9fa" v-show="advancedSearch">
+          <b-form-group>
+            <b-form-input v-model="search.keyword" class="form-control-alt" placeholder="文章搜索" size="sm" ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input class="form-control-alt" placeholder="作者" size="sm" ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-form-input class="form-control-alt" placeholder="分类" size="sm" ></b-form-input>
+          </b-form-group>
+          <b-form-group>
+            <b-button size="sm" block variant="primary">搜索</b-button>
+          </b-form-group>
+        </b-form>
       </div>
       <b-list-group class="font-size-sm">
-        <b-list-group-item href="#" class="ribbon ribbon-light">
-          <div class="ribbon-box"><t-icon icon="save" pack="far" /></div>
-          <p class="font-size-h6 font-w700 mb-0">New Photo PackNew Photo PackNew Photo PackNew Photo PackNew Photo Pack</p>
+        <b-list-group-item href="#" class="ribbon ribbon-light" v-for="article in articles" :key="article.id" @mouseover="showTime(article, 'full')" @mouseout="showTime(article, 'ago')">
+          <div class="ribbon-box" v-if="article.status === 2"><t-icon icon="save" pack="far" v-if="article.status === 2" /></div>
+          <p class="font-size-h6 font-w700 mb-0">{{ article.title }}</p>
           <p class="text-muted mb-2">
-            Our new photo pack is now available to go live and we couldn’t be more excited..
+            {{ article.description }}
           </p>
-          <small class="text-muted">3days ago create by xww</small>
-        </b-list-group-item>
-        <b-list-group-item href="#" class="ribbon ribbon-light">
-          <div class="ribbon-box"><t-icon icon="save" pack="far" /></div>
-          <p class="font-size-h6 font-w700 mb-0">New Photo PackNew Photo PackNew Photo PackNew Photo PackNew Photo Pack</p>
-          <p class="text-muted mb-2">
-            Our new photo pack is now available to go live and we couldn’t be more excited..
-          </p>
-          <small class="text-muted">3days ago create by xww</small>
-        </b-list-group-item>
-        <b-list-group-item href="#" class="ribbon ribbon-light">
-          <div class="ribbon-box"><t-icon icon="save" pack="far" /></div>
-          <p class="font-size-h6 font-w700 mb-0">New Photo PackNew Photo PackNew Photo PackNew Photo PackNew Photo Pack</p>
-          <p class="text-muted mb-2">
-            Our new photo pack is now available to go live and we couldn’t be more excited..
-          </p>
-          <small class="text-muted">3days ago create by xww</small>
-        </b-list-group-item>
-        <b-list-group-item href="#" class="ribbon ribbon-light">
-          <div class="ribbon-box"><t-icon icon="save" pack="far" /></div>
-          <p class="font-size-h6 font-w700 mb-0">New Photo PackNew Photo PackNew Photo PackNew Photo PackNew Photo Pack</p>
-          <p class="text-muted mb-2">
-            Our new photo pack is now available to go live and we couldn’t be more excited..
-          </p>
-          <small class="text-muted">3days ago create by xww</small>
+          <div class="d-flex justify-content-between mb-2">
+            <a href="#" class="t-article-list-category">{{ article.category_name }}</a>
+            <div>
+              <b-badge variant="secondary" href="#" pill v-for="tag in splitTag(article.tags)" :key="tag" class="mr-1">{{ tag }}</b-badge>
+            </div>
+          </div>
+          <small class="d-flex justify-content-between">
+            <time datetime="article.created_at">{{ article.created_at_fmt }}</time>
+            <span>Create by {{ article.author_name }}</span>
+          </small>
         </b-list-group-item>
       </b-list-group>
     </div>
   </div>
 </template>
+<script>
+import { articlePage } from '@/api/article'
+import moment from 'moment'
+
+export default {
+  data () {
+    return {
+      articles: [],
+      advancedSearch: false,
+      search: {
+        keyword: ''
+      }
+    }
+  },
+  mounted () {
+    this.loadArticlePage()
+  },
+  methods: {
+    loadArticlePage () {
+      articlePage({
+        page: 1
+      }).then(res => {
+        const tmp = res.page.list
+        tmp.map(art => {
+          art.created_at_fmt = this.fmtDateAgo(art.created_at)
+        })
+        this.articles = tmp
+      })
+    },
+    fmtDateAgo (dt) {
+      return moment(dt).fromNow()
+    },
+    showTime (article, type) {
+      if (type === 'ago') {
+        article.created_at_fmt = this.fmtDateAgo(article.created_at)
+      } else {
+        article.created_at_fmt = moment(article.created_at).format('YYYY-MM-DD H:mm:ss')
+      }
+    },
+    splitTag (tags) {
+      return tags.split(',')
+    }
+  }
+}
+</script>
