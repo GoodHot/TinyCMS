@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" style="height: calc(100vh - 70px); overflow-y: scroll">
     <div class="d-md-none push">
       <b-button block variant="hero-primary">
         Article List
@@ -16,7 +16,7 @@
             <b-button class="bg-white px-3" variant="light" size="sm" text="Button" @click="advancedSearch = !advancedSearch">高级搜索</b-button>
           </b-input-group-append>
         </b-input-group>
-        <b-form class="p-3 bg-white" style="border-top: 1px solid #f8f9fa" v-show="advancedSearch">
+        <b-form class="p-3 bg-white" v-show="advancedSearch">
           <b-form-group>
             <b-form-input v-model="search.keyword" class="form-control-alt" placeholder="文章搜索" size="sm" ></b-form-input>
           </b-form-group>
