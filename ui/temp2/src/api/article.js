@@ -25,6 +25,9 @@ export function articlePage (query) {
   if (query && query.tag) {
     url += `&tag=${query.tag}`
   }
+  if (query && query.user) {
+    url += `&user=${query.user}`
+  }
   return request({
     url: url,
     method: 'get'

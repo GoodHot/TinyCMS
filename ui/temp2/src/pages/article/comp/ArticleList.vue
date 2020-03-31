@@ -12,7 +12,7 @@
         <b-input-group>
           <b-form-input v-model="search.keyword" class="border-0" placeholder="文章搜索" :disabled="advancedSearch"></b-form-input>
           <b-input-group-append>
-            <b-button class="bg-white px-3" variant="light" size="sm" text="Button" :disabled="advancedSearch"><t-icon size="fw" icon="search" /></b-button>
+            <b-button class="bg-white px-3" variant="light" size="sm" text="Button" :disabled="advancedSearch" @click="searchSubmit"><t-icon size="fw" icon="search" /></b-button>
             <b-button class="bg-white px-3" variant="light" size="sm" text="Button" @click="advancedSearch = !advancedSearch">高级搜索</b-button>
           </b-input-group-append>
         </b-input-group>
@@ -21,35 +21,43 @@
             <b-form-input v-model="search.keyword" class="form-control-alt" placeholder="文章搜索" size="sm" ></b-form-input>
           </b-form-group>
           <b-form-group>
-            <user-input size="sm" inputClass="form-control-alt"></user-input>
+            <user-input size="sm" inputClass="form-control-alt" @change="userChangeHandler"></user-input>
           </b-form-group>
           <b-form-group>
-            <category-input size="sm" inputClass="form-control-alt"></category-input>
+            <category-input size="sm" inputClass="form-control-alt" @change="categoryChangeHandler"></category-input>
           </b-form-group>
           <b-form-group>
-            <b-button size="sm" block variant="primary">搜索</b-button>
+            <b-button size="sm" block variant="primary" @click="searchSubmit">搜索</b-button>
           </b-form-group>
         </b-form>
       </div>
-      <b-list-group class="font-size-sm">
-        <b-list-group-item href="#" class="ribbon ribbon-light" v-for="article in articles" :key="article.id" @mouseover="showTime(article, 'full')" @mouseout="showTime(article, 'ago')">
-          <div class="ribbon-box" v-if="article.status === 2"><t-icon icon="save" pack="far" v-if="article.status === 2" /></div>
-          <p class="font-size-h6 font-w700 mb-0">{{ article.title }}</p>
-          <p class="text-muted mb-2">
-            {{ article.description }}
+      <b-overlay :show="loading" rounded="sm">
+        <b-alert show variant="info" v-if="!articles || articles.length === 0">
+          <h4 class="alert-heading">没有文章</h4>
+          <p>
+            抱歉，没有找到任何文章，你可以立即发布一篇新文章
           </p>
-          <div class="d-flex justify-content-between mb-2">
-            <a href="#" class="t-article-list-category">{{ article.category_name }}</a>
-            <div>
-              <b-badge variant="secondary" href="#" pill v-for="tag in splitTag(article.tags)" :key="tag" class="mr-1">{{ tag }}</b-badge>
+        </b-alert>
+        <b-list-group class="font-size-sm">
+          <b-list-group-item href="#" class="ribbon ribbon-light" v-for="article in articles" :key="article.id" @mouseover="showTime(article, 'full')" @mouseout="showTime(article, 'ago')">
+            <div class="ribbon-box" v-if="article.status === 2"><t-icon icon="save" pack="far" v-if="article.status === 2" /></div>
+            <p class="font-size-h6 font-w700 mb-0">{{ article.title }}</p>
+            <p class="text-muted mb-2">
+              {{ article.description }}
+            </p>
+            <div class="d-flex justify-content-between mb-2">
+              <a href="#" class="t-article-list-category">{{ article.category_name }}</a>
+              <div>
+                <b-badge variant="secondary" href="#" pill v-for="tag in splitTag(article.tags)" :key="tag" class="mr-1">{{ tag }}</b-badge>
+              </div>
             </div>
-          </div>
-          <small class="d-flex justify-content-between">
-            <time datetime="article.created_at">{{ article.created_at_fmt }}</time>
-            <span>Create by {{ article.author_name }}</span>
-          </small>
-        </b-list-group-item>
-      </b-list-group>
+            <small class="d-flex justify-content-between">
+              <time datetime="article.created_at">{{ article.created_at_fmt }}</time>
+              <span>Create by {{ article.author_name }}</span>
+            </small>
+          </b-list-group-item>
+        </b-list-group>
+      </b-overlay>
     </div>
   </div>
 </template>
@@ -68,8 +76,12 @@ export default {
     return {
       articles: [],
       advancedSearch: false,
+      loading: false,
       search: {
-        keyword: ''
+        keyword: '',
+        user: 0,
+        category: 0,
+        page: 1
       }
     }
   },
@@ -78,14 +90,24 @@ export default {
   },
   methods: {
     loadArticlePage () {
-      articlePage({
-        page: 1
-      }).then(res => {
+      this.loading = true
+      const param = {}
+      if (this.advancedSearch) {
+        param.page = this.search.page
+        param.keyword = this.search.keyword
+        param.user = this.search.user
+        param.category = this.search.category
+      } else {
+        param.page = this.search.page
+        param.keyword = this.search.keyword
+      }
+      articlePage(param).then(res => {
         const tmp = res.page.list
         tmp.map(art => {
           art.created_at_fmt = this.fmtDateAgo(art.created_at)
         })
         this.articles = tmp
+        this.loading = false
       })
     },
     fmtDateAgo (dt) {
@@ -100,6 +122,16 @@ export default {
     },
     splitTag (tags) {
       return tags.split(',')
+    },
+    userChangeHandler (id) {
+      this.search.user = id
+    },
+    categoryChangeHandler (id) {
+      this.search.category = id
+    },
+    searchSubmit () {
+      this.search.page = 1
+      this.loadArticlePage()
     }
   }
 }

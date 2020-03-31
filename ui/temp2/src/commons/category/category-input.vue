@@ -1,5 +1,5 @@
 <template>
-  <t-input-drawer placeholder="选择分类" :dataValue="choose.name" :size="size" :inputClass="inputClass" @onshow="onshowHandler" :readonly="true">
+  <t-input-drawer ref="categoryInput" placeholder="选择分类" :dataValue="choose.name" :size="size" :inputClass="inputClass" @onshow="onshowHandler" :readonly="true" @clear="clearHandler">
     <b-overlay :show="loading" rounded="sm">
       <div style="max-height: 200px; overflow-y: scroll">
         <ul class="t-category-drawer">
@@ -22,7 +22,9 @@ export default {
       loading: false,
       hasData: false,
       categorys: [],
-      choose: {}
+      choose: {
+        name: ''
+      }
     }
   },
   props: {
@@ -31,7 +33,9 @@ export default {
   },
   methods: {
     chooseItem (item) {
-      this.choose = item
+      this.choose.name = item.name
+      this.$refs.categoryInput.hideDrawer()
+      this.$emit('change', item.id)
     },
     calcPaddingLeft (level) {
       if (level === 0) {
@@ -67,6 +71,10 @@ export default {
         }
       }
       return data
+    },
+    clearHandler () {
+      this.choose.name = ''
+      this.$emit('change', 0)
     }
   }
 }

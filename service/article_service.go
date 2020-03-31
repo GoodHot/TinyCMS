@@ -258,6 +258,7 @@ type ArticlePageQuery struct {
 	CategoryID int
 	Keyword    string
 	TagID      int
+	UserID     int
 }
 
 func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
@@ -273,6 +274,10 @@ func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 	if query.Type != 0 {
 		where += " and status = ?"
 		param = append(param, query.Type)
+	}
+	if query.UserID != 0 {
+		where += " and author_id = ?"
+		param = append(param, query.UserID)
 	}
 	query.Keyword = strings.TrimSpace(query.Keyword)
 	if query.Keyword != "" {
