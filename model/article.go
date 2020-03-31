@@ -32,8 +32,8 @@ type Article struct {
 
 type ArticleContent struct {
 	orm.Model
-	Markdown string `gorm:"type:text"`
-	Html     string `gorm:"type:text"`
+	Markdown string `gorm:"type:text" json:"markdown"`
+	Html     string `gorm:"type:text" json:"html"`
 }
 
 type Tag struct {

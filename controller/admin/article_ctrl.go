@@ -98,26 +98,28 @@ func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
 	if article == nil || article.Title == "" {
 		return ctx.ResultErr("article not exists")
 	}
-	tags := s.TagService.GetByArticleID(id)
-	tagsName := []string{}
-	if tags != nil && len(tags) > 0 {
-		for _, v := range tags {
-			tagsName = append(tagsName, v.Name)
-		}
-	}
 	content := s.ArticleService.GetContent(article.ContentTable, int(article.ContentID))
-	publish := &PublishForm{
-		ID:          int(article.ID),
-		Title:       article.Title,
-		SEOTitle:    article.SEOTitle,
-		Markdown:    content.Markdown,
-		Html:        content.Html,
-		Cover:       article.Cover,
-		CategoryID:  int(article.CategoryID),
-		Description: article.Description,
-		Tags:        tagsName,
-	}
-	ctx.Put("article", publish)
+	//tags := s.TagService.GetByArticleID(id)
+	//tagsName := []string{}
+	//if tags != nil && len(tags) > 0 {
+	//	for _, v := range tags {
+	//		tagsName = append(tagsName, v.Name)
+	//	}
+	//}
+
+	//publish := &PublishForm{
+	//	ID:          int(article.ID),
+	//	Title:       article.Title,
+	//	SEOTitle:    article.SEOTitle,
+	//	Markdown:    content.Markdown,
+	//	Html:        content.Html,
+	//	Cover:       article.Cover,
+	//	CategoryID:  int(article.CategoryID),
+	//	Description: article.Description,
+	//	Tags:        tagsName,
+	//}
+	ctx.Put("article", article)
+	ctx.Put("content", content)
 	return ctx.ResultOK()
 }
 

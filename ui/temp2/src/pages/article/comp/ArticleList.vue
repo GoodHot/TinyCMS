@@ -39,8 +39,12 @@
           </p>
         </b-alert>
         <b-list-group class="font-size-sm">
-          <b-list-group-item href="#" class="ribbon ribbon-light" v-for="article in articles" :key="article.id" @mouseover="showTime(article, 'full')" @mouseout="showTime(article, 'ago')">
-            <div class="ribbon-box" v-if="article.status === 2"><t-icon icon="save" pack="far" v-if="article.status === 2" /></div>
+          <b-list-group-item href="#" @click="onperview(article.id)" class="ribbon ribbon-light ribbon-modern" v-for="article in articles" :key="article.id" @mouseover="showTime(article, 'full')" @mouseout="showTime(article, 'ago')">
+            <div class="ribbon-box" v-if="article.status === 2 || article.id === activeId">
+              <t-icon icon="save" pack="far" v-if="article.status === 2" />
+              <span class="mr-2" v-if="article.id === activeId && article.status === 2" ></span>
+              <t-icon icon="check" class="text-success" v-if="article.id === activeId" />
+            </div>
             <p class="font-size-h6 font-w700 mb-0">{{ article.title }}</p>
             <p class="text-muted mb-2">
               {{ article.description }}
@@ -75,6 +79,7 @@ export default {
   data () {
     return {
       articles: [],
+      activeId: 0,
       advancedSearch: false,
       loading: false,
       search: {
@@ -86,10 +91,10 @@ export default {
     }
   },
   mounted () {
-    this.loadArticlePage()
+    this.loadArticlePage('firstPerview')
   },
   methods: {
-    loadArticlePage () {
+    loadArticlePage (perview) {
       this.loading = true
       const param = {}
       if (this.advancedSearch) {
@@ -108,6 +113,9 @@ export default {
         })
         this.articles = tmp
         this.loading = false
+        if (perview && this.articles && this.articles.length > 0) {
+          this.onperview(this.articles[0].id)
+        }
       })
     },
     fmtDateAgo (dt) {
@@ -132,6 +140,10 @@ export default {
     searchSubmit () {
       this.search.page = 1
       this.loadArticlePage()
+    },
+    onperview (id) {
+      this.activeId = id
+      this.$emit('perview', id)
     }
   }
 }
