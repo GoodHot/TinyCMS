@@ -6,7 +6,7 @@
       </b-button>
     </div>
     <div class="d-md-block push d-none t-article-list">
-      <b-button block variant="hero-success" class="mb-3"><t-icon icon="plus" class="mr-1" /> 发布新文章</b-button>
+      <b-button block variant="hero-success" class="mb-3" @click="$router.push('/article/publish')"><t-icon icon="plus" class="mr-1" /> 发布新文章</b-button>
 
       <div class="mb-3">
         <b-input-group>

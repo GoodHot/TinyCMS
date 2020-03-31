@@ -176,7 +176,7 @@ export default {
           title: '发布文章',
           icon: 'note',
           iconPack: 'si',
-          to: '/content'
+          to: '/article/publish'
         },
         {
           title: '文章管理',

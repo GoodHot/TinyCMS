@@ -25,6 +25,12 @@
         </div>
         <div class="block-content" v-html="content.html">
         </div>
+        <div class="block-content bg-body-light">
+          <p class="font-size-sm text-muted pt-2">
+            <t-icon icon="tags" class="mr-2" />
+            <b-badge class="mr-1" variant="info" v-for="(tag, index) in tagSplit(article.tags)" :key="index">{{ tag }}</b-badge>
+          </p>
+        </div>
       </div>
     </b-overlay>
   </div>
@@ -37,7 +43,9 @@ export default {
   data () {
     return {
       loading: false,
-      article: {},
+      article: {
+        tags: ''
+      },
       content: {}
     }
   },
@@ -45,7 +53,6 @@ export default {
     loadArticle (id) {
       this.loading = true
       getArticleById(id).then(res => {
-        console.log(res)
         this.article = res.article
         this.content = res.content
         this.loading = false
@@ -53,6 +60,9 @@ export default {
     },
     dateFmt (dt) {
       return moment(dt).format('YYYY-MM-DD H:mm:ss')
+    },
+    tagSplit (tags) {
+      return tags.split(',')
     }
   }
 }
