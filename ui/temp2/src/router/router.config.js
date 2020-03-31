@@ -31,6 +31,11 @@ export const routerMap = [
         component: () => import('@/pages/elements/block'),
       },
       {
+        path: '/elements/dropdown',
+        name: 'dropdown',
+        component: () => import('@/pages/elements/dropdown'),
+      },
+      {
         path: '/components/navigation',
         name: 'navigation',
         component: () => import('@/pages/components/navigation'),

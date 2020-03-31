@@ -244,6 +244,10 @@ export default {
             {
               title: "Block",
               to: "/elements/block"
+            },
+            {
+              title: "Dropdown",
+              to: "/elements/dropdown"
             }
           ]
         },

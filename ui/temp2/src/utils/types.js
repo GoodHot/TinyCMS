@@ -42,5 +42,17 @@ export const PropTypes = {
         default: def
       }
     }
+  },
+  Number: {
+    type: Number,
+    default () {
+      return 0
+    },
+    def (def) {
+      return {
+        type: Number,
+        default: def
+      }
+    }
   }
 }

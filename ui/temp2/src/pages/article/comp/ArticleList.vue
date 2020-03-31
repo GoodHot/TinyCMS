@@ -21,10 +21,10 @@
             <b-form-input v-model="search.keyword" class="form-control-alt" placeholder="文章搜索" size="sm" ></b-form-input>
           </b-form-group>
           <b-form-group>
-            <b-form-input class="form-control-alt" placeholder="作者" size="sm" ></b-form-input>
+            <user-input size="sm" inputClass="form-control-alt"></user-input>
           </b-form-group>
           <b-form-group>
-            <b-form-input class="form-control-alt" placeholder="分类" size="sm" ></b-form-input>
+            <category-input size="sm" inputClass="form-control-alt"></category-input>
           </b-form-group>
           <b-form-group>
             <b-button size="sm" block variant="primary">搜索</b-button>
@@ -56,8 +56,14 @@
 <script>
 import { articlePage } from '@/api/article'
 import moment from 'moment'
+import categoryInput from '@/commons/category/category-input'
+import userInput from '@/commons/user/user-input'
 
 export default {
+  components: {
+    categoryInput,
+    userInput
+  },
   data () {
     return {
       articles: [],
