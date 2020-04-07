@@ -14,20 +14,23 @@ const (
 
 type Article struct {
 	orm.Model
-	Title        string        `json:"title"`
-	SEOTitle     string        `json:"seo_title"`
-	CategoryID   uint          `json:"category_id"`
-	CategoryName string        `gorm:"-" json:"category_name"`
-	Description  string        `json:"description"`   // article description
-	Cover        string        `json:"cover"`         // conver image
-	ContentTable string        `json:"content_table"` // content table
-	ContentID    uint          `json:"content_id"`    // content id
-	PublishTime  *time.Time    `json:"publish_time"`  // timing publish
-	Status       ArticleStatus `json:"status"`        // status
-	Views        int           `json:"views"`         // page view count
-	Tags         string        `json:"tags"`          // article tags
-	AuthorID     uint          `json:"author"`        // article author
-	AuthorName   string        `gorm:"-" json:"author_name"`
+	Title          string        `json:"title"`
+	SEOTitle       string        `json:"seo_title"`
+	SEODescription string        `json:"seo_description"`
+	SEOKeyword     string        `json:"seo_keyword"`
+	CategoryID     uint          `json:"category_id"`
+	Description    string        `json:"description"`   // article description
+	Cover          string        `json:"cover"`         // conver image
+	ContentTable   string        `json:"content_table"` // content table
+	ContentID      uint          `json:"content_id"`    // content id
+	PublishTime    *time.Time    `json:"publish_time"`  // timing publish
+	Status         ArticleStatus `json:"status"`        // status
+	Views          int           `json:"views"`         // page view count
+	Tags           string        `json:"tags"`          // article tags
+	AuthorID       uint          `json:"author"`        // article author
+	Template       uint          `json:"template"`
+	AuthorName     string        `gorm:"-" json:"author_name"`
+	CategoryName   string        `gorm:"-" json:"category_name"`
 }
 
 type ArticleContent struct {
@@ -39,7 +42,7 @@ type ArticleContent struct {
 type Tag struct {
 	orm.Model
 	Name         string `gorm:"unique_index" json:"name"`
-	ArticleCount int `json:"article_count"`
+	ArticleCount int    `json:"article_count"`
 }
 
 type RelTagArticle struct {

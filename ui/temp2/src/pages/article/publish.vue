@@ -7,15 +7,11 @@
       <div class="content content-full">
         <div class="block block-fx-pop">
           <div class="block-content block-content-full d-flex justify-content-between border-bottom">
-              <div>
-                <b-button size="sm" variant="primary"><t-icon icon="eye" /> 预览</b-button>
-              </div>
-              <div>
-                <b-button size="sm" variant="secondary" class="mr-1"><t-icon icon="save" /> 保存草稿</b-button>
-                <b-dropdown size="sm" split text="立即发布" variant="info">
-                  <b-dropdown-item href="#">定时发布</b-dropdown-item>
-                </b-dropdown>
-              </div>
+            <b-button size="sm" variant="primary"><t-icon icon="eye" /> 预览</b-button>
+            <div>
+              <b-button size="sm" variant="secondary" class="mr-1"><t-icon icon="save" /> 保存草稿</b-button>
+              <b-button size="sm" variant="info"><t-icon icon="paper-plane" pack="far" /> 立即发布</b-button>
+            </div>
           </div>
           <div class="block-content">
             <b-form>
@@ -45,7 +41,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.article-title {
-}
-</style>

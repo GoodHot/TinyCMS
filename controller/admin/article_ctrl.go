@@ -27,16 +27,22 @@ func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
 }
 
 type PublishForm struct {
-	ID          int      `json:"id"`
-	Title       string   `json:"title"`
-	SEOTitle    string   `json:"seo_title"`
-	Markdown    string   `json:"markdown"`
-	Html        string   `json:"html"`
-	Cover       string   `json:"cover"`
-	CategoryID  int      `json:"category_id"`
-	Description string   `json:"description"`
-	Tags        []string `json:"tags"`
-	Type        string   `json:"type"` // 操作类型 [publish, draft]
+	ID             int      `json:"id"`
+	Title          string   `json:"title"`           // 标题
+	SEOTitle       string   `json:"seo_title"`       // SEO标题
+	SEODescription string   `json:"seo_description"` // SEO描述
+	SEOKeyword     string   `json:"seo_keyword"`     // SEO关键字
+	Markdown       string   `json:"markdown"`        // markdown代码
+	Html           string   `json:"html"`            // HTML代码
+	Cover          string   `json:"cover"`           // 封面图
+	CategoryID     int      `json:"category_id"`     // 分类
+	Description    string   `json:"description"`     // 内容描述
+	Tags           []string `json:"tags"`            // 标签
+	Type           string   `json:"type"`            // 操作类型 [publish, draft]
+	Visibility     string   `json:"visibility"`      // 可见性 [public, private]
+	Template       string   `json:"template"`        // 页面模板
+	Author         uint     `json:"author"`          // 作者ID
+
 }
 
 func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {

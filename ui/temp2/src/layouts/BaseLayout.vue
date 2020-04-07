@@ -233,48 +233,48 @@ export default {
           icon: 'users',
           iconPack: 'si',
           to: '/admin'
-        },
-        {
-          title: 'TOOL',
-          type: 'heading'
-        },
-        {
-          title: "控件",
-          icon: "campground",
-          active: true,
-          child: [
-            {
-              title: "图标",
-              to: "/elements/icon"
-            },
-            {
-              title: "Block",
-              to: "/elements/block"
-            },
-            {
-              title: "Dropdown",
-              to: "/elements/dropdown"
-            }
-          ]
-        },
-        {
-          title: "组件",
-          icon: "car-battery",
-          child: [
-            {
-              title: "导航条",
-              to: "/components/navigation"
-            },
-            {
-              title: "布局",
-              to: "/components/layout"
-            },
-            {
-              title: "Nestable",
-              to: "/components/nestable"
-            }
-          ]
         }
+        // {
+        //   title: 'TOOL',
+        //   type: 'heading'
+        // },
+        // {
+        //   title: "控件",
+        //   icon: "campground",
+        //   active: true,
+        //   child: [
+        //     {
+        //       title: "图标",
+        //       to: "/elements/icon"
+        //     },
+        //     {
+        //       title: "Block",
+        //       to: "/elements/block"
+        //     },
+        //     {
+        //       title: "Dropdown",
+        //       to: "/elements/dropdown"
+        //     }
+        //   ]
+        // },
+        // {
+        //   title: "组件",
+        //   icon: "car-battery",
+        //   child: [
+        //     {
+        //       title: "导航条",
+        //       to: "/components/navigation"
+        //     },
+        //     {
+        //       title: "布局",
+        //       to: "/components/layout"
+        //     },
+        //     {
+        //       title: "Nestable",
+        //       to: "/components/nestable"
+        //     }
+        //   ]
+        // }
       ]
     };
   }

@@ -20,24 +20,19 @@
       </b-form-group>
       <b-form-group
         label-cols="4"
+        label="页面模板"
+      >
+        <b-form-select>
+          <b-form-select-option>post.html</b-form-select-option>
+          <b-form-select-option>post_2.html</b-form-select-option>
+        </b-form-select>
+      </b-form-group>
+      <b-form-group
+        label-cols="4"
         label="作者:"
       >
         <user-input clearVariant="dark"></user-input>
       </b-form-group>
-      <!-- <b-form-group
-        label-cols="4"
-        label="定时发布:"
-      >
-        <b-form-checkbox-group
-          switches
-        ></b-form-checkbox-group>
-      </b-form-group>
-      <b-form-group
-        label-cols="4"
-        label="发布时间:"
-      >
-        <b-form-datepicker calendar-width="425px" :right="true" offset="210"></b-form-datepicker>
-      </b-form-group> -->
     </collapse>
     <collapse :show="active === 'seo'" title="SEO设置" @onshow="showHandler('seo')">
       <b-form-group
