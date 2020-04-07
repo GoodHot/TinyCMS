@@ -185,10 +185,16 @@ export default {
           to: '/article'
         },
         {
-          title: '分类和标签',
-          icon: 'tag',
+          title: '分类管理',
+          icon: 'directions',
           iconPack: 'si',
           to: '/category/1'
+        },
+        {
+          title: '标签管理',
+          icon: 'tag',
+          iconPack: 'si',
+          to: '/tags/1'
         },
         {
           title: 'SETTINGS',
@@ -198,19 +204,19 @@ export default {
           title: '自定义标签',
           icon: 'pin',
           iconPack: 'si',
-          to: '/content'
+          to: '/label'
         },
         {
           title: '皮肤管理',
           icon: 'magic-wand',
           iconPack: 'si',
-          to: '/content'
+          to: '/skin'
         },
         {
           title: '资源管理',
           icon: 'paper-clip',
           iconPack: 'si',
-          to: '/content'
+          to: '/resource'
         },
         {
           title: 'SYSTEM',
@@ -220,13 +226,13 @@ export default {
           title: '系统设置',
           icon: 'equalizer',
           iconPack: 'si',
-          to: '/content'
+          to: '/setting'
         },
         {
           title: '用户管理',
           icon: 'users',
           iconPack: 'si',
-          to: '/content'
+          to: '/admin'
         },
         {
           title: 'TOOL',

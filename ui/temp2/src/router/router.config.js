@@ -26,6 +26,36 @@ export const routerMap = [
         component: () => import('@/pages/article/category'),
       },
       {
+        path: '/tags/:page',
+        name: 'Tags',
+        component: () => import('@/pages/article/tags'),
+      },
+      {
+        path: '/label',
+        name: 'Label',
+        component: () => import('@/pages/label/list'),
+      },
+      {
+        path: '/skin',
+        name: 'Skin',
+        component: () => import('@/pages/skin/list'),
+      },
+      {
+        path: '/resource',
+        name: 'Resource',
+        component: () => import('@/pages/resource/list'),
+      },
+      {
+        path: '/setting',
+        name: 'Setting',
+        component: () => import('@/pages/setting/setting'),
+      },
+      {
+        path: '/admin',
+        name: 'Admin',
+        component: () => import('@/pages/admin/list'),
+      },
+      {
         path: '/elements/icon',
         name: 'icon',
         component: () => import('@/pages/elements/icon'),
