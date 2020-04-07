@@ -15,4 +15,5 @@ type Admin struct {
 	RoleID     uint   `json:"role_id"`
 	Token      string `gorm:"-" json:"token"`
 	Role       *Role  `gorm:"-" json:"role"`
+	IsSelf     bool   `gorm:"-" json:"is_self"`
 }

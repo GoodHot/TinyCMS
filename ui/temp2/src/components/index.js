@@ -11,6 +11,7 @@ import table from './table/table'
 import form from './form/form'
 import imageUpload from './upload/imageUpload'
 import inputDrawer from './drawer/input-drawer'
+import markdown from './markdown/markdown'
 
 export default {
   't-icon': icon,
@@ -25,5 +26,6 @@ export default {
   't-table': table,
   't-form': form,
   't-image-upload': imageUpload,
-  't-input-drawer': inputDrawer
+  't-input-drawer': inputDrawer,
+  't-markdown': markdown
 }

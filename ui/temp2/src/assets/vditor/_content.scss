@@ -1,0 +1,237 @@
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.vditor {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-family: $font-family-base;
+
+  &--fullscreen {
+    position: fixed;
+    top: 0;
+    width: 100% !important;
+    left: 0;
+    height: 100vh !important;
+    z-index: 90;
+    border-radius: 0;
+  }
+
+  &-content {
+    display: flex;
+    min-height: 60px;
+    flex: 1;
+    position: relative;
+    background-color: var(--textarea-background-color);
+  }
+
+  &-textarea {
+    font-family: $font-family-base;
+    margin: 0 1px 0 0;
+    height: 100%;
+    overflow: auto;
+    width: 100%;
+    flex: 1;
+    border: 0;
+    resize: none;
+    padding: 10px 9px 10px 10px;
+    box-sizing: border-box;
+    background-color:  var(--panel-background-color);
+    outline: 0 none;
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--textarea-text-color);
+    border-radius: 0 0 3px 3px;
+    font-variant-ligatures: no-common-ligatures;
+    white-space: pre-wrap;
+    word-break: break-word;
+    word-wrap: break-word;
+
+    &[contenteditable="false"] {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    &:empty::before {
+      content: attr(placeholder);
+      color: var(--second-color);
+    }
+
+    &:focus {
+      background-color:var(--textarea-background-color);
+    }
+
+    &:after {
+      content: "";
+      height: var(--editor-bottom);
+      display: block;
+    }
+  }
+
+  &-preview {
+    flex: 1;
+    overflow: auto;
+    margin-left: -1px;
+    border-left: 1px solid var(--border-color);
+    box-sizing: border-box;
+    border-radius: 0 0 3px 0;
+    background-color: var(--textarea-background-color);
+    padding: 10px;
+
+    & > div::-webkit-scrollbar {
+      display: none;
+    }
+
+    & > .vditor-reset {
+      margin: 0 auto;
+    }
+  }
+
+  &-devtools {
+    display: none;
+    background-color: var(--textarea-background-color);
+    overflow: auto;
+    flex: 1;
+    box-shadow: inset 1px 0  var(--border-color);
+    box-sizing: border-box;
+    border-radius: 0 0 3px 0;
+    padding: 10px;
+  }
+
+  &-counter {
+    padding: 0 3px;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: var(--toolbar-icon-color);
+    background-color: var(--code-background-color);
+    border-radius: 3px;
+    font-size: 12px;
+    user-select: none;
+
+    &--error {
+      color: $errorColor;
+      background-color: rgba($errorColor, 0.1);
+    }
+  }
+
+  &-resize {
+    padding: 3px 0;
+    cursor: row-resize;
+    user-select: none;
+    position: absolute;
+    width: 100%;
+
+    &--top {
+      top: -3px;
+    }
+
+    &--bottom {
+      bottom: -3px;
+    }
+
+    & > div {
+      height: 3px;
+      background-color: var(--resize-background-color);
+      transition: $transition;
+    }
+
+    &:hover,
+    &--selected {
+      & > div {
+        background-color: var(--resize-hover-background-color);
+      }
+
+      svg {
+        color: var(--resize-hover-icon-color);
+      }
+    }
+
+    svg {
+      fill: currentColor;
+      stroke-width: 0;
+      stroke: currentColor;
+      width: 13px;
+      height: 3px;
+      display: block;
+      margin: 0 auto;
+      color:  var(--resize-icon-color);
+    }
+  }
+
+  &-upload {
+    position: absolute;
+    height: 3px;
+    left: 0;
+    top: -2px;
+    transition: $transition;
+    background-color: $blurColor;
+  }
+
+  &-tip {
+    position: absolute;
+    font-size: 12px;
+    top: 10px;
+    color: var(--toolbar-icon-color);
+    animation-duration: .15s;
+    animation-fill-mode: both;
+    left: 50%;
+
+    &--show {
+      display: block;
+      animation-name: slideInDown;
+    }
+
+    &__content {
+      text-align: left;
+      display: inline-block;
+      line-height: 16px;
+      padding: 3px 10px;
+      border-radius: 3px;
+      background: var(--toolbar-icon-color);
+      position: relative;
+      margin-left: -50%;
+      color: var(--toolbar-background-color);
+
+      ul {
+        margin: 2px 0;
+        padding: 0 0 0 18px;
+      }
+    }
+
+    &__close {
+      position: absolute;
+      color:  var(--toolbar-icon-color);
+      top: -7px;
+      right: -15px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:hover {
+        color:  var(--toolbar-icon-hover-color);
+      }
+    }
+  }
+
+  &-arrow:before {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    content: " ";
+    border: 7px solid transparent;
+    top: -14px;
+    left: 5px;
+    border-bottom-color: var(--panel-background-color);
+  }
+}

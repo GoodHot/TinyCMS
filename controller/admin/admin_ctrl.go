@@ -49,7 +49,7 @@ func (s *AdminAuthCtrl) Info(ctx *ctrl.HTTPContext) error {
 }
 
 func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
-	ctx.Put("admins", s.AdminService.All())
+	ctx.Put("admins", s.AdminService.All(ctx.Admin.ID))
 	return ctx.ResultOK()
 }
 

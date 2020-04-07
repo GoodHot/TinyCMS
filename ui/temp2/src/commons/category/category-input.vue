@@ -1,5 +1,5 @@
 <template>
-  <t-input-drawer ref="categoryInput" placeholder="选择分类" :dataValue="choose.name" :size="size" :inputClass="inputClass" @onshow="onshowHandler" :readonly="true" @clear="clearHandler">
+  <t-input-drawer :clearVariant="clearVariant" ref="categoryInput" placeholder="选择分类" :dataValue="choose.name" :size="size" :inputClass="inputClass" @onshow="onshowHandler" :readonly="true" @clear="clearHandler">
     <b-overlay :show="loading" rounded="sm">
       <div style="max-height: 200px; overflow-y: scroll">
         <ul class="t-category-drawer">
@@ -29,7 +29,8 @@ export default {
   },
   props: {
     size: PropTypes.String,
-    inputClass: PropTypes.String
+    inputClass: PropTypes.String,
+    clearVariant: PropTypes.String.def('light')
   },
   methods: {
     chooseItem (item) {

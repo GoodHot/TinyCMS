@@ -1,11 +1,12 @@
 <template>
-  <t-input-drawer ref="userInput" placeholder="选择用户" :dataValue="choose.nickname" :size="size" :inputClass="inputClass" @onshow="onshowHandler" :readonly="true" @clear="clearHandler">
+  <t-input-drawer ref="userInput" placeholder="选择用户" :clearVariant="clearVariant" :dataValue="choose.nickname" :size="size" :inputClass="inputClass" @onshow="onshowHandler" :readonly="true" @clear="clearHandler">
     <b-overlay :show="loading" rounded="sm">
       <div style="max-height: 200px; overflow-y: scroll">
         <ul class="t-category-drawer">
           <li v-for="user in users" :key="user.id" @click="chooseItem(user)">
             <img :src="assetsURL(user.avatar)" width="20" height="20" class="mr-2" />
             {{ user.nickname }}
+            <span v-if="user.is_self">(我)</span>
           </li>
         </ul>
       </div>
@@ -29,7 +30,8 @@ export default {
   },
   props: {
     size: PropTypes.String,
-    inputClass: PropTypes.String
+    inputClass: PropTypes.String,
+    clearVariant: PropTypes.String.def('light')
   },
   methods: {
     chooseItem (item) {
