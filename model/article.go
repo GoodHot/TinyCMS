@@ -28,10 +28,10 @@ type Article struct {
 	Views          int           `json:"views"`         // page view count
 	Tags           string        `json:"tags"`          // article tags
 	AuthorID       uint          `json:"author"`        // article author
-	Template       uint          `json:"template"`      // 页面渲染模板
+	Template       string        `json:"template"`      // 页面渲染模板
 	Visibility     uint          `json:"visibility"`    // 可见性 [1. public, 2. private]
-	CreatorId      uint          `json:"creator_id"`    // 创建人
-	Editor         uint          `json:"editor"`        // 修改人
+	CreatorID      uint          `json:"creator_id"`    // 创建人
+	EditorID       uint          `json:"editor_id"`     // 修改人
 	AuthorName     string        `gorm:"-" json:"author_name"`
 	CategoryName   string        `gorm:"-" json:"category_name"`
 }
@@ -54,7 +54,10 @@ type RelTagArticle struct {
 }
 
 type ArticlePublish struct {
-	Article *Article
-	Tags    []*Tag
-	Content *ArticleContent
+	Article        *Article
+	Tags           []*Tag
+	Content        *ArticleContent
+	GetCover       bool `json:"get_cover"`
+	GetNetImage    bool `json:"get_net_image"`
+	GetDescription bool `json:"get_description"`
 }

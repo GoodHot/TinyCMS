@@ -4,6 +4,7 @@ import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
+	"strings"
 )
 
 type AdminArticleCtrl struct {
@@ -50,51 +51,18 @@ type PublishForm struct {
 }
 
 func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
-	publish := new(PublishForm)
+	publish := new(model.ArticlePublish)
 	if err := ctx.Bind(publish); err != nil {
 		return ctx.ResultErr(err.Error())
 	}
-	ctx.Put("publish", publish)
+	publish.Article.Title = strings.TrimSpace(publish.Article.Title)
+	if publish.Article.Title == "" {
+		publish.Article.Title = "未命名"
+	}
+	if err := s.ArticleService.Publish(publish, ctx.Admin.ID); err != nil {
+		return ctx.ResultErr(err.Error())
+	}
 	return ctx.ResultOK()
-	//publish.Title = strings.TrimSpace(publish.Title)
-	//if publish.Title == "" {
-	//	return ctx.ResultErr("请输入文章标题")
-	//}
-	//var tags []*model.Tag
-	//if len(publish.Tags) > 0 {
-	//	for _, v := range publish.Tags {
-	//		tags = append(tags, &model.Tag{
-	//			Name: v,
-	//		})
-	//	}
-	//}
-	//status := model.ArticleStatusPublish
-	//if publish.Type != "publish" {
-	//	status = model.ArticleStatusDraft
-	//}
-	//article := &model.ArticlePublish{
-	//	Article: &model.Article{
-	//		Model: orm.Model{
-	//			ID: uint(publish.ID),
-	//		},
-	//		Title:       publish.Title,
-	//		SEOTitle:    publish.SEOTitle,
-	//		CategoryID:  uint(publish.CategoryID),
-	//		Description: publish.Description,
-	//		Cover:       publish.Cover,
-	//		Status:      status,
-	//		AuthorID:    ctx.Admin.ID,
-	//	},
-	//	Tags: tags,
-	//	Content: &model.ArticleContent{
-	//		Markdown: publish.Markdown,
-	//		Html:     publish.Html,
-	//	},
-	//}
-	//if err := s.ArticleService.Publish(article); err != nil {
-	//	return ctx.ResultErr(err.Error())
-	//}
-	//return ctx.ResultOK()
 }
 
 func (s *AdminArticleCtrl) Count(ctx *ctrl.HTTPContext) error {

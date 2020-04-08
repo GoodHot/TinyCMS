@@ -30,6 +30,8 @@
 </template>
 <script>
 import ArticleSetting from './comp/ArticleSetting'
+import { saveArticle } from '@/api/article'
+
 export default {
   components: {
     ArticleSetting
@@ -82,7 +84,9 @@ export default {
         get_description: setting.writeSetting.getDescription,
         tags
       }
-      console.log(post)
+      saveArticle(post).then(res => {
+        console.log(res)
+      })
     }
   }
 }

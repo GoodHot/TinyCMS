@@ -110,17 +110,17 @@ func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish)
 		if err != nil {
 			return err
 		}
-	}
-	err := db.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
-	if err != nil {
-		return err
+		err = db.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
+		if err != nil {
+			return err
+		}
 	}
 	article.Article.Cover = strings.TrimSpace(article.Article.Cover)
-	if article.Article.Cover == "" {
+	if article.Article.Cover == "" && article.GetCover {
 		article.Article.Cover = s.findCover(article.Content.Html)
 	}
 	article.Article.Description = strings.TrimSpace(article.Article.Description)
-	if article.Article.Description == "" {
+	if article.Article.Description == "" && article.GetDescription {
 		article.Article.Description = s.findDescription(article.Content.Html)
 	}
 	article.Article.SEOTitle = strings.TrimSpace(article.Article.SEOTitle)
@@ -133,7 +133,7 @@ func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish)
 		article.Content.ID = dbContent.ID
 	}
 	// save content
-	err = db.Table(article.Article.ContentTable).Save(article.Content).Error
+	err := db.Table(article.Article.ContentTable).Save(article.Content).Error
 	if err != nil {
 		return err
 	}
@@ -147,15 +147,27 @@ func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish)
 			article.Article.Tags += tag.Name + ","
 		}
 	}
+	if strings.TrimSpace(article.Article.SEODescription) == "" {
+		article.Article.SEODescription = article.Article.Description
+	}
+	if strings.TrimSpace(article.Article.SEOKeyword) == "" {
+		article.Article.SEOKeyword = article.Article.Tags
+	}
+	if dbArticle.AuthorID == 0 && article.Article.AuthorID == 0 {
+		article.Article.AuthorID = article.Article.CreatorID
+	}
 	// update article cover,description,content_table,content_id,tags, seo_title
 	err = db.Model(article.Article).Updates(&model.Article{
-		Description:  article.Article.Description,
-		Cover:        article.Article.Cover,
-		ContentTable: article.Article.ContentTable,
-		ContentID:    article.Content.ID,
-		Tags:         article.Article.Tags,
-		SEOTitle:     article.Article.SEOTitle,
-		CategoryID:   article.Article.CategoryID,
+		Description:    article.Article.Description,
+		Cover:          article.Article.Cover,
+		ContentTable:   article.Article.ContentTable,
+		ContentID:      article.Content.ID,
+		Tags:           article.Article.Tags,
+		CategoryID:     article.Article.CategoryID,
+		AuthorID:       article.Article.AuthorID,
+		SEOTitle:       article.Article.SEOTitle,
+		SEODescription: article.Article.SEODescription,
+		SEOKeyword:     article.Article.SEOKeyword,
 	}).Error
 	if err != nil {
 		return err
@@ -211,13 +223,16 @@ func (s *ArticleService) saveTags(db *gorm.DB, article *model.ArticlePublish) er
 	return nil
 }
 
-func (s *ArticleService) Publish(article *model.ArticlePublish) error {
+func (s *ArticleService) Publish(article *model.ArticlePublish, adminID uint) error {
 	if article.Article.ID == 0 {
+		article.Article.CreatorID = adminID
+		article.Article.EditorID = adminID
 		s.ORM.DB.Save(article.Article)
 	} else {
 		s.ORM.DB.Model(article.Article).Updates(&model.Article{
-			Title:  article.Article.Title,
-			Status: article.Article.Status,
+			Title:    article.Article.Title,
+			Status:   article.Article.Status,
+			EditorID: adminID,
 		})
 	}
 	tableName := s.contentTableName(article.Article.ID)
