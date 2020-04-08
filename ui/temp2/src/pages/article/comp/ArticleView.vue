@@ -38,8 +38,14 @@
 <script>
 import { getArticleById } from '@/api/article'
 import moment from 'moment'
+// import userInput from '@/commons/user/user-input'
+// import categoryInput from '@/commons/category/category-input'
 
 export default {
+  components: {
+    // userInput,
+    // categoryInput
+  },
   data () {
     return {
       loading: false,

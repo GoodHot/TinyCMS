@@ -64,9 +64,15 @@ export default {
     },
     autosaveHandler () {
       this.$emit('onloading', true, '保存中……')
-      this.saveArticle('draft')
+      this.saveArticle('draft', (res) => {
+        this.id = res.article.Article.id
+        this.$refs.setting.refresh(res.article.Article)
+        setTimeout(() => {
+          this.$emit('onloading', false, '保存中……')
+        }, 1000)
+      })
     },
-    saveArticle (type) {
+    saveArticle (type, callback) {
       const content = this.$refs.markdown.getValue()
       const setting = this.$refs.setting.getValue()
       const tags = []
@@ -101,10 +107,13 @@ export default {
         get_description: setting.writeSetting.getDescription,
         tags
       }
-      saveArticle(post).then(() => {
-        setTimeout(() => {
-          this.$emit('onloading', false, '保存中……')
-        }, 1000);
+      saveArticle(post).then((res) => {
+        if (callback) {
+          callback(res)
+        } else {
+          alert('发布成功')
+          this.$router.push('/article')
+        }
       })
     }
   }

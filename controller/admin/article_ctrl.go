@@ -62,6 +62,7 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	if err := s.ArticleService.Publish(publish, ctx.Admin.ID); err != nil {
 		return ctx.ResultErr(err.Error())
 	}
+	ctx.Put("article", publish)
 	return ctx.ResultOK()
 }
 

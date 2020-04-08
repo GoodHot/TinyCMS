@@ -75,7 +75,6 @@ export default {
         if (u.id === this.value) {
           this.choose.nickname = u.nickname + ''
         }
-        console.log(u)
       })
     }
   },
