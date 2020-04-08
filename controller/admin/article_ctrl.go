@@ -3,9 +3,7 @@ package admin
 import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/model"
-	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/service"
-	"strings"
 )
 
 type AdminArticleCtrl struct {
@@ -27,21 +25,27 @@ func (s *AdminArticleCtrl) Page(ctx *ctrl.HTTPContext) error {
 }
 
 type PublishForm struct {
-	ID             int      `json:"id"`
-	Title          string   `json:"title"`           // 标题
-	SEOTitle       string   `json:"seo_title"`       // SEO标题
-	SEODescription string   `json:"seo_description"` // SEO描述
-	SEOKeyword     string   `json:"seo_keyword"`     // SEO关键字
-	Markdown       string   `json:"markdown"`        // markdown代码
-	Html           string   `json:"html"`            // HTML代码
-	Cover          string   `json:"cover"`           // 封面图
-	CategoryID     int      `json:"category_id"`     // 分类
-	Description    string   `json:"description"`     // 内容描述
-	Tags           []string `json:"tags"`            // 标签
-	Type           string   `json:"type"`            // 操作类型 [publish, draft]
-	Visibility     string   `json:"visibility"`      // 可见性 [public, private]
-	Template       string   `json:"template"`        // 页面模板
-	Author         uint     `json:"author"`          // 作者ID
+	Article        *model.Article        `json:"article"`
+	Content        *model.ArticleContent `json:"content"`
+	Tags           []*model.Tag          `json:"tags"`
+	GetCover       bool                  `json:"get_cover"`
+	GetNetImage    bool                  `json:"get_net_image"`
+	GetDescription bool                  `json:"get_description"`
+	//ID             int      `json:"id"`
+	//Title          string   `json:"title"`           // 标题
+	//SEOTitle       string   `json:"seo_title"`       // SEO标题
+	//SEODescription string   `json:"seo_description"` // SEO描述
+	//SEOKeyword     string   `json:"seo_keyword"`     // SEO关键字
+	//Markdown       string   `json:"markdown"`        // markdown代码
+	//Html           string   `json:"html"`            // HTML代码
+	//Cover          string   `json:"cover"`           // 封面图
+	//CategoryID     int      `json:"category_id"`     // 分类
+	//Description    string   `json:"description"`     // 内容描述
+	//Tags           []string `json:"tags"`            // 标签
+	//Type           string   `json:"type"`            // 操作类型 [publish, draft]
+	//Visibility     string   `json:"visibility"`      // 可见性 [public, private]
+	//Template       string   `json:"template"`        // 页面模板
+	//Author         uint     `json:"author"`          // 作者ID
 
 }
 
@@ -50,45 +54,47 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	if err := ctx.Bind(publish); err != nil {
 		return ctx.ResultErr(err.Error())
 	}
-	publish.Title = strings.TrimSpace(publish.Title)
-	if publish.Title == "" {
-		return ctx.ResultErr("请输入文章标题")
-	}
-	var tags []*model.Tag
-	if len(publish.Tags) > 0 {
-		for _, v := range publish.Tags {
-			tags = append(tags, &model.Tag{
-				Name: v,
-			})
-		}
-	}
-	status := model.ArticleStatusPublish
-	if publish.Type != "publish" {
-		status = model.ArticleStatusDraft
-	}
-	article := &model.ArticlePublish{
-		Article: &model.Article{
-			Model: orm.Model{
-				ID: uint(publish.ID),
-			},
-			Title:       publish.Title,
-			SEOTitle:    publish.SEOTitle,
-			CategoryID:  uint(publish.CategoryID),
-			Description: publish.Description,
-			Cover:       publish.Cover,
-			Status:      status,
-			AuthorID:    ctx.Admin.ID,
-		},
-		Tags: tags,
-		Content: &model.ArticleContent{
-			Markdown: publish.Markdown,
-			Html:     publish.Html,
-		},
-	}
-	if err := s.ArticleService.Publish(article); err != nil {
-		return ctx.ResultErr(err.Error())
-	}
+	ctx.Put("publish", publish)
 	return ctx.ResultOK()
+	//publish.Title = strings.TrimSpace(publish.Title)
+	//if publish.Title == "" {
+	//	return ctx.ResultErr("请输入文章标题")
+	//}
+	//var tags []*model.Tag
+	//if len(publish.Tags) > 0 {
+	//	for _, v := range publish.Tags {
+	//		tags = append(tags, &model.Tag{
+	//			Name: v,
+	//		})
+	//	}
+	//}
+	//status := model.ArticleStatusPublish
+	//if publish.Type != "publish" {
+	//	status = model.ArticleStatusDraft
+	//}
+	//article := &model.ArticlePublish{
+	//	Article: &model.Article{
+	//		Model: orm.Model{
+	//			ID: uint(publish.ID),
+	//		},
+	//		Title:       publish.Title,
+	//		SEOTitle:    publish.SEOTitle,
+	//		CategoryID:  uint(publish.CategoryID),
+	//		Description: publish.Description,
+	//		Cover:       publish.Cover,
+	//		Status:      status,
+	//		AuthorID:    ctx.Admin.ID,
+	//	},
+	//	Tags: tags,
+	//	Content: &model.ArticleContent{
+	//		Markdown: publish.Markdown,
+	//		Html:     publish.Html,
+	//	},
+	//}
+	//if err := s.ArticleService.Publish(article); err != nil {
+	//	return ctx.ResultErr(err.Error())
+	//}
+	//return ctx.ResultOK()
 }
 
 func (s *AdminArticleCtrl) Count(ctx *ctrl.HTTPContext) error {

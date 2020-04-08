@@ -52,6 +52,14 @@
           <b-button variant="dual"><t-icon size="fw" icon="search" /> <span class="ml-1 d-none d-sm-inline-block">Search</span></b-button>
         </div>
       </div>
+      <div id="page-header-loader" class="overlay-header bg-primary-darker show" v-show="loadingShow">
+        <div class="content-header">
+            <div class="w-100 text-center">
+              <t-icon icon="sun" class="fa-fw fa-spin text-white" />
+              {{ loadingText }}
+            </div>
+        </div>
+    </div>
     </template>
 
 
@@ -94,6 +102,7 @@
         @headerTheme="onHeaderTheme"
         @footerMode="onFooterMode"
         @contentMode="onContentMode"
+        @onloading="onloading"
       />
     </div>
   </t-layout>
@@ -143,6 +152,10 @@ export default {
     },
     onContentMode (mode) {
       this.contentMode = mode
+    },
+    onloading (state, text) {
+      this.loadingShow = state
+      this.loadingText = text
     }
   },
   data() {
@@ -161,6 +174,8 @@ export default {
       headerTheme: 'dark',
       footerMode: 'static',
       contentMode: 'full',
+      loadingShow: false,
+      loadingText: '',
       navigation: [
         {
           title: '控制台',

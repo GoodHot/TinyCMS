@@ -1,5 +1,8 @@
 .vditor {
   &-toolbar {
+    position: sticky;
+    top: 70px;
+    z-index: 20;
     background-color: var(--toolbar-background-color);
     border-bottom: 1px solid var(--border-color);
     padding: 0 5px;
