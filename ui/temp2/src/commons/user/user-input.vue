@@ -18,6 +18,10 @@ import { PropTypes } from '@/utils/types'
 import { getAllAdmin } from '@/api/admin'
 
 export default {
+  model: {
+    prop: 'value',
+    event: 'value.change'
+  },
   data () {
     return {
       loading: false,
@@ -31,7 +35,8 @@ export default {
   props: {
     size: PropTypes.String,
     inputClass: PropTypes.String,
-    clearVariant: PropTypes.String.def('light')
+    clearVariant: PropTypes.String.def('light'),
+    value: PropTypes.Number
   },
   methods: {
     chooseItem (item) {
@@ -51,15 +56,32 @@ export default {
       }
     },
     loadAdmin () {
+      if (this.users && this.users.length > 0) {
+        return
+      }
       getAllAdmin().then(res => {
         this.loading = false
         this.hasData = true
         this.users = res.admins
+        this.setValue()
       })
     },
     clearHandler () {
       this.choose.nickname = ''
       this.$emit('change', 0)
+    },
+    setValue () {
+      this.users.map(u => {
+        if (u.id === this.value) {
+          this.choose.nickname = u.nickname + ''
+        }
+        console.log(u)
+      })
+    }
+  },
+  watch: {
+    value () {
+      this.loadAdmin()
     }
   }
 }

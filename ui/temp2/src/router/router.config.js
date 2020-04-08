@@ -21,6 +21,11 @@ export const routerMap = [
         component: () => import('@/pages/article/publish'),
       },
       {
+        path: '/article/edit/:id',
+        name: 'ArticleEdit',
+        component: () => import('@/pages/article/publish'),
+      },
+      {
         path: '/category/:page',
         name: 'Category',
         component: () => import('@/pages/article/category'),

@@ -68,6 +68,17 @@
   &-category {
     color: #000;
   }
+  &-description {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+}
+
+.t-article-view {
+  .block-content {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
 }
 
 .t-input-drawer {

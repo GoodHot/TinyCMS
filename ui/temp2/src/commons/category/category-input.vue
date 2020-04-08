@@ -17,6 +17,10 @@ import { PropTypes } from '@/utils/types'
 import { categoryTree } from '@/api/category'
 
 export default {
+  model: {
+    prop: 'value',
+    event: 'value.change'
+  },
   data () {
     return {
       loading: false,
@@ -30,7 +34,13 @@ export default {
   props: {
     size: PropTypes.String,
     inputClass: PropTypes.String,
-    clearVariant: PropTypes.String.def('light')
+    clearVariant: PropTypes.String.def('light'),
+    value: PropTypes.Number
+  },
+  mounted () {
+    if (this.value !== 0) {
+      this.loadCategoryTree()
+    }
   },
   methods: {
     chooseItem (item) {
@@ -50,11 +60,22 @@ export default {
       }
     },
     loadCategoryTree () {
+      if (this.categorys && this.categorys.length > 0) {
+        return
+      }
       this.loading = true
       categoryTree().then(res => {
         this.loading = false
         this.hasData = true
         this.categorys = this.setData(res.tree, 0)
+        this.setValue()
+      })
+    },
+    setValue () {
+      this.categorys.map(c => {
+        if (c.id === this.value) {
+          this.choose.name = c.name
+        }
       })
     },
     setData (tree, level) {
@@ -76,6 +97,11 @@ export default {
     clearHandler () {
       this.choose.name = ''
       this.$emit('change', 0)
+    }
+  },
+  watch: {
+    value () {
+      this.loadCategoryTree()
     }
   }
 }

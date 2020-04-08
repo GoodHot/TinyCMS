@@ -30,7 +30,7 @@
 </template>
 <script>
 import ArticleSetting from './comp/ArticleSetting'
-import { saveArticle } from '@/api/article'
+import { saveArticle, getArticleById } from '@/api/article'
 
 export default {
   components: {
@@ -42,13 +42,29 @@ export default {
       article: {
         title: 'Hello World',
         markdown: '# 你好，世界'
-      }
+      },
+      id: 0
     }
   },
+  mounted () {
+    this.loadArticle()
+  },
   methods: {
+    loadArticle () {
+      const id = this.$route.params.id
+      if (!id) {
+        return
+      }
+      getArticleById(id).then(res => {
+        this.id = res.article.id
+        this.article.markdown = res.content.markdown
+        this.article.title = res.article.title
+        this.$refs.setting.refresh(res.article)
+      })
+    },
     autosaveHandler () {
       this.$emit('onloading', true, '保存中……')
-      console.log('save')
+      this.saveArticle('draft')
     },
     saveArticle (type) {
       const content = this.$refs.markdown.getValue()
@@ -63,6 +79,7 @@ export default {
       }
       const post = {
         article: {
+          id: this.id,
           title: this.article.title,
           seo_title: setting.seoSetting.seo_title,
           seo_description: setting.seoSetting.seo_description,
@@ -84,8 +101,10 @@ export default {
         get_description: setting.writeSetting.getDescription,
         tags
       }
-      saveArticle(post).then(res => {
-        console.log(res)
+      saveArticle(post).then(() => {
+        setTimeout(() => {
+          this.$emit('onloading', false, '保存中……')
+        }, 1000);
       })
     }
   }

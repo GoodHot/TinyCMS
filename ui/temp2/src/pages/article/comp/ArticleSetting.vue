@@ -31,7 +31,7 @@
         label-cols="4"
         label="作者:"
       >
-        <user-input clearVariant="dark" @change="userChangeHandler"></user-input>
+        <user-input clearVariant="dark" @change="userChangeHandler" v-model="publishSetting.authorId"></user-input>
       </b-form-group>
     </collapse>
     <collapse :show="active === 'seo'" title="SEO设置" @onshow="showHandler('seo')">
@@ -69,7 +69,7 @@
         label-cols="4"
         label="分类:"
       >
-        <category-input clearVariant="dark" @change="categoryChangeHandler"></category-input>
+        <category-input clearVariant="dark" v-model="meta.category" @change="categoryChangeHandler"></category-input>
       </b-form-group>
       <b-form-group
         label-cols="4"
@@ -159,7 +159,7 @@ export default {
         const _this = this
         this.autoSaveTimer = setInterval(() => {
           _this.$emit('autosave')
-        }, 3 * 1000)
+        }, 30 * 1000)
       } else {
         clearInterval(this.autoSaveTimer)
       }
@@ -172,6 +172,18 @@ export default {
         meta: this.meta,
         cover: this.cover
       }
+    },
+    refresh (article) {
+      this.publishSetting.visibility = article.visibility
+      this.publishSetting.template = article.template
+      this.publishSetting.authorId = article.author
+      this.seoSetting.seo_title = article.seo_title
+      this.seoSetting.seo_description = article.seo_description
+      this.seoSetting.seo_keyword = article.seo_keyword
+      this.seoSetting.description = article.description
+      this.meta.category = article.category_id
+      this.meta.tags = article.tags.split(',')
+      this.cover = article.cover
     }
   }
 }

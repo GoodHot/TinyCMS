@@ -74,6 +74,11 @@ export default {
         html: html
       }
     }
+  },
+  watch: {
+    value(val) {
+      this.contentEditor.setValue(val)
+    }
   }
 }
 </script>

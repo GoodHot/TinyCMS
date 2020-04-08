@@ -1,7 +1,7 @@
 <template>
   <div class="row no-gutters flex-md-10-auto">
     <div class="col-md-4 col-lg-5 col-xl-3">
-      <article-list @perview="perviewHandler"></article-list>
+      <article-list @perview="perviewHandler" style="position: sticky; top: 70px"></article-list>
     </div>
     <div class="col-md-8 col-lg-7 col-xl-9 bg-body-dark">
       <article-view ref="articleView"></article-view>

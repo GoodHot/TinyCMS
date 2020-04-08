@@ -46,7 +46,7 @@
               <t-icon icon="check" class="text-success" v-if="article.id === activeId" />
             </div>
             <p class="font-size-h6 font-w700 mb-0">{{ article.title }}</p>
-            <p class="text-muted mb-2">
+            <p class="text-muted mb-2 t-article-list-description">
               {{ article.description }}
             </p>
             <div class="d-flex justify-content-between mb-2">
