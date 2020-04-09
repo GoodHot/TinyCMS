@@ -42,8 +42,8 @@ export default {
   },
   data () {
     return {
-      title: '分类和标签管理',
-      description: '添加分类和查看标签，可以通过拖拽移动分类排序',
+      title: '分类管理',
+      description: '添加分类和编辑分类，可以通过拖拽移动分类排序',
       nestableItems: [],
       columns: [
         {

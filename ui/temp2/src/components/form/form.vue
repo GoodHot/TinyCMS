@@ -1,6 +1,6 @@
 <template>
   <b-form>
-    <b-form-group :label="item.label" v-for="(item, index) of items" :key="index">
+    <b-form-group :label="item.label" v-for="(item, index) of items" :key="index" :description="item.description">
       <b-form-input v-if="item.type === 'input'" @blur="validation(item)" :placeholder="item.placeholder" v-model="item.value" :state="item.validState"></b-form-input>
       <b-form-textarea v-if="item.type === 'textarea'" @blur="validation(item)" rows="3" max-rows="6" v-model="item.value" :placeholder="item.placeholder" :state="item.validState"></b-form-textarea>
       <t-image-upload v-if="item.type === 'imageUpload'" v-model="item.value" :state="item.validState"></t-image-upload>

@@ -1,9 +1,11 @@
 package service
 
 import (
+	"errors"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/armon/go-radix"
+	"strings"
 )
 
 type TagService struct {
@@ -89,4 +91,57 @@ func (s *TagService) getArticleIDs(id int) []uint {
 		ids = append(ids, rel.ArticleID)
 	}
 	return ids
+}
+
+type TagQuery struct {
+	Keyword string `json:"keyword"`
+}
+
+func (s *TagService) Page(page int, query *TagQuery) *orm.Page {
+	where := "1 = 1"
+	var param []interface{}
+	query.Keyword = strings.TrimSpace(query.Keyword)
+	if query.Keyword != "" {
+		where += " and name = ?"
+		param = append(param, query.Keyword)
+	}
+	var tags []*model.Tag
+	result := s.ORM.Page(orm.ORMPage{
+		PageNum:  page,
+		PageSize: s.PageSize,
+		Result:   &tags,
+		Where:    orm.Where(where, param...),
+		OrderBy:  "id desc",
+	})
+	return result
+}
+
+func (s *TagService) Get(id int) (*model.Tag, error) {
+	model := &model.Tag{}
+	err := s.ORM.DB.Find(model, id).Error
+	return model, err
+}
+
+func (s *TagService) Save(tag *model.Tag) error {
+	var tags []*model.Tag
+	s.ORM.DB.Where("name = ? and id != ?", tag.Name, tag.ID).Find(&tags)
+	if len(tags) > 0 {
+		return errors.New("标签名" + tag.Name + "已存在")
+	}
+	s.ORM.DB.Where("path = ? and id != ?", tag.Path, tag.ID).Find(&tags)
+	if len(tags) > 0 {
+		return errors.New("路径" + tag.Path + "已存在")
+	}
+	if tag.ID == 0 {
+		return s.ORM.DB.Save(tag).Error
+	}
+	update := map[string]interface{}{
+		"name": tag.Name,
+		"path": tag.Path,
+		"description": tag.Description,
+		"meta_title": tag.MetaTitle,
+		"meta_description": tag.MetaDescription,
+		"icon": tag.Icon,
+	}
+	return s.ORM.DB.Model(&model.Tag{}).Where("id = ?", tag.ID).Updates(update).Error
 }

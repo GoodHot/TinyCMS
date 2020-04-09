@@ -44,8 +44,13 @@ type ArticleContent struct {
 
 type Tag struct {
 	orm.Model
-	Name         string `gorm:"unique_index" json:"name"`
-	ArticleCount int    `json:"article_count"`
+	Name            string `gorm:"unique_index" json:"name"`
+	Path            string `gorm:"unique_index" json:"path"`
+	Description     string `json:"description"`
+	Icon            string `json:"icon"`
+	MetaTitle       string `json:"meta_title"`
+	MetaDescription string `json:"meta_description"`
+	ArticleCount    int    `json:"article_count"`
 }
 
 type RelTagArticle struct {

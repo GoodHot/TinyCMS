@@ -200,6 +200,8 @@ func (s *ArticleService) saveTags(db *gorm.DB, article *model.ArticlePublish) er
 		tag := s.TagService.GetByName(t.Name)
 		if tag.Name == "" {
 			t.ArticleCount = 0
+			// TODO 这里需要处理标签path重复问题
+			t.Path = s.findTitle(t.Name)
 			db.Create(t)
 			tag = t
 			s.TagService.PutPrefix(tag)

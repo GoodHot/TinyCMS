@@ -15,8 +15,7 @@
                 </div>
                 <div class="col-sm-5 d-sm-flex align-items-sm-center">
                   <div class="font-size-sm font-italic text-muted text-sm-right w-100 mt-2 mt-sm-0">
-                    <b-button size="sm" variant="success" @click="$router.push('/article/edit/' + article.id)"><t-icon icon="edit" pack="fa" /> 编辑内容</b-button>
-                    <b-button size="sm" class="ml-1"><t-icon icon="cog" pack="fa" /> 选项设置</b-button>
+                    <b-button size="sm" variant="success" @click="$router.push('/article/edit/' + article.id)"><t-icon icon="edit" pack="fa" /> 编辑</b-button>
                   </div>
                 </div>
               </div>

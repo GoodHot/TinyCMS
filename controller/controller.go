@@ -101,8 +101,11 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.POST("/category/sort", s.AdminCategoryCtrl.Sort, s.AdminService)
 
 	// tag
+	router.POST("/tag", s.AdminTagCtrl.Save, s.AdminService)
+	router.GET("/tag/:id", s.AdminTagCtrl.Get, s.AdminService)
 	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search, s.AdminService)
 	router.GET("/tag/hot", s.AdminTagCtrl.HotTag, s.AdminService)
+	router.GET("/tag/page_:page", s.AdminTagCtrl.Page, s.AdminService)
 
 	// upload
 	router.POST("/upload", s.AdminUploadCtrl.Upload, s.AdminService)
