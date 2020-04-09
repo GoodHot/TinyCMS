@@ -227,12 +227,12 @@ export default {
           iconPack: 'si',
           to: '/skin'
         },
-        {
-          title: '资源管理',
-          icon: 'paper-clip',
-          iconPack: 'si',
-          to: '/resource'
-        },
+        // {
+        //   title: '资源管理',
+        //   icon: 'paper-clip',
+        //   iconPack: 'si',
+        //   to: '/resource'
+        // },
         {
           title: 'SYSTEM',
           type: 'heading'
@@ -243,12 +243,12 @@ export default {
           iconPack: 'si',
           to: '/setting'
         },
-        {
-          title: '用户管理',
-          icon: 'users',
-          iconPack: 'si',
-          to: '/admin'
-        }
+        // {
+        //   title: '用户管理',
+        //   icon: 'users',
+        //   iconPack: 'si',
+        //   to: '/admin'
+        // }
         // {
         //   title: 'TOOL',
         //   type: 'heading'

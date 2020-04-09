@@ -21,6 +21,7 @@ type Controller struct {
 	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
 	AdminDictCtrl     *admin.AdminDictCtrl     `ioc:"auto"`
 	RoleAuthCtrl      *admin.RoleCtrl          `ioc:"auto"`
+	AdminSkinCtrl     *admin.AdminSkinCtrl     `ioc:"auto"`
 	SkinCtrl          *web.SkinCtrl            `ioc:"auto"`
 	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
 	AdminService      *service.AdminService    `ioc:"auto"`
@@ -30,7 +31,6 @@ type Controller struct {
 	APIPrefix         string                   `val:"${server.api_prefix}"`
 	Static            string                   `val:"${server.static}"`
 	HTMLCompress      bool                     `val:"${server.html_compress}"`
-	AdminTemplateDir  string                   `val:"${server.admin_template_dir}"`
 }
 
 func (c *Controller) StartUp() {
@@ -125,6 +125,9 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 	router.GET("/role/page_:page", s.RoleAuthCtrl.Page, s.AdminService)
 	router.GET("/role/:id", s.RoleAuthCtrl.Get, s.AdminService)
 	router.GET("/role/all", s.RoleAuthCtrl.All, s.AdminService)
+
+	// skin
+	router.GET("/skin", s.AdminSkinCtrl.All, s.AdminService)
 }
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {

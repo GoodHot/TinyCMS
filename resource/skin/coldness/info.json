@@ -1,0 +1,15 @@
+{
+  "name": "coldness",
+  "description": "冷淡",
+  "cover": "cover",
+  "template": [
+    {
+      "file": "index.html",
+      "description": "首页"
+    },
+    {
+      "file": "article.html",
+      "description": "详情页"
+    }
+  ]
+}

@@ -12,12 +12,12 @@ import (
 )
 
 type SkinCtrl struct {
-	DictService    *service.DictService    `ioc:"auto"`
+	DictService     *service.DictService     `ioc:"auto"`
 	CategoryService *service.CategoryService `ioc:"auto"`
-	TemplateDir    string                  `val:"${server.skin_template_dir}"`
-	HTMLCompress   bool                    `val:"${server.html_compress}"`
-	templateSkin   string
-	webRender      *render.HTMLRenderer
+	TemplateDir     string                   `val:"${server.skin_template_dir}"`
+	HTMLCompress    bool                     `val:"${server.html_compress}"`
+	templateSkin    string
+	webRender       *render.HTMLRenderer
 }
 
 func (s *SkinCtrl) Render(writer io.Writer, name string, data map[string]interface{}) error {

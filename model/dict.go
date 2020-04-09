@@ -21,4 +21,5 @@ type Dict struct {
 	Options     string   `json:"options"`
 	Value       string   `json:"value"`
 	ReadOnly    bool     `json:"read_only"`
+	Visible     bool     `json:"visible"`
 }
