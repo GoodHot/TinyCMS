@@ -128,6 +128,10 @@ func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
 
 	// skin
 	router.GET("/skin", s.AdminSkinCtrl.All, s.AdminService)
+
+	// dict
+	router.GET("/dict", s.AdminDictCtrl.All, s.AdminService)
+	router.PUT("/dict", s.AdminDictCtrl.Edit, s.AdminService)
 }
 
 func (s *Controller) registerWeb(echo *echo.Echo, prefix string) {

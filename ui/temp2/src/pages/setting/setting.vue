@@ -1,106 +1,60 @@
 <template>
   <t-block title="系统设置" border theme>
     <b-form>
-      <h2 class="content-heading pt-0">基础设置</h2>
-      <b-row>
+      <b-row class="push">
         <b-col :cols="4">
-          <p class="text-muted">
-              You can easily change the date format to match your preference
-          </p>
+          <div v-for="dict in dicts" :key="dict.id">
+            <b-form-group
+              :description="dict.description"
+              :label="dict.name"
+              v-if="dict.visible"
+            >
+              <b-form-input v-if="dict.type === 'text'" v-model="dict.value"></b-form-input>
+              <b-form-textarea v-if="dict.type === 'textarea'" v-model="dict.value" rows="3" max-rows="6"></b-form-textarea>
+              <b-form-select v-if="dict.type === 'select'" v-model="dict.value" :options="getItemOptions(dict)"></b-form-select>
+            </b-form-group>
+          </div>
+          <b-button variant="primary" @click="save">保存设置</b-button>
         </b-col>
-        <b-col :cols="4">
-          <b-form-group
-            description="Let us know your name."
-            label="站点名称"
-          >
-            <b-form-input></b-form-input>
-          </b-form-group>
-          <b-form-group
-            description="Let us know your name."
-            label="域名"
-          >
-            <b-form-input></b-form-input>
-          </b-form-group>
-          <b-form-group
-            description="Let us know your name."
-            label="站点Logo"
-          >
-            <t-image-upload></t-image-upload>
-          </b-form-group>
-        </b-col>
-      </b-row>
-      <h2 class="content-heading pt-0">SEO设置</h2>
-      <b-row>
-        <b-col :cols="4">
-          <p class="text-muted">
-              You can easily change the date format to match your preference
-          </p>
-        </b-col>
-        <b-col :cols="4">
-          <b-form-group
-            description="Let us know your name."
-            label="SEO标题"
-          >
-            <b-form-input></b-form-input>
-          </b-form-group>
-          <b-form-group
-            description="Let us know your name."
-            label="SEO描述"
-          >
-            <b-form-textarea></b-form-textarea>
-          </b-form-group>
-          <b-form-group
-            description="Let us know your name."
-            label="SEO关键字"
-          >
-            <b-form-input></b-form-input>
-          </b-form-group>
-          <b-form-group
-            description="Let us know your name."
-            label="爬虫设置"
-          >
-            <b-form-textarea></b-form-textarea>
-          </b-form-group>
-        </b-col>
-      </b-row>
-      <h2 class="content-heading pt-0">系统参数设置</h2>
-      <b-row>
-        <b-col :cols="4">
-          <p class="text-muted">
-              You can easily change the date format to match your preference
-          </p>
-        </b-col>
-        <b-col :cols="4">
-          <b-form-group
-            description="编辑和发布文章时的自动保存频率"
-            label="自动保存频率"
-          >
-            <b-form-select>
-              <b-form-select-option>30秒</b-form-select-option>
-              <b-form-select-option>1分钟</b-form-select-option>
-              <b-form-select-option>1分30秒</b-form-select-option>
-              <b-form-select-option>2分钟</b-form-select-option>
-            </b-form-select>
-          </b-form-group>
-          <b-form-group
-            description="开启缓存可提高页面访问速度，减少数据库请求时间，但页面更新会有延迟"
-            label="缓存开启/关闭"
-          >
-            <b-form-checkbox switch>
-              关闭
-            </b-form-checkbox>
-          </b-form-group>
-        </b-col>
+        <b-col :cols="8"></b-col>
       </b-row>
     </b-form>
   </t-block>
 </template>
 <script>
+import { getAllDict, saveDict } from '@/api/dict'
 export default {
   data () {
     return {
       title: '系统设置',
       description: '可配置全局系统',
+      dicts: []
+    }
+  },
+  mounted () {
+    getAllDict().then(res => {
+      this.dicts = res.dicts
+    })
+  },
+  methods: {
+    getItemOptions (dict) {
+      const opts = dict.options.split(',')
+      const rst = []
+      opts.map(opt => {
+        const temp = opt.split(':')
+        rst.push({
+          value: temp[1],
+          text: temp[0]
+        })
+      })
+      return rst
+    },
+    save () {
+      saveDict({
+        dicts: this.dicts
+      }).then(res => {
+        console.log(res)
+      })
     }
   }
 }
