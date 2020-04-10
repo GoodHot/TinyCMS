@@ -19,7 +19,7 @@
         <b-img :src="assetsURL(prop.item.icon)" :width="32" :height="32" rounded alt="Rounded image"></b-img>
       </template>
       <template v-slot:path="prop">
-        <b-badge>/tag/{{ prop.item.path }}</b-badge>
+        <b-badge>/tags/{{ prop.item.path }}</b-badge>
       </template>
       <template v-slot:action=" {item} = props">
         <b-button-group size="sm">

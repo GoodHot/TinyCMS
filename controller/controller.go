@@ -44,9 +44,6 @@ func (c *Controller) StartUp() {
 	c.registerAPI(e.Group(c.APIPrefix), c.APIPrefix)
 
 	e.Logger.Fatal(e.Start(":" + strconv.Itoa(c.Port)))
-	//if err != nil {
-	//	panic(err)
-	//}
 }
 
 func (s *Controller) registerAdmin(group *echo.Group, prefix string) {
