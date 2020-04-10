@@ -1,22 +1,12 @@
-<div class="content content-components">
-    <div class="container">
-        <h1 class="df-title">今日金句</h1>
-        <p class="df-lead">{{dict "website_name"}}</p>
-        <hr class="mg-y-40">
-        <ul class="list-unstyled">
-            {{range $i, $article := .list.List}}
-                {{template "comp:article_card" $article}}
-            {{end}}
-        </ul>
-        <nav class="mg-t-40">
-            <ul class="pagination pagination-outline justify-content-center">
-                <li class="page-item disabled"><a class="page-link page-link-icon" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg></a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link page-link-icon" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg></a></li>
-            </ul>
-        </nav>
-        {{template "comp:footer"}}
-    </div><!-- container -->
-</div>
+<main class="list">
+    {{range $i, $article := .list.List}}
+    <section class="list-item">
+        <h1 class="title"><a href="{{$article.Link}}">{{$article.Title}}</a></h1>
+        <time datetime="{{$article.CreatedAt}}">{{timeFmt $article.CreatedAt}}</time>
+        <div class="description">
+            {{$article.Description}}
+        </div>
+        <a href="{{$article.Link}}">read more ⟶</a>
+    </section>
+    {{end}}
+</main>

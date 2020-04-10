@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/orm"
 	"time"
 )
@@ -34,6 +35,10 @@ type Article struct {
 	EditorID       uint          `json:"editor_id"`     // 修改人
 	AuthorName     string        `gorm:"-" json:"author_name"`
 	CategoryName   string        `gorm:"-" json:"category_name"`
+}
+
+func (s *Article) Link() string {
+	return strs.Fmt("/post/%v/%s", s.ID, s.SEOTitle)
 }
 
 type ArticleContent struct {

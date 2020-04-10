@@ -1,34 +1,32 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta name="generator" content="Hugo 0.68.3"/>
+    <title>Jesse Li</title>
+    <meta name="description" content="Jesse Li&#39;s blog">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{dict "website_name"}}</title>
-    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.bootcss.com/jquery.perfect-scrollbar/1.4.0/css/perfect-scrollbar.min.css" rel="stylesheet">
-    <link href="/static/assets/css/style.css" rel="stylesheet">
-    <link href="/static/assets/css/components.css" rel="stylesheet">
+    <link href="/static/assets/css/blog/style.css" rel="stylesheet">
 </head>
 
 <body>
-{{template "comp:header"}}
-{{template "comp:sidebar" .}}
-{{if .showSection}}
-    {{template "comp:section"}}
-{{end}}
-##content##
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.bootcss.com/feather-icons/4.24.1/feather.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.min.js"></script>
-<script src="/static/assets/js/script.js"></script>
-<script src="//at.alicdn.com/t/font_1635126_zl9h3uk7wih.js"></script>
-<script>
-    $(function () {
-        'use strict'
-    });
-</script>
-</body>
+<div class="content">
+    <header>
+        <div class="logo">
+            <a href="/">Jesse Li</a>
+        </div>
+        <nav>
+            <a href="https://blog.jse.li/index.xml">rss</a>
+        </nav>
+    </header>
+    ##content##
+    <footer>
+        <a href="/cdn-cgi/l/email-protection#a8c2cddbdbcdc2cddbdbcd999a9be8cfc5c9c1c486cbc7c5">email</a>
+        <a href="https://twitter.com/__jesse_li">twitter</a>
+        <a href="https://github.com/veggiedefender">github</a>
+        <a href="https://blog.jse.li/index.xml">rss</a>
+    </footer>
 
+</div>
+</body>
 </html>

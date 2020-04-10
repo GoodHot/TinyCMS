@@ -18,6 +18,18 @@ func (s *IndexCtrl) Index(ctx *ctrl.HTTPContext) error {
 	return ctx.HTML("index")
 }
 
+func (s *IndexCtrl) Post(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	article := s.ArticleService.GetById(id)
+	if article == nil || article.Title == "" {
+		return ctx.ResultErr("article not exists")
+	}
+	content := s.ArticleService.GetContent(article.ContentTable, int(article.ContentID))
+	ctx.Put("article", article)
+	ctx.Put("content", content)
+	return ctx.HTML("post")
+}
+
 func (s *IndexCtrl) Channel(ctx *ctrl.HTTPContext) error {
 	//title := ctx.Param("title")
 	//channel, err := s.CategoryService.GetByTitle(title)
