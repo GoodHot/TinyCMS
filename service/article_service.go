@@ -6,7 +6,7 @@ import (
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/go-ego/gse"
 	"github.com/jinzhu/gorm"
-	"github.com/mozillazg/go-pinyin"
+	//"github.com/mozillazg/go-pinyin"
 	"regexp"
 	"strconv"
 	"strings"
@@ -89,7 +89,7 @@ func (s *ArticleService) findTitle(title string) string {
 		if len(findSymbol) > 0 {
 			trim = s.symbolRegexp.ReplaceAllString(trim, "-")
 		}
-		py := strings.ReplaceAll(pinyin.Paragraph(trim), " ", "")
+		py := "" // strings.ReplaceAll(pinyin.Paragraph(trim), " ", "")
 		result.WriteString(py)
 		if i != len(hmm)-1 {
 			result.WriteString("-")
