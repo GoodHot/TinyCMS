@@ -1,0 +1,8 @@
+{
+  "port": 9000,
+  "db": {
+    "dialect": "sqlite3",
+    "url": "cms.db",
+    "physical_deletion": false
+  }
+}
