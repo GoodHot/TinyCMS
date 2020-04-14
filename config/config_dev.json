@@ -19,5 +19,12 @@
     "html_compress": false,
     "admin_template_dir": "resource/admin",
     "skin_template_dir": "resource/skin"
+  },
+  "cache": {
+    "type": "free",
+    "url": "127.0.0.1:6379",
+    "password": "",
+    "db": 1,
+    "cache_size": 3
   }
 }

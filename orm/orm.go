@@ -2,6 +2,7 @@ package orm
 
 import (
 	"errors"
+	"github.com/GoodHot/TinyCMS/brain"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -11,34 +12,46 @@ import (
 )
 
 type Model struct {
-	ID        int       `gorm:"primary_key" json:"id"`
+	ID        int        `gorm:"primary_key" json:"id"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 }
 
 type ORM struct {
-	Dialect          string `val:"${db.dialect}"`
-	URL              string `val:"${db.url}"`
-	TablePrefix      string `val:"${db.table_prefix}"`
-	PhysicalDeletion bool   `val:${db.physical_deletion}`
+	Log              brain.Logger `ioc:"auto"`
+	Dialect          string       `val:"${db.dialect}"`
+	URL              string       `val:"${db.url}"`
+	TablePrefix      string       `val:"${db.table_prefix}"`
+	PhysicalDeletion bool         `val:${db.physical_deletion}`
 	DB               *gorm.DB
 }
 
-func (s *ORM) Init(model ...interface{}) error {
+func (s *ORM) Print(v ...interface{}) {
+
+}
+
+func (s *ORM) Startup() error {
 	if s.Dialect != "mysql" && s.Dialect != "postgres" && s.Dialect != "sqlite3" && s.Dialect != "mssql" {
+		s.Log.Error("unsupport database dialect:%s", s.Dialect)
 		return errors.New("unsupport database dialect:" + s.Dialect)
 	}
-	var err error
-	s.DB, err = gorm.Open(s.Dialect, s.URL)
+	s.Log.Info("ORM Connect database %s[%s]. table prefix is [%s], physical deletion is [%v]", s.Dialect, s.URL, s.TablePrefix, s.PhysicalDeletion)
+	db, err := gorm.Open(s.Dialect, s.URL)
 	if err != nil {
 		return err
 	}
+	s.DB = db
 	s.DB.LogMode(true)
 	s.DB.SingularTable(true)
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return s.TablePrefix + defaultTableName;
+		return s.TablePrefix + defaultTableName
 	}
+	s.DB.SetLogger(s.Log)
+	return nil
+}
+
+func (s *ORM) AutoMigrate(model ...interface{}) error {
 	return s.DB.AutoMigrate(model...).Error
 }
 

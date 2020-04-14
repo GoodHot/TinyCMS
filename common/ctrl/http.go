@@ -2,7 +2,7 @@ package ctrl
 
 import (
 	"github.com/GoodHot/TinyCMS/model"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"mime/multipart"
 	"net/http"

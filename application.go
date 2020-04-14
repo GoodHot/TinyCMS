@@ -5,6 +5,8 @@ import (
 	"github.com/GoodHot/TinyCMS/common/logger"
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/controller"
+	"github.com/GoodHot/TinyCMS/model"
+	"github.com/GoodHot/TinyCMS/orm"
 	"os"
 )
 
@@ -23,6 +25,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	// 设置全局日志
 	BrainContext.SetLogger(&logger.TinyLogger{})
+	// 创建ORM和数据库表
+	tables := []interface{}{
+		&model.Admin{},
+		&model.Admin333{},
+	}
+	BrainContext.Register(&orm.ORM{}).(*orm.ORM).AutoMigrate(tables...)
+	// 启动controller
 	BrainContext.Register(&controller.Controller{})
 }
