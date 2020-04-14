@@ -19,7 +19,6 @@ func (b *Brain) SetLogger(logger Logger) {
 	logger.Info("Brain set logger %v", reflect.TypeOf(logger))
 	b.ioc.log = logger
 	b.ioc.RegInterface((*Logger)(nil), logger)
-	//b.ioc.RegInterface(&Brain{}, logger)
 }
 
 func Load(cfgFile string) (*Brain, error) {

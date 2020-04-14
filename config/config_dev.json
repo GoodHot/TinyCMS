@@ -3,9 +3,21 @@
   "db": {
     "dialect": "sqlite3",
     "url": "cms.db",
+    "table_prefix": "t_",
     "physical_deletion": false
   },
   "logger": {
     "level": "debug"
+  },
+  "server": {
+    "port": 9000,
+    "static": "static",
+    "template": "template",
+    "admin_prefix": "/admin",
+    "web_prefix": "/",
+    "api_prefix": "/api",
+    "html_compress": false,
+    "admin_template_dir": "resource/admin",
+    "skin_template_dir": "resource/skin"
   }
 }

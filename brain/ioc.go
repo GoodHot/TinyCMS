@@ -2,7 +2,6 @@ package brain
 
 import (
 	"errors"
-	"fmt"
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/wang22/easyjson"
 	"reflect"
@@ -27,7 +26,7 @@ func (ioc *BrainIOC) Reg(x interface{}) (ins interface{}, err error) {
 	if ins != nil {
 		return
 	}
-	ioc.setIns(name, x)
+	ioc.setIns(name, x, false)
 	return ioc.createIns(x), nil
 }
 
@@ -39,12 +38,11 @@ func (ioc *BrainIOC) RegInterface(i interface{}, x interface{}) error {
 		return errors.New(msg)
 	}
 	interfaceName := ioc.instanceName(interfaceType)
-	fmt.Println("name", interfaceName)
 	ins := ioc.GetByName(interfaceName)
 	if ins != nil {
 		return nil
 	}
-	ioc.setIns(interfaceName, x)
+	ioc.setIns(interfaceName, x, true)
 	ioc.createIns(x)
 	return nil
 }
@@ -54,14 +52,18 @@ func (ioc *BrainIOC) Get(x interface{}) interface{} {
 	return ioc.GetByName(ioc.instanceName(refType))
 }
 
-func (ioc *BrainIOC) setIns(name string, x interface{}) error {
+func (ioc *BrainIOC) setIns(name string, x interface{}, interfaceReg bool) error {
 	ins := ioc.GetByName(name)
 	if ins != nil {
 		ioc.log.Error("instance [%s] is exists", name)
 		return errors.New("instance [" + name + "] is exists")
 	}
 	ioc.instanceMap[name] = x
-	ioc.log.Info("IOC loading --> %s", name)
+	if interfaceReg {
+		ioc.log.Info("IOC loading --> interface %s instance is %s", name, reflect.TypeOf(x))
+	} else {
+		ioc.log.Info("IOC loading --> %s", name)
+	}
 	return nil
 }
 
@@ -104,7 +106,7 @@ func (ioc *BrainIOC) createIns(x interface{}) interface{} {
 			newIns := reflect.New(field.Type.Elem())
 			value.Set(newIns)
 			newInterface := newIns.Interface()
-			ioc.setIns(ioc.instanceName(field.Type), newInterface)
+			ioc.setIns(ioc.instanceName(field.Type), newInterface, false)
 			ioc.createIns(newInterface)
 		}
 	}

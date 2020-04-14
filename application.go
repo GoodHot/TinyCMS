@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+var BrainContext brain.Brain
+
 func main() {
 	// 判断运行环境
 	env := "dev"
@@ -17,10 +19,10 @@ func main() {
 	// 根据运行环境读取不同配置文件
 	configFile := strs.Fmt("config/config_%s.json", env)
 	// 加载配置文件
-	brain, err := brain.Load(configFile)
+	BrainContext, err := brain.Load(configFile)
 	if err != nil {
 		panic(err)
 	}
-	brain.SetLogger(&logger.TinyLogger{})
-	brain.Register(&controller.Controller{})
+	BrainContext.SetLogger(&logger.TinyLogger{})
+	BrainContext.Register(&controller.Controller{})
 }
