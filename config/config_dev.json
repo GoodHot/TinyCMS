@@ -4,5 +4,8 @@
     "dialect": "sqlite3",
     "url": "cms.db",
     "physical_deletion": false
+  },
+  "logger": {
+    "level": "debug"
   }
 }

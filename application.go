@@ -1,10 +1,10 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"github.com/GoodHot/TinyCMS/brain"
+	"github.com/GoodHot/TinyCMS/common/logger"
 	"github.com/GoodHot/TinyCMS/common/strs"
+	"github.com/GoodHot/TinyCMS/controller"
 	"os"
 )
 
@@ -21,15 +21,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	brain.Reg(&XXX{})
-	brain.Reg(&YYY{})
-}
-
-type YYY struct{}
-
-type XXX struct{}
-
-func (*XXX) Startup() error {
-	fmt.Println("gogogo")
-	return errors.New("fffsdf")
+	brain.SetLogger(&logger.TinyLogger{})
+	brain.Register(&controller.Controller{})
 }

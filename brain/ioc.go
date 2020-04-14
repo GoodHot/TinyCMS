@@ -1,9 +1,9 @@
 package brain
 
-
 import (
 	"errors"
 	"fmt"
+	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/wang22/easyjson"
 	"reflect"
 	"regexp"
@@ -13,11 +13,13 @@ import (
 type BrainIOC struct {
 	instanceMap map[string]interface{}
 	config      *easyjson.EasyJSON
+	log         Logger
 }
 
 func (ioc *BrainIOC) Reg(x interface{}) (ins interface{}, err error) {
 	insType := reflect.TypeOf(x)
 	if insType.Kind() != reflect.Ptr {
+		ioc.log.Error("Register must be struct")
 		return ins, errors.New("register must be struct")
 	}
 	name := ioc.instanceName(insType)
@@ -29,6 +31,24 @@ func (ioc *BrainIOC) Reg(x interface{}) (ins interface{}, err error) {
 	return ioc.createIns(x), nil
 }
 
+func (ioc *BrainIOC) RegInterface(i interface{}, x interface{}) error {
+	interfaceType := reflect.TypeOf(i)
+	if interfaceType.Elem().Kind() != reflect.Interface {
+		msg := strs.Fmt("%v is not interface", interfaceType)
+		ioc.log.Error(msg)
+		return errors.New(msg)
+	}
+	interfaceName := ioc.instanceName(interfaceType)
+	fmt.Println("name", interfaceName)
+	ins := ioc.GetByName(interfaceName)
+	if ins != nil {
+		return nil
+	}
+	ioc.setIns(interfaceName, x)
+	ioc.createIns(x)
+	return nil
+}
+
 func (ioc *BrainIOC) Get(x interface{}) interface{} {
 	refType := reflect.TypeOf(x)
 	return ioc.GetByName(ioc.instanceName(refType))
@@ -37,10 +57,11 @@ func (ioc *BrainIOC) Get(x interface{}) interface{} {
 func (ioc *BrainIOC) setIns(name string, x interface{}) error {
 	ins := ioc.GetByName(name)
 	if ins != nil {
+		ioc.log.Error("instance [%s] is exists", name)
 		return errors.New("instance [" + name + "] is exists")
 	}
 	ioc.instanceMap[name] = x
-	fmt.Println("ioc load --> ", name)
+	ioc.log.Info("IOC loading --> %s", name)
 	return nil
 }
 
@@ -67,10 +88,16 @@ func (ioc *BrainIOC) createIns(x interface{}) interface{} {
 			continue
 		}
 		iocTag := field.Tag.Get("ioc")
-		if iocTag == "" || iocTag != "auto" || field.Type.Kind() != reflect.Ptr {
+		if iocTag == "" || iocTag != "auto" || (field.Type.Kind() != reflect.Ptr && field.Type.Kind() != reflect.Interface) {
 			continue
 		}
-		ins := ioc.GetByName(ioc.instanceName(field.Type))
+		var insName string
+		if field.Type.Kind() == reflect.Ptr {
+			insName = ioc.instanceName(field.Type)
+		} else {
+			insName = field.Type.PkgPath() + "/" + field.Type.Name()
+		}
+		ins := ioc.GetByName(insName)
 		if ins != nil {
 			value.Set(reflect.ValueOf(ins))
 		} else {
@@ -85,8 +112,10 @@ func (ioc *BrainIOC) createIns(x interface{}) interface{} {
 	if method.Kind() == reflect.Func {
 		err := method.Call(nil)[0]
 		if !err.IsNil() {
-			msg := err.Interface().(error)
-			panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + " -> call Startup function error, error msg:" + msg.Error()))
+			msg := err.Interface().(error).Error()
+			errMsg := refType.Elem().PkgPath() + "/" + refType.Elem().Name() + " -> call Startup function error, error msg:" + msg
+			ioc.log.Error(errMsg)
+			panic(errors.New(errMsg))
 		}
 	}
 	return x
@@ -115,6 +144,7 @@ func (ioc *BrainIOC) injectValue(key string, value reflect.Value) error {
 		return err
 	}
 	if data == nil {
+		ioc.log.Error("inject value fail, %s is not found", key)
 		return errors.New("inject value fail, " + key + " is not found")
 	}
 	switch value.Kind() {

@@ -3,19 +3,23 @@ package brain
 import (
 	"github.com/wang22/easyjson"
 	"io/ioutil"
+	"reflect"
 )
 
 type Brain struct {
 	ioc *BrainIOC
 }
 
-func (s *Brain) Reg(i interface{}) interface{} {
-	ins, _ := s.ioc.Reg(i)
+func (b *Brain) Register(i interface{}) interface{} {
+	ins, _ := b.ioc.Reg(i)
 	return ins
 }
 
-func (*Brain) Get(i interface{}) {
-
+func (b *Brain) SetLogger(logger Logger) {
+	logger.Info("Brain set logger %v", reflect.TypeOf(logger))
+	b.ioc.log = logger
+	b.ioc.RegInterface((*Logger)(nil), logger)
+	//b.ioc.RegInterface(&Brain{}, logger)
 }
 
 func Load(cfgFile string) (*Brain, error) {
