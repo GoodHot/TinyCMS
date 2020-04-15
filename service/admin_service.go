@@ -7,6 +7,7 @@ import (
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/importcjj/trie-go"
 	uuid "github.com/satori/go.uuid"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -74,30 +75,30 @@ func (s *AdminService) CheckToken(token string) (*model.AdminResult, error) {
 //	return admin, nil
 //}
 //
-//func (s *AdminService) TrieGet(id uint) *model.Admin {
-//	if s.dataTree == nil {
-//		s.dataTree = trie.New()
-//		page, size := 1, 20
-//		row := (page - 1) * size
-//		var admins []*model.Admin
-//		for ; ; {
-//			s.ORM.DB.Limit(size).Offset(row).Find(&admins)
-//			if len(admins) == 0 {
-//				break
-//			}
-//			for _, adm := range admins {
-//				s.dataTree.Put(strconv.Itoa(int(adm.ID)), adm)
-//			}
-//			page++
-//			row = (page - 1) * size
-//		}
-//	}
-//	exists, result := s.dataTree.Match(strconv.Itoa(int(id)))
-//	if !exists {
-//		return nil
-//	}
-//	return result.Value.(*model.Admin)
-//}
+func (s *AdminService) TrieGet(id int) *model.Admin {
+	if s.dataTree == nil {
+		s.dataTree = trie.New()
+		page, size := 1, 20
+		row := (page - 1) * size
+		var admins []*model.Admin
+		for ; ; {
+			s.ORM.DB.Limit(size).Offset(row).Find(&admins)
+			if len(admins) == 0 {
+				break
+			}
+			for _, adm := range admins {
+				s.dataTree.Put(strconv.Itoa(int(adm.ID)), adm)
+			}
+			page++
+			row = (page - 1) * size
+		}
+	}
+	exists, result := s.dataTree.Match(strconv.Itoa(int(id)))
+	if !exists {
+		return nil
+	}
+	return result.Value.(*model.Admin)
+}
 //
 //func (s *AdminService) All(selfID uint) []*model.Admin {
 //	var result []*model.Admin

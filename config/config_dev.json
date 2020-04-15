@@ -7,7 +7,8 @@
     "physical_deletion": false
   },
   "logger": {
-    "level": "debug"
+    "level": "debug",
+    "output": "logs/example.log"
   },
   "server": {
     "port": 9000,
@@ -26,5 +27,9 @@
     "password": "",
     "db": 1,
     "cache_size": 3
+  },
+  "website": {
+    "page_size": 15,
+    "article_table_size": 10
   }
 }

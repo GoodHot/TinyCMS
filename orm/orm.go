@@ -47,7 +47,6 @@ func (s *ORM) Startup() error {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return s.TablePrefix + defaultTableName
 	}
-	s.DB.SetLogger(s.Log)
 	return nil
 }
 
