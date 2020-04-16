@@ -95,6 +95,10 @@ func (s *HTMLRenderer) loadPage() error {
 		if v.IsDir() {
 			continue
 		}
+		suffix := v.Name()[strings.LastIndex(v.Name(), "."):]
+		if suffix != s.Suffix {
+			continue
+		}
 		name := v.Name()[0:strings.LastIndex(v.Name(), ".")]
 		fileNames = append(fileNames, name)
 	}

@@ -14,10 +14,10 @@ type AdminCategoryCtrl struct {
 func (s *AdminCategoryCtrl) Save(ctx *ctrl.HTTPContext) error {
 	category := new(model.Category)
 	if err := ctx.Bind(category); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	if err := s.CategoryService.Save(category); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	return ctx.ResultOK()
 }
@@ -31,7 +31,7 @@ func (s *AdminCategoryCtrl) Get(ctx *ctrl.HTTPContext) error {
 	id := ctx.ParamInt("id")
 	category, err := s.CategoryService.Get(id)
 	if err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	ctx.Put("category", category)
 	return ctx.ResultOK()
@@ -49,7 +49,7 @@ func (s *AdminCategoryCtrl) Page(ctx *ctrl.HTTPContext) error {
 func (s *AdminCategoryCtrl) Sort(ctx *ctrl.HTTPContext) error {
 	sort := new(service.CategorySort)
 	if err := ctx.Bind(sort); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	s.CategoryService.Sort(sort)
 	return ctx.ResultOK()

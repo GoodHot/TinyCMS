@@ -13,6 +13,10 @@ func (s *AdminSkinCtrl) List(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
-func (s *AdminSkinCtrl) Install(ctx *ctrl.HTTPContext) error {
+func (s *AdminSkinCtrl) Switch(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	if err := s.SkinService.SwitchSkin(id); err != nil {
+		ctx.ResultErr(err)
+	}
 	return ctx.ResultOK()
 }

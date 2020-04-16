@@ -34,7 +34,7 @@ func (s *AdminTagCtrl) Get(ctx *ctrl.HTTPContext) error {
 	id := ctx.ParamInt("id")
 	tag, err := s.TagService.Get(id)
 	if err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	ctx.Put("tag", tag)
 	return ctx.ResultOK()
@@ -43,10 +43,10 @@ func (s *AdminTagCtrl) Get(ctx *ctrl.HTTPContext) error {
 func (s *AdminTagCtrl) Save(ctx *ctrl.HTTPContext) error {
 	tag := new(model.Tag)
 	if err := ctx.Bind(tag); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	if err := s.TagService.Save(tag); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	return ctx.ResultOK()
 }

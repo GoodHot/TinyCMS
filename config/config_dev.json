@@ -15,13 +15,13 @@
     "static": "static",
     "template": "template",
     "admin_prefix": "/admin",
-    "web_prefix": "/",
+    "web_prefix": "",
     "api_prefix": "/api",
     "html_compress": false,
     "skin_template_dir": "config/skin"
   },
   "cache": {
-    "type": "free",
+    "type": "redis",
     "url": "127.0.0.1:6379",
     "password": "",
     "db": 1,

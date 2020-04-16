@@ -18,15 +18,15 @@ type userForm struct {
 func (s *AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
 	u := new(userForm)
 	if err := ctx.Bind(u); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	fmt.Println(s.AdminService.EncrptyPwd("admin"))
 	admin := s.AdminService.GetByUsername(u.Username)
 	if admin == nil {
-		return ctx.ResultErr("admin not exists")
+		return ctx.ResultErrMsg("admin not exists")
 	}
 	if !s.AdminService.AssertPwd(u.Password, admin.Password) {
-		return ctx.ResultErr("wrong password")
+		return ctx.ResultErrMsg("wrong password")
 	}
 	result := s.AdminService.GenToken(admin)
 	ctx.Put("info", result)

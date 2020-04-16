@@ -54,14 +54,14 @@ type PublishForm struct {
 func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	publish := new(model.ArticlePublish)
 	if err := ctx.Bind(publish); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	publish.Article.Title = strings.TrimSpace(publish.Article.Title)
 	if publish.Article.Title == "" {
 		publish.Article.Title = "未命名"
 	}
 	if err := s.ArticleService.Publish(publish, ctx.Admin.ID); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	ctx.Put("article", publish)
 	return ctx.ResultOK()
@@ -78,7 +78,7 @@ func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
 	id := ctx.ParamInt("id")
 	article := s.ArticleService.GetById(id)
 	if article == nil || article.Title == "" {
-		return ctx.ResultErr("article not exists")
+		return ctx.ResultErrMsg("article not exists")
 	}
 	content := s.ArticleService.GetContent(article.ContentTable, int(article.ContentID))
 	//tags := s.TagService.GetByArticleID(id)
@@ -112,10 +112,10 @@ type DeleteArticle struct {
 func (s *AdminArticleCtrl) Delete(ctx *ctrl.HTTPContext) error {
 	ids := new(DeleteArticle)
 	if err := ctx.Bind(ids); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	if err := s.ArticleService.Delete(ids.IDS); err != nil {
-		return ctx.ResultErr(err.Error())
+		return ctx.ResultErr(err)
 	}
 	return ctx.ResultOK()
 }

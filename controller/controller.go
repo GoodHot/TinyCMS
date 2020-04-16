@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/GoodHot/TinyCMS/brain"
-	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/controller/admin"
+	"github.com/GoodHot/TinyCMS/controller/web"
 	"github.com/GoodHot/TinyCMS/service"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -11,18 +11,19 @@ import (
 )
 
 type Controller struct {
-	Log                brain.Logger             `ioc:"auto"`
-	AdminAuthCtrl      *admin.AdminAuthCtrl     `ioc:"auto"`
-	AdminArticleCtrl   *admin.AdminArticleCtrl  `ioc:"auto"`
-	AdminCategoryCtrl  *admin.AdminCategoryCtrl `ioc:"auto"`
-	AdminTagCtrl       *admin.AdminTagCtrl      `ioc:"auto"`
-	AdminSkinCtrl      *admin.AdminSkinCtrl     `ioc:"auto"`
-	AdminService       *service.AdminService    `ioc:"auto"`
-	ServerStatic       string                   `val:"${server.static}"`            // 静态文件夹
-	ServerPort         int                      `val:"${server.port}"`              // 服务启动端口
-	ServerTemplateDir  string                   `val:"${server.skin_template_dir}"` // 模板文件夹
-	ServerHTMLCompress bool                     `val:"${server.html_compress}"`     // HTML代码是否压缩
-	AdminPrefix        string                   `val:"${server.admin_prefix}"`      // Admin接口访问路径
+	Log               brain.Logger             `ioc:"auto"`
+	AdminAuthCtrl     *admin.AdminAuthCtrl     `ioc:"auto"`
+	AdminArticleCtrl  *admin.AdminArticleCtrl  `ioc:"auto"`
+	AdminCategoryCtrl *admin.AdminCategoryCtrl `ioc:"auto"`
+	AdminTagCtrl      *admin.AdminTagCtrl      `ioc:"auto"`
+	AdminSkinCtrl     *admin.AdminSkinCtrl     `ioc:"auto"`
+	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
+	AdminService      *service.AdminService    `ioc:"auto"`
+	SkinService       *service.SkinService     `ioc:"auto"`
+	ServerStatic      string                   `val:"${server.static}"`       // 静态文件夹
+	ServerPort        int                      `val:"${server.port}"`         // 服务启动端口
+	AdminPrefix       string                   `val:"${server.admin_prefix}"` // Admin接口访问路径
+	WebPrefix         string                   `val:"${server.web_prefix}"`   // Web页面路径
 }
 
 func (s *Controller) Startup() error {
@@ -30,17 +31,28 @@ func (s *Controller) Startup() error {
 	e := echo.New()
 	e.HideBanner = true
 	// 模板引擎
-	e.Renderer = &render.TinyRender{
-		TemplateDir:  s.ServerTemplateDir,
-		HTMLCompress: s.ServerHTMLCompress,
-	}
+	e.Renderer = s.SkinService
 	// 静态文件
 	e.Static(s.ServerStatic, s.ServerStatic)
 	s.Log.Info("website static files is %s", s.ServerStatic)
 	// 注册controller
 	s.registerAdmin(e.Group(s.AdminPrefix))
+	s.registerWeb(e.Group(s.WebPrefix))
 	// 启动服务
 	return e.Start(":" + strconv.Itoa(s.ServerPort))
+}
+
+func (s *Controller) registerWeb(group *echo.Group) {
+	router := &RouterRegister{
+		Group:        group,
+		Prefix:       s.WebPrefix,
+		BuildOption:  false,
+		AdminService: s.AdminService,
+		Log:          s.Log,
+	}
+	router.GET("/", s.IndexCtrl.Index)
+	//echo.GET("/", buildHandlerFunc(s.IndexCtrl.Index, s.AdminService))
+	//echo.GET("/post/:id/:title", buildHandlerFunc(s.IndexCtrl.Post, s.AdminService))
 }
 
 func (s *Controller) registerAdmin(group *echo.Group) {
@@ -81,6 +93,7 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 
 	// skin
 	router.GET("/skins", s.AdminSkinCtrl.List)
+	router.PUT("/skin/switch/:id", s.AdminSkinCtrl.Switch)
 }
 
 func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFunc {

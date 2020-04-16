@@ -6,18 +6,24 @@ import (
 	"github.com/GoodHot/TinyCMS/brain"
 	"github.com/GoodHot/TinyCMS/common/consts"
 	"github.com/GoodHot/TinyCMS/common/files"
+	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
+	"github.com/labstack/echo/v4"
+	"io"
 	"io/ioutil"
 	"time"
 )
 
 type SkinService struct {
-	Log             brain.Logger   `ioc:"auto"`
-	ORM             *orm.ORM       `ioc:"auto"`
-	ConfigService   *ConfigService `ioc:"auto"`
-	SkinTemplateDir string         `val:"${server.skin_template_dir}"`
+	Log                brain.Logger   `ioc:"auto"`
+	ORM                *orm.ORM       `ioc:"auto"`
+	ConfigService      *ConfigService `ioc:"auto"`
+	SkinTemplateDir    string         `val:"${server.skin_template_dir}"`
+	ServerTemplateDir  string         `val:"${server.skin_template_dir}"` // 模板文件夹
+	ServerHTMLCompress bool           `val:"${server.html_compress}"`     // HTML代码是否压缩
+	htmlRender         *render.HTMLRenderer
 }
 
 type SkinInfo struct {
@@ -68,8 +74,7 @@ func (s *SkinService) Startup() error {
 	}
 	skin := &model.Skin{}
 	s.ORM.DB.First(skin)
-	s.ORM.DB.Model(skin).Where("id = ?", skin.ID).Update("active", true)
-	return nil
+	return s.ORM.DB.Model(skin).Where("id = ?", skin.ID).Update("active", true).Error
 }
 
 func (s *SkinService) loadSkin(dirName string, skinDir string) error {
@@ -140,8 +145,51 @@ func (s *SkinService) GetActive() *model.Skin {
 func (s *SkinService) List() {
 }
 
-/**
-安装皮肤
-*/
-func (s *SkinService) Install() {
+func (s *SkinService) initHTMLRender() error {
+	skin := s.GetActive()
+	s.htmlRender = &render.HTMLRenderer{
+		LayoutDir:    "layout",
+		ComponentDir: "component",
+		TemplateDir:  strs.Fmt("%s/%s", s.ServerTemplateDir, skin.Dir),
+		Suffix:       ".html",
+		Compress:     s.ServerHTMLCompress,
+	}
+	return s.htmlRender.Init(nil)
+}
+
+func (s *SkinService) SwitchSkin(id int) error {
+	skin, err := s.GetById(id)
+	if err != nil {
+		return err
+	}
+	active := s.GetActive()
+	err = s.ORM.DB.Model(&model.Skin{}).Where("id = ?", active.ID).Update("active", false).Error
+	if err != nil {
+		return err
+	}
+	err = s.ORM.DB.Model(&model.Skin{}).Where("id = ?", skin.ID).Update("active", true).Error
+	if err != nil {
+		return err
+	}
+	return s.initHTMLRender()
+}
+
+func (s *SkinService) GetById(id int) (*model.Skin, error) {
+	var skin model.Skin
+	s.ORM.DB.Where("id = ?", id).First(&skin)
+	if skin.Dir == "" {
+		return nil, errors.New(strs.Fmt("Skin is %v not exists", id))
+	}
+	return &skin, nil
+}
+
+func (s *SkinService) Render(writer io.Writer, name string, data interface{}, ctx echo.Context) error {
+	if s.htmlRender == nil {
+		err := s.initHTMLRender()
+		if err != nil {
+			s.Log.Error("Render Skin template failed, error message is :", err.Error())
+			return err
+		}
+	}
+	return s.htmlRender.Render(writer, name, data)
 }

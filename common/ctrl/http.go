@@ -106,10 +106,14 @@ func (s *HTTPContext) ResultOKMsg(msg string) error {
 	return s.JsonOk(s.Result)
 }
 
-func (s *HTTPContext) ResultErr(msg string) error {
+func (s *HTTPContext) ResultErrMsg(msg string) error {
 	s.Result.Status = http.StatusInternalServerError
 	s.Result.Msg = msg
 	return s.JsonOk(s.Result)
+}
+
+func (s *HTTPContext) ResultErr(err error) error {
+	return s.ResultOKMsg(err.Error())
 }
 
 func (s *HTTPContext) ResultErrStatus(status int, msg string) error {
