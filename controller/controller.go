@@ -16,6 +16,7 @@ type Controller struct {
 	AdminArticleCtrl   *admin.AdminArticleCtrl  `ioc:"auto"`
 	AdminCategoryCtrl  *admin.AdminCategoryCtrl `ioc:"auto"`
 	AdminTagCtrl       *admin.AdminTagCtrl      `ioc:"auto"`
+	AdminSkinCtrl      *admin.AdminSkinCtrl     `ioc:"auto"`
 	AdminService       *service.AdminService    `ioc:"auto"`
 	ServerStatic       string                   `val:"${server.static}"`            // 静态文件夹
 	ServerPort         int                      `val:"${server.port}"`              // 服务启动端口
@@ -77,6 +78,9 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search)
 	router.GET("/tag/hot", s.AdminTagCtrl.HotTag)
 	router.GET("/tag/page_:page", s.AdminTagCtrl.Page)
+
+	// skin
+	router.GET("/skins", s.AdminSkinCtrl.List)
 }
 
 func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFunc {

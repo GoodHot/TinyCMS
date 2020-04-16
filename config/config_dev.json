@@ -18,8 +18,7 @@
     "web_prefix": "/",
     "api_prefix": "/api",
     "html_compress": false,
-    "admin_template_dir": "resource/admin",
-    "skin_template_dir": "resource/skin"
+    "skin_template_dir": "config/skin"
   },
   "cache": {
     "type": "free",

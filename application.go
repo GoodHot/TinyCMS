@@ -30,7 +30,8 @@ func main() {
 	// 创建ORM和数据库表
 	tables := []interface{}{
 		&model.Admin{},
-		&model.Admin333{},
+		&model.Skin{},
+		&model.Config{},
 	}
 	BrainContext.Register(&orm.ORM{}).(*orm.ORM).AutoMigrate(tables...)
 	// 启动controller
