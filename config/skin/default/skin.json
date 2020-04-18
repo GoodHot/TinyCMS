@@ -4,18 +4,6 @@
   "version": "1.0.0",
   "author": "xww",
   "website": "https://github.com/wang22/skin/default",
-  "cover": [
-    {
-      "image": "index.jpg",
-      "name": "首页",
-      "description": "这是一个首页"
-    },
-    {
-      "image": "post.jpg",
-      "name": "文章页面",
-      "description": "文章内容页面"
-    }
-  ],
   "pages": [
     {
       "page": "index.html",

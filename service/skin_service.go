@@ -20,6 +20,7 @@ type SkinService struct {
 	Log                brain.Logger   `ioc:"auto"`
 	ORM                *orm.ORM       `ioc:"auto"`
 	ConfigService      *ConfigService `ioc:"auto"`
+	CacheService       *CacheService  `ioc:"auto"`
 	SkinTemplateDir    string         `val:"${server.skin_template_dir}"`
 	ServerTemplateDir  string         `val:"${server.skin_template_dir}"` // 模板文件夹
 	ServerHTMLCompress bool           `val:"${server.html_compress}"`     // HTML代码是否压缩
@@ -33,11 +34,6 @@ type SkinInfo struct {
 	Author      string         `json:"author"`
 	Website     string         `json:"website"`
 	Pages       []SkinInfoPage `json:"pages"`
-	Cover       []struct {
-		Image       string `json:"image"`
-		Name        string `json:"name"`
-		Description string `json:"description"`
-	} `json:"cover"`
 }
 
 type SkinInfoPage struct {
@@ -57,6 +53,8 @@ func (s *SkinService) Startup() error {
 		s.Log.Warn("Skin template [%s] no files found", s.SkinTemplateDir)
 		return nil
 	}
+	s.CacheService.Delete("skin:active")
+	var existsSkins []string
 	// 逐个加载模板文件夹
 	for _, dir := range dirs {
 		s.Log.Info("Find skin template directory [%v]", dir.Name())
@@ -66,7 +64,9 @@ func (s *SkinService) Startup() error {
 			s.Log.Error("Load skin template [%s] failed, error message : %s", skinDir, err.Error())
 			return err
 		}
+		existsSkins = append(existsSkins, dir.Name())
 	}
+	s.ORM.DB.Unscoped().Delete(&model.Skin{}, "dir not in (?)", existsSkins)
 	// 判断是否有默认模板，如果没有，需要指定一个
 	active := s.GetActive()
 	if active != nil {
@@ -134,12 +134,17 @@ func (s *SkinService) Save(skinInfo *SkinInfo, skinDir string, active bool) {
 }
 
 func (s *SkinService) GetActive() *model.Skin {
-	var skin model.Skin
-	s.ORM.DB.Where("active = ?", 1).First(&skin)
+	skin := &model.Skin{}
+	cacheKey := "skin:active"
+	s.CacheService.Get(cacheKey, skin)
 	if skin.Dir == "" {
-		return nil
+		s.ORM.DB.Where("active = ?", true).First(skin)
+		if skin.Dir == "" {
+			return nil
+		}
+		s.CacheService.Set(cacheKey, skin, 24*time.Hour)
 	}
-	return &skin
+	return skin
 }
 
 func (s *SkinService) List() {
@@ -171,7 +176,7 @@ func (s *SkinService) SwitchSkin(id int) error {
 	if err != nil {
 		return err
 	}
-	return s.initHTMLRender()
+	return s.CacheService.Set("skin:active", skin, 24*time.Hour)
 }
 
 func (s *SkinService) GetById(id int) (*model.Skin, error) {
@@ -189,6 +194,16 @@ func (s *SkinService) Render(writer io.Writer, name string, data interface{}, ct
 		if err != nil {
 			s.Log.Error("Render Skin template failed, error message is :", err.Error())
 			return err
+		}
+	} else {
+		// TODO 这里可能会有性能问题，但这样可以处理分布式部署问题
+		active := s.GetActive()
+		if s.htmlRender.TemplateDir != strs.Fmt("%s/%s", s.ServerTemplateDir, active.Dir) {
+			err := s.initHTMLRender()
+			if err != nil {
+				s.Log.Error("Render Skin template failed, error message is :", err.Error())
+				return err
+			}
 		}
 	}
 	return s.htmlRender.Render(writer, name, data)

@@ -54,5 +54,5 @@ func (s *CacheService) GetStr(key string) (string, error) {
 	return s.GetStr(key)
 }
 func (s *CacheService) Delete(key string) error {
-	return s.Delete(key)
+	return s.cacher.Delete(key)
 }
