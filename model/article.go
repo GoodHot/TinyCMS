@@ -1,6 +1,5 @@
 package model
 
-
 import (
 	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/orm"
@@ -16,24 +15,25 @@ const (
 
 type Article struct {
 	orm.Model
+	ShortID        string        `gorm:"UNIQUE_INDEX" json:"short_id"`
 	Title          string        `json:"title"`
 	SEOTitle       string        `json:"seo_title"`
 	SEODescription string        `json:"seo_description"`
 	SEOKeyword     string        `json:"seo_keyword"`
-	CategoryID     int          `json:"category_id"`
+	CategoryID     int           `json:"category_id"`
 	Description    string        `json:"description"`   // article description
 	Cover          string        `json:"cover"`         // conver image
 	ContentTable   string        `json:"content_table"` // content table
-	ContentID      int          `json:"content_id"`    // content id
+	ContentID      int           `json:"content_id"`    // content id
 	PublishTime    *time.Time    `json:"publish_time"`  // timing publish
 	Status         ArticleStatus `json:"status"`        // status
 	Views          int           `json:"views"`         // page view count
 	Tags           string        `json:"tags"`          // article tags
-	AuthorID       int          `json:"author"`        // article author
+	AuthorID       int           `json:"author"`        // article author
 	Template       string        `json:"template"`      // 页面渲染模板
 	Visibility     uint          `json:"visibility"`    // 可见性 [1. public, 2. private]
-	CreatorID      int          `json:"creator_id"`    // 创建人
-	EditorID       int          `json:"editor_id"`     // 修改人
+	CreatorID      int           `json:"creator_id"`    // 创建人
+	EditorID       int           `json:"editor_id"`     // 修改人
 	AuthorName     string        `gorm:"-" json:"author_name"`
 	CategoryName   string        `gorm:"-" json:"category_name"`
 }

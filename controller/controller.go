@@ -108,6 +108,7 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 
 	// upload
 	router.POST("/upload", s.AdminUploadCtrl.Upload)
+	router.POST("/upload/markdown", s.AdminUploadCtrl.MarkdownUpload)
 }
 
 func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFunc {
