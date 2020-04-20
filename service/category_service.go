@@ -31,7 +31,7 @@ func (s *CategoryService) Tree() []*CategoryTree {
 }
 
 type CategoryTree struct {
-	ID       int            `json:"id"`
+	ID       int             `json:"id"`
 	Name     string          `json:"name"`
 	Children []*CategoryTree `json:"children"`
 	Category *model.Category `json:"category"`
@@ -126,4 +126,16 @@ func (s *CategoryService) Sort(sort *CategorySort) error {
 		}
 		return nil
 	})
+}
+
+func (s *CategoryService) GetByName(name string) []*model.Category {
+	var categorys []*model.Category
+	s.ORM.DB.Where("name = ?", name).Find(&categorys)
+	return categorys
+}
+
+func (s *CategoryService) GetByPath(path string) []*model.Category {
+	var categorys []*model.Category
+	s.ORM.DB.Where("path = ?", path).Find(&categorys)
+	return categorys
 }

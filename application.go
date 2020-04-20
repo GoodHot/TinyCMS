@@ -32,6 +32,9 @@ func main() {
 		&model.Admin{},
 		&model.Skin{},
 		&model.Config{},
+		&model.Article{},
+		&model.Category{},
+		&model.Upload{},
 	}
 	BrainContext.Register(&orm.ORM{}).(*orm.ORM).AutoMigrate(tables...)
 	// 启动controller

@@ -46,6 +46,18 @@ func (s *AdminCategoryCtrl) Page(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminCategoryCtrl) GetByName(ctx *ctrl.HTTPContext) error {
+	name := ctx.Param("name")
+	ctx.Put("categorys", s.CategoryService.GetByName(name))
+	return ctx.ResultOK()
+}
+
+func (s *AdminCategoryCtrl) GetByPath(ctx *ctrl.HTTPContext) error {
+	path := ctx.Param("path")
+	ctx.Put("categorys", s.CategoryService.GetByPath(path))
+	return ctx.ResultOK()
+}
+
 func (s *AdminCategoryCtrl) Sort(ctx *ctrl.HTTPContext) error {
 	sort := new(service.CategorySort)
 	if err := ctx.Bind(sort); err != nil {

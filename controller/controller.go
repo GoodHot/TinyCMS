@@ -6,6 +6,7 @@ import (
 	"github.com/GoodHot/TinyCMS/controller/web"
 	"github.com/GoodHot/TinyCMS/service"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 	"strconv"
 )
@@ -17,6 +18,7 @@ type Controller struct {
 	AdminCategoryCtrl *admin.AdminCategoryCtrl `ioc:"auto"`
 	AdminTagCtrl      *admin.AdminTagCtrl      `ioc:"auto"`
 	AdminSkinCtrl     *admin.AdminSkinCtrl     `ioc:"auto"`
+	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
 	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
 	AdminService      *service.AdminService    `ioc:"auto"`
 	SkinService       *service.SkinService     `ioc:"auto"`
@@ -56,10 +58,17 @@ func (s *Controller) registerWeb(group *echo.Group) {
 }
 
 func (s *Controller) registerAdmin(group *echo.Group) {
+	// 开发环境允许跨域
+	group.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{"*"},
+		AllowMethods: []string{"*"},
+	}))
+
 	router := &RouterRegister{
 		Group:        group,
 		Prefix:       s.AdminPrefix,
-		BuildOption:  false,
+		BuildOption:  true,
 		AdminService: s.AdminService,
 		Log:          s.Log,
 	}
@@ -82,6 +91,8 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	router.GET("/category/tree", s.AdminCategoryCtrl.Tree)
 	router.GET("/category/:id", s.AdminCategoryCtrl.Get)
 	router.GET("/category/page_:page", s.AdminCategoryCtrl.Page)
+	router.GET("/category/name/:name", s.AdminCategoryCtrl.GetByName)
+	router.GET("/category/path/:path", s.AdminCategoryCtrl.GetByPath)
 	router.POST("/category/sort", s.AdminCategoryCtrl.Sort)
 
 	// tag
@@ -94,6 +105,9 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	// skin
 	router.GET("/skins", s.AdminSkinCtrl.List)
 	router.PUT("/skin/switch/:id", s.AdminSkinCtrl.Switch)
+
+	// upload
+	router.POST("/upload", s.AdminUploadCtrl.Upload)
 }
 
 func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFunc {

@@ -30,5 +30,10 @@
   "website": {
     "page_size": 15,
     "article_table_size": 10
+  },
+  "upload": {
+    "type": "local",
+    "max_size": 102400,
+    "local_dir": "upload"
   }
 }
