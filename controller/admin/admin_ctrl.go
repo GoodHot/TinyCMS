@@ -33,6 +33,11 @@ func (s *AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
+	ctx.Put("admins", s.AdminService.All(ctx.Admin.ID))
+	return ctx.ResultOK()
+}
+
 //func (s *AdminAuthCtrl) Info(ctx *ctrl.HTTPContext) error {
 //	token := ctx.Context.Request().Header.Get("ACCESS-TOKEN")
 //	admin, err := s.AdminService.CheckToken(token)

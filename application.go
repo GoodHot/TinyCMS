@@ -33,6 +33,8 @@ func main() {
 		&model.Skin{},
 		&model.Config{},
 		&model.Article{},
+		&model.Tag{},
+		&model.RelTagArticle{},
 		&model.Category{},
 		&model.Upload{},
 	}

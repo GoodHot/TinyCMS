@@ -99,6 +99,20 @@ func (s *AdminService) TrieGet(id int) *model.Admin {
 	}
 	return result.Value.(*model.Admin)
 }
+
+func (s *AdminService) All(selfID int) []*model.Admin {
+	var result []*model.Admin
+	s.ORM.DB.Find(&result)
+	//if result != nil && len(result) > 0 {
+		//for _, item := range result {
+			//role, _ := s.RoleService.Get(int(item.RoleID))
+			//item.Role = role
+		//	item.IsSelf = item.ID == selfID
+		//}
+	//}
+	return result
+}
+
 //
 //func (s *AdminService) All(selfID uint) []*model.Admin {
 //	var result []*model.Admin

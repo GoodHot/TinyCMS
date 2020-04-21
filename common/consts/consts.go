@@ -5,6 +5,9 @@ const (
 
 	// 皮肤模板配置
 	configSkinTemplate = "skin.template"
+
+	// http access token header name
+	httpAccessTokenName = "ACCESS-TOKEN"
 )
 
 // 皮肤模板的配置json文件名
@@ -19,4 +22,8 @@ func SkinTemplateContainPage() []string {
 
 func ConfigSkinTemplate() string {
 	return configSkinTemplate
+}
+
+func HttpAccessTokenName() string {
+	return httpAccessTokenName
 }

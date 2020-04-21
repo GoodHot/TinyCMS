@@ -1,12 +1,12 @@
 package service
 
-
 import (
 	"bytes"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/go-ego/gse"
 	"github.com/jinzhu/gorm"
+	"github.com/teris-io/shortid"
 	"regexp"
 	"strconv"
 	"strings"
@@ -26,6 +26,7 @@ type ArticleService struct {
 	symbolRegexp      *regexp.Regexp
 	cleanTitleRegexp  *regexp.Regexp
 	dict              *gse.Segmenter
+	shortIdGen        *shortid.Shortid
 }
 
 func (s *ArticleService) GetContent(tableName string, id int) *model.ArticleContent {
@@ -227,6 +228,11 @@ func (s *ArticleService) saveTags(db *gorm.DB, article *model.ArticlePublish) er
 
 func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) error {
 	if article.Article.ID == 0 {
+		if s.shortIdGen == nil {
+			s.shortIdGen, _ = shortid.New(1, shortid.DefaultABC, 2342)
+		}
+		id, _ := s.shortIdGen.Generate()
+		article.Article.ShortID = id
 		article.Article.CreatorID = adminID
 		article.Article.EditorID = adminID
 		s.ORM.DB.Save(article.Article)
@@ -386,4 +392,3 @@ func (s *ArticleService) TotalCount() int {
 	s.ORM.DB.Model(&model.Article{}).Count(&count)
 	return count
 }
-

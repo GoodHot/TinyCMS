@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/GoodHot/TinyCMS/brain"
+	"github.com/GoodHot/TinyCMS/common/consts"
 	"github.com/GoodHot/TinyCMS/controller/admin"
 	"github.com/GoodHot/TinyCMS/controller/web"
 	"github.com/GoodHot/TinyCMS/service"
@@ -79,6 +80,9 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	// admin
 	router.POST("/auth/login", s.AdminAuthCtrl.Login)
 
+	// admin
+	router.GET("/admin/all", s.AdminAuthCtrl.All)
+
 	// article
 	router.POST("/article", s.AdminArticleCtrl.Publish)
 	router.GET("/article/page_:page", s.AdminArticleCtrl.Page)
@@ -120,7 +124,7 @@ func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFun
 				return next(c)
 			}
 		}
-		token := c.Request().Header.Get("ACCESS-TOKEN")
+		token := c.Request().Header.Get(consts.HttpAccessTokenName())
 		if token == "" {
 			return c.JSON(http.StatusUnauthorized, "please login")
 		}

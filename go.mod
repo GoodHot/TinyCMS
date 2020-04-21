@@ -13,6 +13,7 @@ require (
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
 	github.com/satori/go.uuid v1.2.0
+	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	github.com/wang22/easyjson v0.0.0-20200203035647-7920045a1db3
 )
