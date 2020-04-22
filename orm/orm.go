@@ -8,6 +8,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"strconv"
 	"time"
 )
 
@@ -19,16 +20,13 @@ type Model struct {
 }
 
 type ORM struct {
-	Log              brain.Logger `ioc:"auto"`
-	Dialect          string       `val:"${db.dialect}"`
-	URL              string       `val:"${db.url}"`
-	TablePrefix      string       `val:"${db.table_prefix}"`
-	PhysicalDeletion bool         `val:${db.physical_deletion}`
-	DB               *gorm.DB
-}
-
-func (s *ORM) Print(v ...interface{}) {
-
+	Log                  brain.Logger `ioc:"auto"`
+	Dialect              string       `val:"${db.dialect}"`
+	URL                  string       `val:"${db.url}"`
+	TablePrefix          string       `val:"${db.table_prefix}"`
+	PhysicalDeletion     bool         `val:"${db.physical_deletion}"`
+	ArticleSubTableCount int          `val:"${db.article_sub_table_count}"`
+	DB                   *gorm.DB
 }
 
 func (s *ORM) Startup() error {
@@ -50,8 +48,26 @@ func (s *ORM) Startup() error {
 	return nil
 }
 
-func (s *ORM) AutoMigrate(model ...interface{}) error {
-	return s.DB.AutoMigrate(model...).Error
+func (s *ORM) AutoMigrate(contentModel interface{}, model ...interface{}) error {
+	err := s.DB.AutoMigrate(model...).Error
+	if err != nil {
+		return err
+	}
+	for i := 0; i < s.ArticleSubTableCount; i++ {
+		tableName := s.ArticleContentTableName(i)
+		if s.DB.HasTable(tableName) {
+			continue
+		}
+		err := s.DB.Table(tableName).CreateTable(contentModel).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *ORM) ArticleContentTableName(index int) string {
+	return s.TablePrefix + "article_content_" + strconv.Itoa(index)
 }
 
 // Transaction

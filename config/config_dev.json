@@ -4,7 +4,8 @@
     "dialect": "sqlite3",
     "url": "cms.db",
     "table_prefix": "t_",
-    "physical_deletion": false
+    "physical_deletion": false,
+    "article_sub_table_count": 10
   },
   "logger": {
     "level": "debug",

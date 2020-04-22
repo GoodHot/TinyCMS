@@ -33,21 +33,6 @@ type PublishForm struct {
 	GetCover       bool                  `json:"get_cover"`
 	GetNetImage    bool                  `json:"get_net_image"`
 	GetDescription bool                  `json:"get_description"`
-	//ID             int      `json:"id"`
-	//Title          string   `json:"title"`           // 标题
-	//SEOTitle       string   `json:"seo_title"`       // SEO标题
-	//SEODescription string   `json:"seo_description"` // SEO描述
-	//SEOKeyword     string   `json:"seo_keyword"`     // SEO关键字
-	//Markdown       string   `json:"markdown"`        // markdown代码
-	//Html           string   `json:"html"`            // HTML代码
-	//Cover          string   `json:"cover"`           // 封面图
-	//CategoryID     int      `json:"category_id"`     // 分类
-	//Description    string   `json:"description"`     // 内容描述
-	//Tags           []string `json:"tags"`            // 标签
-	//Type           string   `json:"type"`            // 操作类型 [publish, draft]
-	//Visibility     string   `json:"visibility"`      // 可见性 [public, private]
-	//Template       string   `json:"template"`        // 页面模板
-	//Author         uint     `json:"author"`          // 作者ID
 
 }
 
@@ -58,7 +43,7 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	}
 	publish.Article.Title = strings.TrimSpace(publish.Article.Title)
 	if publish.Article.Title == "" {
-		publish.Article.Title = "未命名"
+		publish.Article.Title = "untitled"
 	}
 	if err := s.ArticleService.Publish(publish, ctx.Admin.ID); err != nil {
 		return ctx.ResultErr(err)
@@ -81,25 +66,6 @@ func (s *AdminArticleCtrl) Get(ctx *ctrl.HTTPContext) error {
 		return ctx.ResultErrMsg("article not exists")
 	}
 	content := s.ArticleService.GetContent(article.ContentTable, int(article.ContentID))
-	//tags := s.TagService.GetByArticleID(id)
-	//tagsName := []string{}
-	//if tags != nil && len(tags) > 0 {
-	//	for _, v := range tags {
-	//		tagsName = append(tagsName, v.Name)
-	//	}
-	//}
-
-	//publish := &PublishForm{
-	//	ID:          int(article.ID),
-	//	Title:       article.Title,
-	//	SEOTitle:    article.SEOTitle,
-	//	Markdown:    content.Markdown,
-	//	Html:        content.Html,
-	//	Cover:       article.Cover,
-	//	CategoryID:  int(article.CategoryID),
-	//	Description: article.Description,
-	//	Tags:        tagsName,
-	//}
 	ctx.Put("article", article)
 	ctx.Put("content", content)
 	return ctx.ResultOK()

@@ -1,10 +1,11 @@
 package service
 
 import (
-	"bytes"
+	"github.com/GoodHot/TinyCMS/common/consts"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/go-ego/gse"
+	"github.com/gomarkdown/markdown"
 	"github.com/jinzhu/gorm"
 	"github.com/teris-io/shortid"
 	"regexp"
@@ -13,20 +14,32 @@ import (
 )
 
 type ArticleService struct {
-	CategoryService   *CategoryService `ioc:"auto"`
-	AdminService      *AdminService    `ioc:"auto"`
-	TagService        *TagService      `ioc:"auto"`
-	ORM               *orm.ORM         `ioc:"auto"`
-	PageSize          int              `val:"${website.page_size}"`
-	TableSize         int              `val:"${website.article_table_size}"`
-	TablePrefix       string           `val:"${db.table_prefix}"`
-	coverRegexp       *regexp.Regexp
-	descriptionRegexp *regexp.Regexp
-	tagRegexp         *regexp.Regexp
-	symbolRegexp      *regexp.Regexp
-	cleanTitleRegexp  *regexp.Regexp
-	dict              *gse.Segmenter
-	shortIdGen        *shortid.Shortid
+	CategoryService      *CategoryService `ioc:"auto"`
+	AdminService         *AdminService    `ioc:"auto"`
+	TagService           *TagService      `ioc:"auto"`
+	ORM                  *orm.ORM         `ioc:"auto"`
+	PageSize             int              `val:"${website.page_size}"`
+	TableSize            int              `val:"${website.article_table_size}"`
+	TablePrefix          string           `val:"${db.table_prefix}"`
+	ArticleSubTableCount int              `val:"${db.article_sub_table_count}"`
+	coverRegexp          *regexp.Regexp
+	descriptionRegexp    *regexp.Regexp
+	tagRegexp            *regexp.Regexp
+	symbolRegexp         *regexp.Regexp
+	cleanTitleRegexp     *regexp.Regexp
+	dict                 *gse.Segmenter
+	shortIdGen           *shortid.Shortid
+}
+
+func (s *ArticleService) Startup() error {
+	if s.shortIdGen == nil {
+		sid, err := shortid.New(1, consts.ShortIdDefaultABC(), 9527)
+		if err != nil {
+			return err
+		}
+		s.shortIdGen = sid
+	}
+	return nil
 }
 
 func (s *ArticleService) GetContent(tableName string, id int) *model.ArticleContent {
@@ -35,245 +48,151 @@ func (s *ArticleService) GetContent(tableName string, id int) *model.ArticleCont
 	return &content
 }
 
-func (s *ArticleService) findCover(html string) string {
-	if s.coverRegexp == nil {
-		s.coverRegexp = regexp.MustCompile("<img\\s+src=\"(.+?)\"\\s+.+?/>")
-	}
-	match := s.coverRegexp.FindAllStringSubmatch(html, -1)
-	if match == nil || len(match) == 0 {
-		return ""
-	}
-	return match[0][1]
-}
-
-func (s *ArticleService) findDescription(html string) string {
-	if s.descriptionRegexp == nil {
-		s.descriptionRegexp = regexp.MustCompile("<p>(.+?)</p>")
-	}
-	if s.tagRegexp == nil {
-		s.tagRegexp = regexp.MustCompile("(<.+?>.+?</.+?>|<.+?/>)")
-	}
-	submatch := s.descriptionRegexp.FindAllStringSubmatch(html, -1)
-	for _, m := range submatch {
-		s := s.tagRegexp.ReplaceAllString(m[1], "")
-		s = strings.TrimSpace(s)
-		if s != "" {
-			temp := []rune(s)
-			if len(temp) > 150 {
-				return string(temp[:150])
-			}
-			return string(temp)
-		}
-	}
+func (s *ArticleService) findTitle(title string) string {
+	//if s.symbolRegexp == nil {
+	//	s.symbolRegexp = regexp.MustCompile("\\p{P}")
+	//}
+	//if s.cleanTitleRegexp == nil {
+	//	s.cleanTitleRegexp = regexp.MustCompile("\\-{1,}")
+	//}
+	//if s.dict == nil {
+	//	tmp := gse.New("zh,resource/dict/dictionary.txt", "alpha")
+	//	s.dict = &tmp
+	//}
+	//hmm := s.dict.Cut(title, true)
+	//result := bytes.NewBufferString("")
+	//for i, han := range hmm {
+	//	trim := strings.TrimSpace(han)
+	//	if trim == "" {
+	//		continue
+	//	}
+	//	findSymbol := s.symbolRegexp.FindAllString(trim, -1)
+	//	if len(findSymbol) > 0 {
+	//		trim = s.symbolRegexp.ReplaceAllString(trim, "-")
+	//	}
+	//	py := "" // strings.ReplaceAll(pinyin.Paragraph(trim), " ", "")
+	//	result.WriteString(py)
+	//	if i != len(hmm)-1 {
+	//		result.WriteString("-")
+	//	}
+	//}
+	//rst := s.cleanTitleRegexp.ReplaceAllString(result.String(), "-")
+	//if rst[len(rst)-1:] == "-" {
+	//	rst = rst[:len(rst)-1]
+	//}
 	return ""
 }
 
-func (s *ArticleService) findTitle(title string) string {
-	if s.symbolRegexp == nil {
-		s.symbolRegexp = regexp.MustCompile("\\p{P}")
-	}
-	if s.cleanTitleRegexp == nil {
-		s.cleanTitleRegexp = regexp.MustCompile("\\-{1,}")
-	}
-	if s.dict == nil {
-		tmp := gse.New("zh,resource/dict/dictionary.txt", "alpha")
-		s.dict = &tmp
-	}
-	hmm := s.dict.Cut(title, true)
-	result := bytes.NewBufferString("")
-	for i, han := range hmm {
-		trim := strings.TrimSpace(han)
-		if trim == "" {
-			continue
-		}
-		findSymbol := s.symbolRegexp.FindAllString(trim, -1)
-		if len(findSymbol) > 0 {
-			trim = s.symbolRegexp.ReplaceAllString(trim, "-")
-		}
-		py := "" // strings.ReplaceAll(pinyin.Paragraph(trim), " ", "")
-		result.WriteString(py)
-		if i != len(hmm)-1 {
-			result.WriteString("-")
-		}
-	}
-	rst := s.cleanTitleRegexp.ReplaceAllString(result.String(), "-")
-	if rst[len(rst)-1:] == "-" {
-		rst = rst[:len(rst)-1]
-	}
-	return rst
-}
-
-func (s *ArticleService) saveArticle(db *gorm.DB, article *model.ArticlePublish) error {
-	dbArticle := &model.Article{}
-	db.Where("id = ?", article.Article.ID).Find(dbArticle)
-	if dbArticle.CategoryID != 0 && dbArticle.CategoryID != article.Article.CategoryID {
-		err := db.Model(&model.Category{}).Where("id = ?", dbArticle.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1)).Error
-		if err != nil {
-			return err
-		}
-		err = db.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
-		if err != nil {
-			return err
-		}
-	}
-	article.Article.Cover = strings.TrimSpace(article.Article.Cover)
-	if article.Article.Cover == "" && article.GetCover {
-		article.Article.Cover = s.findCover(article.Content.Html)
-	}
-	article.Article.Description = strings.TrimSpace(article.Article.Description)
-	if article.Article.Description == "" && article.GetDescription {
-		article.Article.Description = s.findDescription(article.Content.Html)
-	}
-	article.Article.SEOTitle = strings.TrimSpace(article.Article.SEOTitle)
-	if article.Article.SEOTitle == "" {
-		article.Article.SEOTitle = s.findTitle(article.Article.Title)
-	}
-	if dbArticle.ContentID != 0 {
-		dbContent := &model.ArticleContent{}
-		db.Table(article.Article.ContentTable).Where("id = ?", dbArticle.ContentID).Find(dbContent)
-		article.Content.ID = dbContent.ID
-	}
-	// save content
-	err := db.Table(article.Article.ContentTable).Save(article.Content).Error
-	if err != nil {
-		return err
-	}
-	// save tags
-	err = s.saveTags(db, article)
-	if err != nil {
-		return err
-	}
-	if len(article.Tags) > 0 {
-		for _, tag := range article.Tags {
-			article.Article.Tags += tag.Name + ","
-		}
-	}
-	if strings.TrimSpace(article.Article.SEODescription) == "" {
-		article.Article.SEODescription = article.Article.Description
-	}
-	if strings.TrimSpace(article.Article.SEOKeyword) == "" {
-		article.Article.SEOKeyword = article.Article.Tags
-	}
-	if dbArticle.AuthorID == 0 && article.Article.AuthorID == 0 {
-		article.Article.AuthorID = article.Article.CreatorID
-	}
-	// update article cover,description,content_table,content_id,tags, seo_title
-	err = db.Model(article.Article).Updates(&model.Article{
-		Description:    article.Article.Description,
-		Cover:          article.Article.Cover,
-		ContentTable:   article.Article.ContentTable,
-		ContentID:      article.Content.ID,
-		Tags:           article.Article.Tags,
-		CategoryID:     article.Article.CategoryID,
-		AuthorID:       article.Article.AuthorID,
-		SEOTitle:       article.Article.SEOTitle,
-		SEODescription: article.Article.SEODescription,
-		SEOKeyword:     article.Article.SEOKeyword,
-	}).Error
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *ArticleService) saveTags(db *gorm.DB, article *model.ArticlePublish) error {
-	// 1. 减去t_tag表中article_count的数量 (article_count - 1)
-	var rels []*model.RelTagArticle
-	db.Where("article_id = ?", article.Article.ID).Find(&rels)
-	if len(rels) > 0 {
-		var ids []int
-		for _, t := range rels {
-			ids = append(ids, t.TagID)
-		}
-		err := db.Model(&model.Tag{}).Where("id in (?)", ids).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1)).Error
-		if err != nil {
-			return err
-		}
-	}
-	// 2. 删除t_rel_tag_article 关联关系
-	db.Unscoped().Where("article_id = ?", article.Article.ID).Delete(&model.RelTagArticle{})
-	if len(article.Tags) == 0 {
-		return nil
-	}
-	// 3. 重新增加新的关联关系
-	var ids []int
-	for _, t := range article.Tags {
-		tag := s.TagService.GetByName(t.Name)
-		if tag.Name == "" {
-			t.ArticleCount = 0
-			// TODO 这里需要处理标签path重复问题
-			t.Path = s.findTitle(t.Name)
-			db.Create(t)
-			tag = t
-			s.TagService.PutPrefix(tag)
-		} else {
-			t.ID = tag.ID
-		}
-		ids = append(ids, t.ID)
-		rel := &model.RelTagArticle{}
-		rel.ArticleID = article.Article.ID
-		rel.TagID = t.ID
-		err := db.Create(rel).Error
-		if err != nil {
-			return err
-		}
-	}
-	// 4. t_tag表中article_count + 1
-	err := db.Model(&model.Tag{}).Where("id in (?)", ids).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1)).Error
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) error {
-	if article.Article.ID == 0 {
-		if s.shortIdGen == nil {
-			s.shortIdGen, _ = shortid.New(1, shortid.DefaultABC, 2342)
-		}
-		id, _ := s.shortIdGen.Generate()
-		article.Article.ShortID = id
+	isInsert := article.Article.ID == 0
+	var oldArticle *model.Article
+	if isInsert {
+		// 创建短ID
+		article.Article.ShortID, _ = s.shortIdGen.Generate()
 		article.Article.CreatorID = adminID
-		article.Article.EditorID = adminID
+	} else {
+		oldArticle = s.GetById(article.Article.ID)
+	}
+	updateMap := make(map[string]interface{})
+	// 0. 保存article
+	if isInsert {
 		s.ORM.DB.Save(article.Article)
 	} else {
-		s.ORM.DB.Model(article.Article).Updates(&model.Article{
-			Title:    article.Article.Title,
-			Status:   article.Article.Status,
-			EditorID: adminID,
-		})
+		updateMap["title"] = article.Article.Title
+		updateMap["seo_title"] = article.Article.SEOTitle
+		updateMap["seo_description"] = article.Article.SEODescription
+		updateMap["seo_keyword"] = article.Article.SEOKeyword
+		updateMap["category_id"] = article.Article.CategoryID
+		updateMap["description"] = article.Article.Description
+		updateMap["cover"] = article.Article.Cover
+		updateMap["status"] = article.Article.Status
+		updateMap["author"] = article.Article.AuthorID
+		updateMap["template"] = article.Article.Template
+		updateMap["visible"] = article.Article.Visible
+		updateMap["editor_id"] = adminID
 	}
-	tableName := s.contentTableName(article.Article.ID)
-	err := s.createContentTable(tableName)
-	if err != nil {
-		return err
+	// 1. 保存content
+	contentTable := s.ORM.ArticleContentTableName(article.Article.ID % s.ArticleSubTableCount)
+	// TODO 这里默认把markdown转成html
+	md := []byte(article.Content.Source)
+	article.Content.Html = string(markdown.ToHTML(md, nil, nil))
+	// 暂时这样处理 👆
+	if isInsert {
+		s.ORM.DB.Table(contentTable).Save(article.Content)
+		article.Article.ContentTable = contentTable
+		article.Article.ContentID = article.Content.ID
+		updateMap["content_id"] = article.Content.ID
+		updateMap["content_table"] = article.Article.ContentTable
+	} else {
+		contentUpdate := make(map[string]interface{})
+		contentUpdate["html"] = article.Content.Html
+		contentUpdate["source"] = article.Content.Source
+		s.ORM.DB.Table(oldArticle.ContentTable).Where("id = ?", oldArticle.ContentID).Updates(contentUpdate)
 	}
-	article.Article.ContentTable = tableName
-	return s.ORM.Tx(func(db *gorm.DB) error {
-		return s.saveArticle(db, article)
-	})
+	// 2. 保存tag和tag rel
+	// 如果不是新插入，则先删除原来的tag关联
+	// TODO 这里有性能问题，应该先对比新老标签，取出交集然后再更新和删除
+	if !isInsert {
+		tags := s.TagService.GetByArticleID(oldArticle.ID)
+		if len(tags) > 0 {
+			s.ORM.DB.Unscoped().Where("article_id = ?", oldArticle.ID).Delete(&model.RelTagArticle{})
+			var ids []int
+			for _, tag := range tags {
+				ids = append(ids, tag.ID)
+			}
+			s.ORM.DB.Model(&model.Tag{}).Where("id in (?)", ids).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1))
+		}
+	}
+	if len(article.Tags) > 0 {
+		var tagNames []string
+		for _, tag := range article.Tags {
+			s.saveTag(tag, 0)
+			s.ORM.DB.Model(&model.Tag{}).Where("id = ?", tag.ID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
+			s.ORM.DB.Save(&model.RelTagArticle{
+				TagID:     tag.ID,
+				ArticleID: article.Article.ID,
+			})
+			tagNames = append(tagNames, tag.Name)
+		}
+		updateMap["tags"] = strings.Join(tagNames, ",")
+	}
+	// 3. 保存category
+	if article.Article.CategoryID != 0 {
+		if oldArticle != nil && oldArticle.CategoryID != article.Article.CategoryID {
+			s.ORM.DB.Model(&model.Category{}).Where("id = ?", oldArticle.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1))
+		}
+		s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
+	}
+	// 4. 更新article
+	return s.ORM.DB.Model(&model.Article{}).Where("id = ?", article.Article.ID).Updates(updateMap).Error
 }
 
-func (s *ArticleService) Edit(article *model.ArticlePublish) error {
-	return nil
+func (s *ArticleService) saveTag(tag *model.Tag, index int) {
+	if tag.Path == "" {
+		pathAppend := ""
+		if index != 0 {
+			pathAppend = strconv.Itoa(index)
+		}
+		tag.Path = tag.Name + pathAppend
+	}
+	var db model.Tag
+	s.ORM.DB.Model(&model.Tag{}).Where("name = ?", tag.Name).First(&db)
+	if db.Name != "" {
+		tag.ID = db.ID
+		return
+	}
+	s.ORM.DB.Model(&model.Tag{}).Where("path = ?", tag.Path).First(&db)
+	if db.Name != "" {
+		s.saveTag(tag, index+1)
+		return
+	}
+	s.ORM.DB.Save(&tag)
 }
 
 func (s *ArticleService) GetById(id int) *model.Article {
 	var article model.Article
 	s.ORM.DB.Where("id = ?", id).Find(&article)
 	return &article
-}
-
-func (s *ArticleService) contentTableName(articleID int) string {
-	mod := int(articleID) % s.TableSize
-	return s.TablePrefix + "article_content_" + strconv.Itoa(mod)
-}
-
-func (s *ArticleService) createContentTable(tableName string) error {
-	if s.ORM.DB.HasTable(tableName) {
-		return nil
-	}
-	return s.ORM.DB.Table(tableName).CreateTable(&model.ArticleContent{}).Error
 }
 
 type ArticlePageQuery struct {
@@ -321,20 +240,6 @@ func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 		Where:    orm.Where(where, param...),
 		OrderBy:  "status desc, updated_at desc",
 	})
-	if len(article) > 0 {
-		for _, v := range article {
-			admin := s.AdminService.TrieGet(v.AuthorID)
-			if admin != nil {
-				v.AuthorName = admin.Nickname
-			}
-			category := s.CategoryService.TrieGet(v.CategoryID)
-			if category != nil {
-				v.CategoryName = category.Name
-			} else {
-				v.CategoryName = "未归类"
-			}
-		}
-	}
 	return result
 }
 

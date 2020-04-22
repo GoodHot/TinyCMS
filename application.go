@@ -38,7 +38,11 @@ func main() {
 		&model.Category{},
 		&model.Upload{},
 	}
-	BrainContext.Register(&orm.ORM{}).(*orm.ORM).AutoMigrate(tables...)
+	// 创建数据库表
+	err = BrainContext.Register(&orm.ORM{}).(*orm.ORM).AutoMigrate(&model.ArticleContent{}, tables...)
+	if err != nil {
+		panic(err)
+	}
 	// 启动controller
 	BrainContext.Register(&controller.Controller{})
 }

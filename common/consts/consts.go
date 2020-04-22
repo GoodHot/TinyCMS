@@ -8,6 +8,8 @@ const (
 
 	// http access token header name
 	httpAccessTokenName = "ACCESS-TOKEN"
+
+	shortIdDefaultABC = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
 )
 
 // 皮肤模板的配置json文件名
@@ -26,4 +28,8 @@ func ConfigSkinTemplate() string {
 
 func HttpAccessTokenName() string {
 	return httpAccessTokenName
+}
+
+func ShortIdDefaultABC() string {
+	return shortIdDefaultABC
 }

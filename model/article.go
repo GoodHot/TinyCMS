@@ -31,21 +31,22 @@ type Article struct {
 	Tags           string        `json:"tags"`          // article tags
 	AuthorID       int           `json:"author"`        // article author
 	Template       string        `json:"template"`      // 页面渲染模板
-	Visibility     uint          `json:"visibility"`    // 可见性 [1. public, 2. private]
+	Visible        uint          `json:"visible"`       // 可见性 [1. public, 2. private]
 	CreatorID      int           `json:"creator_id"`    // 创建人
 	EditorID       int           `json:"editor_id"`     // 修改人
-	AuthorName     string        `gorm:"-" json:"author_name"`
-	CategoryName   string        `gorm:"-" json:"category_name"`
 }
 
 func (s *Article) Link() string {
+	if s.SEOTitle == "" {
+		return strs.Fmt("/post/%v", s.ID)
+	}
 	return strs.Fmt("/post/%v/%s", s.ID, s.SEOTitle)
 }
 
 type ArticleContent struct {
 	orm.Model
-	Markdown string `gorm:"type:text" json:"markdown"`
-	Html     string `gorm:"type:text" json:"html"`
+	Source string `gorm:"type:text" json:"source"`
+	Html   string `gorm:"type:text" json:"html"`
 }
 
 type Tag struct {
@@ -65,10 +66,10 @@ type RelTagArticle struct {
 }
 
 type ArticlePublish struct {
-	Article        *Article
-	Tags           []*Tag
-	Content        *ArticleContent
-	GetCover       bool `json:"get_cover"`
-	GetNetImage    bool `json:"get_net_image"`
-	GetDescription bool `json:"get_description"`
+	Article        *Article        `json:"article"`
+	Tags           []*Tag          `json:"tags"`
+	Content        *ArticleContent `json:"content"`
+	GetCover       bool            `json:"get_cover"`
+	GetNetImage    bool            `json:"get_net_image"`
+	GetDescription bool            `json:"get_description"`
 }
