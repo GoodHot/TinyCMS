@@ -8,9 +8,11 @@ import (
 	"github.com/GoodHot/TinyCMS/common/files"
 	"github.com/GoodHot/TinyCMS/common/render"
 	"github.com/GoodHot/TinyCMS/common/strs"
+	"github.com/GoodHot/TinyCMS/common/times"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/labstack/echo/v4"
+	"html/template"
 	"io"
 	"io/ioutil"
 	"time"
@@ -159,7 +161,15 @@ func (s *SkinService) initHTMLRender() error {
 		Suffix:       ".html",
 		Compress:     s.ServerHTMLCompress,
 	}
-	return s.htmlRender.Init(nil)
+	funcMap := template.FuncMap{
+		"noescape": func(s string) template.HTML {
+			return template.HTML(s)
+		},
+		"timeFmt": func(t time.Time) string {
+			return times.TimeFmt(t, "2006-01-02 15:04")
+		},
+	}
+	return s.htmlRender.Init(funcMap)
 }
 
 func (s *SkinService) SwitchSkin(id int) error {

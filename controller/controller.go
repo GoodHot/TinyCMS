@@ -54,8 +54,8 @@ func (s *Controller) registerWeb(group *echo.Group) {
 		Log:          s.Log,
 	}
 	router.GET("/", s.IndexCtrl.Index)
-	//echo.GET("/", buildHandlerFunc(s.IndexCtrl.Index, s.AdminService))
-	//echo.GET("/post/:id/:title", buildHandlerFunc(s.IndexCtrl.Post, s.AdminService))
+	router.GET("/post/:shortId", s.IndexCtrl.Post)
+	router.GET("/post/:shortId/:title", s.IndexCtrl.Post)
 }
 
 func (s *Controller) registerAdmin(group *echo.Group) {
@@ -79,6 +79,8 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	// 配置controller
 	// admin
 	router.POST("/auth/login", s.AdminAuthCtrl.Login)
+	// 临时使用
+	router.GET("/auth/init", s.AdminAuthCtrl.InitAdmin)
 
 	// admin
 	router.GET("/admin/all", s.AdminAuthCtrl.All)
@@ -116,7 +118,7 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 }
 
 func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFunc {
-	whiteList := []string{"/auth/login"}
+	whiteList := []string{"/auth/login", "/auth/init"}
 	return func(c echo.Context) error {
 		url := c.Request().URL.String()
 		for _, v := range whiteList {

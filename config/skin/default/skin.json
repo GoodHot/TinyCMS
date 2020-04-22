@@ -11,7 +11,7 @@
       "description": "这是一个首页"
     },
     {
-      "page": "article.html",
+      "page": "post.html",
       "name": "文章页面",
       "description": "文章内容页面"
     },

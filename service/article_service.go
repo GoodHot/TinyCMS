@@ -195,12 +195,20 @@ func (s *ArticleService) GetById(id int) *model.Article {
 	return &article
 }
 
+func (s *ArticleService) GetByShortId(shortiD string) *model.Article {
+	var article model.Article
+	s.ORM.DB.Where("short_id = ?", shortiD).Find(&article)
+	return &article
+}
+
 type ArticlePageQuery struct {
 	Type       int
 	CategoryID int
 	Keyword    string
 	TagID      int
 	UserID     int
+	Status     int
+	Visible    int
 }
 
 func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
@@ -231,6 +239,14 @@ func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 		articleIDs := s.TagService.getArticleIDs(query.TagID)
 		where += " and id in (?)"
 		param = append(param, articleIDs)
+	}
+	if query.Status != 0 {
+		where += " and status = ?"
+		param = append(param, query.Status)
+	}
+	if query.Visible != 0 {
+		where += " and visible = ?"
+		param = append(param, query.Visible)
 	}
 	var article []*model.Article
 	result := s.ORM.Page(orm.ORMPage{

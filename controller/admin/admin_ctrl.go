@@ -3,6 +3,7 @@ package admin
 import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common/ctrl"
+	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
 )
 
@@ -35,6 +36,15 @@ func (s *AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
 
 func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
 	ctx.Put("admins", s.AdminService.All(ctx.Admin.ID))
+	return ctx.ResultOK()
+}
+
+func (s *AdminAuthCtrl) InitAdmin(ctx *ctrl.HTTPContext) error {
+	s.AdminService.Save(&model.Admin{
+		Nickname: "admin",
+		Username: "admin",
+		Password: "admin",
+	})
 	return ctx.ResultOK()
 }
 

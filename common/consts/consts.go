@@ -19,7 +19,7 @@ func SkinTemplateJsonName() string {
 
 // 皮肤模板最少包含的文件
 func SkinTemplateContainPage() []string {
-	return []string{"index.html", "article.html"}
+	return []string{"index.html", "post.html"}
 }
 
 func ConfigSkinTemplate() string {

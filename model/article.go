@@ -38,9 +38,9 @@ type Article struct {
 
 func (s *Article) Link() string {
 	if s.SEOTitle == "" {
-		return strs.Fmt("/post/%v", s.ID)
+		return strs.Fmt("/post/%s", s.ShortID)
 	}
-	return strs.Fmt("/post/%v/%s", s.ID, s.SEOTitle)
+	return strs.Fmt("/post/%v/%s", s.ShortID, s.SEOTitle)
 }
 
 type ArticleContent struct {

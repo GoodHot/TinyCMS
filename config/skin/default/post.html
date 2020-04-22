@@ -1,0 +1,9 @@
+<main>
+    <article>
+        <div class="title">
+            <h1>{{.article.Title}}</h1>
+            <time datetime="{{.article.CreatedAt}}">{{timeFmt .article.CreatedAt}}</time>
+        </div>
+        {{noescape .content.Html}}
+    </article>
+</main>
