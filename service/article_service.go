@@ -157,10 +157,14 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 		updateMap["tags"] = strings.Join(tagNames, ",")
 	}
 	// 3. 保存category
-	if article.Article.CategoryID != oldArticle.CategoryID {
+	if  oldArticle != nil && article.Article.CategoryID != oldArticle.CategoryID {
 		if oldArticle.CategoryID != 0 {
 			s.ORM.DB.Model(&model.Category{}).Where("id = ?", oldArticle.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1))
 		}
+		if article.Article.CategoryID != 0 {
+			s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
+		}
+	} else {
 		if article.Article.CategoryID != 0 {
 			s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
 		}

@@ -60,6 +60,10 @@ type Tag struct {
 	ArticleCount    int    `json:"article_count"`
 }
 
+func (s *Tag) Link() string {
+	return "/tag/" + s.Path
+}
+
 type RelTagArticle struct {
 	TagID     int
 	ArticleID int

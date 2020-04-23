@@ -147,3 +147,9 @@ func (s *TagService) Save(tag *model.Tag) error {
 	return s.ORM.DB.Model(&model.Tag{}).Where("id = ?", tag.ID).Updates(update).Error
 }
 
+func (s *TagService) All() []*model.Tag {
+	var tags []*model.Tag
+	s.ORM.DB.Find(&tags)
+	return tags
+}
+

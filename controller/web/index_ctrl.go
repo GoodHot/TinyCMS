@@ -8,6 +8,7 @@ import (
 
 type IndexCtrl struct {
 	ArticleService *service.ArticleService `ioc:"auto"`
+	TagService     *service.TagService     `ioc:"auto"`
 }
 
 func (s *IndexCtrl) Index(ctx *ctrl.HTTPContext) error {
@@ -26,4 +27,21 @@ func (s *IndexCtrl) Post(ctx *ctrl.HTTPContext) error {
 	ctx.Put("article", article)
 	ctx.Put("content", content)
 	return ctx.HTML("post")
+}
+
+func (s *IndexCtrl) Tags(ctx *ctrl.HTTPContext) error {
+	tags := s.TagService.All()
+	ctx.Put("tags", tags)
+	return ctx.HTML("tags")
+}
+
+func (s *IndexCtrl) Tag(ctx *ctrl.HTTPContext) error {
+	name := ctx.Param("tag")
+	tag := s.TagService.GetByName(name)
+	page := s.ArticleService.Page(1, &service.ArticlePageQuery{
+		TagID: tag.ID,
+	})
+	ctx.Put("page", page)
+	ctx.Put("tag", tag)
+	return ctx.HTML("tag")
 }

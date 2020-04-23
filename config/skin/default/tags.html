@@ -1,0 +1,12 @@
+<main>
+    {{range $i, $tag := .tags}}
+    <section class="list-item">
+        <h1 class="title"><a href="{{$tag.Link}}">{{$tag.Name}}</a></h1>
+        <span class="sub-title">Post Count: {{$tag.ArticleCount}}</span>
+        <div class="description">
+            {{$tag.Description}}
+        </div>
+        <a href="{{$tag.Link}}">see all ⟶</a>
+    </section>
+    {{end}}
+</main>

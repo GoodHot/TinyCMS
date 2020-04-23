@@ -165,7 +165,7 @@ footer {
     margin-bottom: 0;
 }
 
-time {
+time,.sub-title {
     color: #757575;
 }
 
@@ -309,4 +309,8 @@ article .title {
 /* Table of contents */
 .tableofcontents a {
     border: none;
+}
+
+.mr-1 {
+    margin-right: 10px;
 }
