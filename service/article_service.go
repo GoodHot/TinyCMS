@@ -15,7 +15,7 @@ import (
 
 type ArticleService struct {
 	CategoryService      *CategoryService `ioc:"auto"`
-	AdminService         *AdminService    `ioc:"auto"`
+	AdminService         *UserService     `ioc:"auto"`
 	TagService           *TagService      `ioc:"auto"`
 	ORM                  *orm.ORM         `ioc:"auto"`
 	PageSize             int              `val:"${website.page_size}"`
@@ -157,11 +157,13 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 		updateMap["tags"] = strings.Join(tagNames, ",")
 	}
 	// 3. 保存category
-	if article.Article.CategoryID != 0 {
-		if oldArticle != nil && oldArticle.CategoryID != article.Article.CategoryID {
+	if article.Article.CategoryID != oldArticle.CategoryID {
+		if oldArticle.CategoryID != 0 {
 			s.ORM.DB.Model(&model.Category{}).Where("id = ?", oldArticle.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1))
 		}
-		s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
+		if article.Article.CategoryID != 0 {
+			s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
+		}
 	}
 	// 4. 更新article
 	return s.ORM.DB.Model(&model.Article{}).Where("id = ?", article.Article.ID).Updates(updateMap).Error

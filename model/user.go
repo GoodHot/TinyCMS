@@ -5,17 +5,23 @@ import (
 	"time"
 )
 
-type Admin struct {
+type User struct {
 	orm.Model
 	Nickname string `gorm:"type:varchar(60)" json:"nickname"`
 	Username string `gorm:"type:varchar(60);unique_index" json:"username"`
 	Password string `gorm:"type:varchar(60);not null" json:"-"`
+	Role     int    `json:"role"`
 }
 
-type AdminResult struct {
-	*Admin
+type UserResult struct {
+	*User
 	Token     string     `json:"token"`
 	CreatedAt *time.Time `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`
 	DeletedAt *time.Time `json:"deleted_at"`
+}
+
+type Role struct {
+	orm.Model
+	Name string `gorm:"type:varchar(60)" json:"name"`
 }

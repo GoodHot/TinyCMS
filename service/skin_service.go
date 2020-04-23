@@ -149,7 +149,10 @@ func (s *SkinService) GetActive() *model.Skin {
 	return skin
 }
 
-func (s *SkinService) List() {
+func (s *SkinService) List() []*model.Skin {
+	var skins []*model.Skin
+	s.ORM.DB.Find(&skins)
+	return skins
 }
 
 func (s *SkinService) initHTMLRender() error {
@@ -167,6 +170,14 @@ func (s *SkinService) initHTMLRender() error {
 		},
 		"timeFmt": func(t time.Time) string {
 			return times.TimeFmt(t, "2006-01-02 15:04")
+		},
+		"cfg": func(key string) string {
+			cfg := s.ConfigService.GetByKey(key)
+			return cfg.Value
+		},
+		"seo": func(key string) string {
+			cfg := s.ConfigService.GetByKey(key)
+			return cfg.Value
 		},
 	}
 	return s.htmlRender.Init(funcMap)

@@ -20,7 +20,7 @@ type HTTPResult struct {
 type HTTPContext struct {
 	Context echo.Context // echo上下文
 	Result  *HTTPResult
-	Admin   *model.Admin
+	User    *model.User
 }
 
 func (s *HTTPContext) FormFile(name string) (*multipart.FileHeader, error) {
@@ -113,7 +113,7 @@ func (s *HTTPContext) ResultErrMsg(msg string) error {
 }
 
 func (s *HTTPContext) ResultErr(err error) error {
-	return s.ResultOKMsg(err.Error())
+	return s.ResultErrMsg(err.Error())
 }
 
 func (s *HTTPContext) ResultErrStatus(status int, msg string) error {

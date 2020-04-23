@@ -20,8 +20,9 @@ type Controller struct {
 	AdminTagCtrl      *admin.AdminTagCtrl      `ioc:"auto"`
 	AdminSkinCtrl     *admin.AdminSkinCtrl     `ioc:"auto"`
 	AdminUploadCtrl   *admin.AdminUploadCtrl   `ioc:"auto"`
+	AdminConfigCtrl   *admin.AdminConfigCtrl   `ioc:"auto"`
 	IndexCtrl         *web.IndexCtrl           `ioc:"auto"`
-	AdminService      *service.AdminService    `ioc:"auto"`
+	AdminService      *service.UserService     `ioc:"auto"`
 	SkinService       *service.SkinService     `ioc:"auto"`
 	ServerStatic      string                   `val:"${server.static}"`       // 静态文件夹
 	ServerPort        int                      `val:"${server.port}"`         // 服务启动端口
@@ -82,8 +83,8 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	// 临时使用
 	router.GET("/auth/init", s.AdminAuthCtrl.InitAdmin)
 
-	// admin
-	router.GET("/admin/all", s.AdminAuthCtrl.All)
+	// user
+	router.GET("/user/all", s.AdminAuthCtrl.All)
 
 	// article
 	router.POST("/article", s.AdminArticleCtrl.Publish)
@@ -115,6 +116,10 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	// upload
 	router.POST("/upload", s.AdminUploadCtrl.Upload)
 	router.POST("/upload/markdown", s.AdminUploadCtrl.MarkdownUpload)
+
+	// config
+	router.GET("/config/list/:group", s.AdminConfigCtrl.ListByGroup)
+	router.PUT("/config", s.AdminConfigCtrl.Update)
 }
 
 func (s *Controller) adminAuthInterceptor(next echo.HandlerFunc) echo.HandlerFunc {

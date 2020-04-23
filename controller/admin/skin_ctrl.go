@@ -10,6 +10,8 @@ type AdminSkinCtrl struct {
 }
 
 func (s *AdminSkinCtrl) List(ctx *ctrl.HTTPContext) error {
+	skins := s.SkinService.List()
+	ctx.Put("skins", skins)
 	return ctx.ResultOK()
 }
 

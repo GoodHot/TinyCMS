@@ -1,14 +1,13 @@
 package admin
 
 import (
-	"fmt"
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
 )
 
 type AdminAuthCtrl struct {
-	AdminService *service.AdminService `ioc:"auto"`
+	UserService *service.UserService `ioc:"auto"`
 }
 
 type userForm struct {
@@ -21,26 +20,25 @@ func (s *AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
 	if err := ctx.Bind(u); err != nil {
 		return ctx.ResultErr(err)
 	}
-	fmt.Println(s.AdminService.EncrptyPwd("admin"))
-	admin := s.AdminService.GetByUsername(u.Username)
+	admin := s.UserService.GetByUsername(u.Username)
 	if admin == nil {
 		return ctx.ResultErrMsg("admin not exists")
 	}
-	if !s.AdminService.AssertPwd(u.Password, admin.Password) {
+	if !s.UserService.AssertPwd(u.Password, admin.Password) {
 		return ctx.ResultErrMsg("wrong password")
 	}
-	result := s.AdminService.GenToken(admin)
+	result := s.UserService.GenToken(admin)
 	ctx.Put("info", result)
 	return ctx.ResultOK()
 }
 
 func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
-	ctx.Put("admins", s.AdminService.All(ctx.Admin.ID))
+	ctx.Put("users", s.UserService.All(ctx.User.ID))
 	return ctx.ResultOK()
 }
 
 func (s *AdminAuthCtrl) InitAdmin(ctx *ctrl.HTTPContext) error {
-	s.AdminService.Save(&model.Admin{
+	s.UserService.Save(&model.User{
 		Nickname: "admin",
 		Username: "admin",
 		Password: "admin",
@@ -50,7 +48,7 @@ func (s *AdminAuthCtrl) InitAdmin(ctx *ctrl.HTTPContext) error {
 
 //func (s *AdminAuthCtrl) Info(ctx *ctrl.HTTPContext) error {
 //	token := ctx.Context.Request().Header.Get("ACCESS-TOKEN")
-//	admin, err := s.AdminService.CheckToken(token)
+//	admin, err := s.UserService.CheckToken(token)
 //	if err != nil || admin == nil {
 //		return ctx.ResultErrStatus(http.StatusUnauthorized, "please login")
 //	}
@@ -59,13 +57,13 @@ func (s *AdminAuthCtrl) InitAdmin(ctx *ctrl.HTTPContext) error {
 //}
 //
 //func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
-//	ctx.Put("admins", s.AdminService.All(ctx.Admin.ID))
+//	ctx.Put("admins", s.UserService.All(ctx.Admin.ID))
 //	return ctx.ResultOK()
 //}
 //
 //func (s *AdminAuthCtrl) Get(ctx *ctrl.HTTPContext) error {
 //	id := ctx.ParamInt("id")
-//	ctx.Put("admin", s.AdminService.Get(id))
+//	ctx.Put("admin", s.UserService.Get(id))
 //	return ctx.ResultOK()
 //}
 //
@@ -74,7 +72,7 @@ func (s *AdminAuthCtrl) InitAdmin(ctx *ctrl.HTTPContext) error {
 //	if uint(id) == ctx.Admin.ID {
 //		return ctx.ResultErr("不允许删除自己")
 //	}
-//	if err := s.AdminService.Delete(id); err != nil {
+//	if err := s.UserService.Delete(id); err != nil {
 //		return ctx.ResultErr(err.Error())
 //	}
 //	return ctx.ResultOK()
@@ -106,7 +104,7 @@ func (s *AdminAuthCtrl) InitAdmin(ctx *ctrl.HTTPContext) error {
 //		Avatar:   form.Avatar,
 //		RoleID:   form.RoleID,
 //	}
-//	if err := s.AdminService.Save(admin); err != nil {
+//	if err := s.UserService.Save(admin); err != nil {
 //		return ctx.ResultErr(err.Error())
 //	}
 //	return ctx.ResultOK()

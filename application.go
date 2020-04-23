@@ -29,7 +29,8 @@ func main() {
 	BrainContext.SetLogger(&logger.TinyLogger{})
 	// 创建ORM和数据库表
 	tables := []interface{}{
-		&model.Admin{},
+		&model.User{},
+		&model.Role{},
 		&model.Skin{},
 		&model.Config{},
 		&model.Article{},

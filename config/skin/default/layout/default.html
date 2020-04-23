@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="generator" content="Hugo 0.68.3"/>
-    <title>website_name</title>
-    <meta name="description" content="Jesse Li&#39;s blog">
+    <title>{{cfg "website_name"}}</title>
     <meta charset="utf-8">
+    <meta name="description" content="{{seo "seo_description"}}">
+    <meta name="keyword" content="{{seo "seo_keyword"}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/static/assets/css/style.css" rel="stylesheet">
 </head>
@@ -13,7 +13,7 @@
 <div class="content">
     <header>
         <div class="logo">
-            <a href="/">website_name</a>
+            <a href="/">{{cfg "website_name"}}</a>
         </div>
         <nav>
             <a href="/tags">tags</a>

@@ -45,7 +45,7 @@ func (s *AdminArticleCtrl) Publish(ctx *ctrl.HTTPContext) error {
 	if publish.Article.Title == "" {
 		publish.Article.Title = "untitled"
 	}
-	if err := s.ArticleService.Publish(publish, ctx.Admin.ID); err != nil {
+	if err := s.ArticleService.Publish(publish, ctx.User.ID); err != nil {
 		return ctx.ResultErr(err)
 	}
 	ctx.Put("article", publish)

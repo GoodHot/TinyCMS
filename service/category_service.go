@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+	"github.com/GoodHot/TinyCMS/common/strs"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/importcjj/trie-go"
@@ -23,6 +25,13 @@ func (s *CategoryService) Get(id int) (*model.Category, error) {
 }
 
 func (s *CategoryService) Save(category *model.Category) error {
+	// 分类名称允许重复
+	//if len(s.GetByName(category.Name)) > 0 {
+	//	return errors.New(strs.Fmt("分类[%s]已存在", category.Name))
+	//}
+	if len(s.GetByPath(category.Path)) > 0 {
+		return errors.New(strs.Fmt("路径[%s]已存在", category.Path))
+	}
 	return s.ORM.DB.Save(category).Error
 }
 

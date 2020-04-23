@@ -15,7 +15,7 @@ type RouterRegister struct {
 	Group        *echo.Group
 	Prefix       string
 	BuildOption  bool
-	AdminService *service.AdminService
+	AdminService *service.UserService
 }
 
 func (s *RouterRegister) OPTIONS(path string) {
@@ -68,9 +68,9 @@ func (s *RouterRegister) buildHandlerFunc(fn RouterFunc) echo.HandlerFunc {
 		ctx.Result = &ctrl.HTTPResult{Data: make(map[string]interface{})}
 		token := e.Request().Header.Get("ACCESS-TOKEN")
 		if token != "" {
-			admin, _ := s.AdminService.CheckToken(token)
-			if admin != nil {
-				ctx.Admin = admin.Admin
+			user, _ := s.AdminService.CheckToken(token)
+			if user != nil {
+				ctx.User = user.User
 			}
 		}
 		return fn(ctx)
