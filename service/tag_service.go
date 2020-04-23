@@ -6,6 +6,7 @@ import (
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/armon/go-radix"
+	"github.com/jinzhu/gorm"
 	"strings"
 )
 
@@ -151,5 +152,23 @@ func (s *TagService) All() []*model.Tag {
 	var tags []*model.Tag
 	s.ORM.DB.Find(&tags)
 	return tags
+}
+
+func (s *TagService) Delete(ids []int) error {
+	return s.ORM.Tx(func(db *gorm.DB) error {
+		for _, id := range ids {
+			// 删除分类
+			err := s.ORM.DB.Delete(&model.Tag{}, "id = ?", id).Error
+			if err != nil {
+				return err
+			}
+			// 删除文章关系关联
+			err = s.ORM.DB.Unscoped().Delete(&model.RelTagArticle{}, "tag_id = ?", id).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 

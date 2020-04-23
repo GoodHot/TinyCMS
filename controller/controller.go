@@ -102,6 +102,8 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	router.GET("/category/page_:page", s.AdminCategoryCtrl.Page)
 	router.GET("/category/name/:name", s.AdminCategoryCtrl.GetByName)
 	router.GET("/category/path/:path", s.AdminCategoryCtrl.GetByPath)
+	router.GET("/category/path/:path", s.AdminCategoryCtrl.GetByPath)
+	router.DELETE("/category", s.AdminCategoryCtrl.Delete)
 	router.POST("/category/sort", s.AdminCategoryCtrl.Sort)
 
 	// tag
@@ -110,6 +112,7 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 	router.GET("/tag/search/:prefix", s.AdminTagCtrl.Search)
 	router.GET("/tag/hot", s.AdminTagCtrl.HotTag)
 	router.GET("/tag/page_:page", s.AdminTagCtrl.Page)
+	router.DELETE("/tag", s.AdminTagCtrl.Delete)
 
 	// skin
 	router.GET("/skins", s.AdminSkinCtrl.List)

@@ -67,3 +67,18 @@ func (s *AdminCategoryCtrl) Sort(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+type CategoryDeleteFrom struct {
+	CategoryIds []int `json:"category_ids"`
+}
+
+func (s *AdminCategoryCtrl) Delete(ctx *ctrl.HTTPContext) error {
+	ids := new(CategoryDeleteFrom)
+	if err := ctx.Bind(ids); err != nil {
+		return ctx.ResultErr(err)
+	}
+	if err := s.CategoryService.Delete(ids.CategoryIds); err != nil {
+		return ctx.ResultErr(err)
+	}
+	return ctx.ResultOK()
+}
+

@@ -148,3 +148,21 @@ func (s *CategoryService) GetByPath(path string) []*model.Category {
 	s.ORM.DB.Where("path = ?", path).Find(&categorys)
 	return categorys
 }
+
+func (s *CategoryService) Delete(ids []int) error {
+	return s.ORM.Tx(func(db *gorm.DB) error {
+		for _, id := range ids {
+			// 删除分类
+			err := s.ORM.DB.Delete(&model.Category{}, "id = ?", id).Error
+			if err != nil {
+				return err
+			}
+			// 删除文章关联
+			err = s.ORM.DB.Model(&model.Article{}).Where("category_id = ?", id).Update("category_id", 0).Error
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}

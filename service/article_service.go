@@ -272,7 +272,7 @@ func (s *ArticleService) Delete(ids []int) error {
 			if article == nil || article.ID == 0 {
 				continue
 			}
-			err := db.Where("id = ?", id).Delete(&model.Article{}).Error
+			err := db.Delete(&model.Article{}, "id = ?", id).Error
 			if err != nil {
 				return err
 			}
@@ -285,9 +285,11 @@ func (s *ArticleService) Delete(ids []int) error {
 					}
 				}
 			}
-			err = db.Table(article.ContentTable).Where("id = ?", article.ContentID).Delete(&model.ArticleContent{}).Error
-			if err != nil {
-				return err
+			if article.ContentTable != "" {
+				err = db.Table(article.ContentTable).Where("id = ?", article.ContentID).Delete(&model.ArticleContent{}).Error
+				if err != nil {
+					return err
+				}
 			}
 			err = db.Unscoped().Where("article_id = ?", id).Delete(&model.RelTagArticle{}).Error
 			if err != nil {

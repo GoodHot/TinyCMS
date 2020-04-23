@@ -30,6 +30,21 @@ func (s *AdminTagCtrl) Page(ctx *ctrl.HTTPContext) error {
 	return ctx.ResultOK()
 }
 
+type TagDeleteFrom struct {
+	TagIds []int `json:"tag_ids"`
+}
+
+func (s *AdminTagCtrl) Delete(ctx *ctrl.HTTPContext) error {
+	ids := new(TagDeleteFrom)
+	if err := ctx.Bind(ids); err != nil {
+		return ctx.ResultErr(err)
+	}
+	if err := s.TagService.Delete(ids.TagIds); err != nil {
+		return ctx.ResultErr(err)
+	}
+	return ctx.ResultOK()
+}
+
 func (s *AdminTagCtrl) Get(ctx *ctrl.HTTPContext) error {
 	id := ctx.ParamInt("id")
 	tag, err := s.TagService.Get(id)
