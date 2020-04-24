@@ -59,6 +59,10 @@ func (s *Controller) registerWeb(group *echo.Group) {
 	router.GET("/post/:shortId/:title", s.IndexCtrl.Post)
 	router.GET("/tags", s.IndexCtrl.Tags)
 	router.GET("/tag/:tag", s.IndexCtrl.Tag)
+	router.GET("/authors", s.IndexCtrl.Authors)
+	router.GET("/author/:username", s.IndexCtrl.Author)
+	router.GET("/categorys", s.IndexCtrl.Categorys)
+	router.GET("/category/:path", s.IndexCtrl.Category)
 }
 
 func (s *Controller) registerAdmin(group *echo.Group) {

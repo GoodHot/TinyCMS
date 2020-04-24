@@ -11,7 +11,12 @@ type User struct {
 	Username string `gorm:"type:varchar(60);unique_index" json:"username"`
 	Password string `gorm:"type:varchar(60);not null" json:"-"`
 	Avatar   string `json:"avatar"` // 头像
+	Visible  bool   `json:"visible"`
 	Role     int    `json:"role"`
+}
+
+func (s *User) Link() string {
+	return "/author/" + s.Username
 }
 
 type UserResult struct {

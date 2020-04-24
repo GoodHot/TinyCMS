@@ -106,7 +106,7 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 		updateMap["description"] = article.Article.Description
 		updateMap["cover"] = article.Article.Cover
 		updateMap["status"] = article.Article.Status
-		updateMap["author"] = article.Article.AuthorID
+		updateMap["author_id"] = article.Article.AuthorID
 		updateMap["template"] = article.Article.Template
 		updateMap["visible"] = article.Article.Visible
 		updateMap["editor_id"] = adminID

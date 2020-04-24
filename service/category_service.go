@@ -29,7 +29,7 @@ func (s *CategoryService) Save(category *model.Category) error {
 	//if len(s.GetByName(category.Name)) > 0 {
 	//	return errors.New(strs.Fmt("分类[%s]已存在", category.Name))
 	//}
-	if len(s.GetByPath(category.Path)) > 0 {
+	if s.GetByPath(category.Path).Name != "" {
 		return errors.New(strs.Fmt("路径[%s]已存在", category.Path))
 	}
 	return s.ORM.DB.Save(category).Error
@@ -143,10 +143,10 @@ func (s *CategoryService) GetByName(name string) []*model.Category {
 	return categorys
 }
 
-func (s *CategoryService) GetByPath(path string) []*model.Category {
-	var categorys []*model.Category
-	s.ORM.DB.Where("path = ?", path).Find(&categorys)
-	return categorys
+func (s *CategoryService) GetByPath(path string) *model.Category {
+	var categorys model.Category
+	s.ORM.DB.Where("path = ?", path).First(&categorys)
+	return &categorys
 }
 
 func (s *CategoryService) Delete(ids []int) error {

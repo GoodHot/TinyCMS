@@ -29,7 +29,7 @@ type Article struct {
 	Status         ArticleStatus `json:"status"`        // status
 	Views          int           `json:"views"`         // page view count
 	Tags           string        `json:"tags"`          // article tags
-	AuthorID       int           `json:"author"`        // article author
+	AuthorID       int           `json:"author_id"`        // article author
 	Template       string        `json:"template"`      // 页面渲染模板
 	Visible        uint          `json:"visible"`       // 可见性 [1. public, 2. private]
 	CreatorID      int           `json:"creator_id"`    // 创建人

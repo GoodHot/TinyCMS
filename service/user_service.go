@@ -116,6 +116,7 @@ func (s *UserService) Save(user *model.User) error {
 	update["nickname"] = user.Nickname
 	update["username"] = user.Username
 	update["avatar"] = user.Avatar
+	update["visible"] = user.Visible
 	return s.ORM.DB.Model(&model.User{}).Where("id = ?", user.ID).UpdateColumns(update).Error
 }
 
@@ -133,4 +134,10 @@ func (s *UserService) UpdatePwd(id int, pwd string) error {
 		return errors.New("密码不能为空")
 	}
 	return s.ORM.DB.Model(&model.User{}).Where("id = ?", id).Update("password", s.EncrptyPwd(pwd)).Error
+}
+
+func (s *UserService) VisibleUser() []*model.User {
+	var result []*model.User
+	s.ORM.DB.Where("visible = ?", true).Find(&result)
+	return result
 }

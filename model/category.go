@@ -16,3 +16,7 @@ type Category struct {
 	ArticleCount int         `json:"article_count"`
 	Children     interface{} `gorm:"-" json:"children"`
 }
+
+func (s *Category) Link() string {
+	return "/category/" + s.Path
+}

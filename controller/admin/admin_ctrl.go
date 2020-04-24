@@ -56,6 +56,7 @@ func (s *AdminAuthCtrl) Save(ctx *ctrl.HTTPContext) error {
 		Username: form.Username,
 		Password: form.Password,
 		Avatar:   form.Avatar,
+		Visible:  form.Visible,
 		Role:     0,
 	}
 	if err := s.UserService.Save(user); err != nil {

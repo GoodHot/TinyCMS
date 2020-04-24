@@ -179,6 +179,12 @@ func (s *SkinService) initHTMLRender() error {
 			cfg := s.ConfigService.GetByKey(key)
 			return cfg.Value
 		},
+		"assetsURL": func(src string) string {
+			if src == "" {
+				return ""
+			}
+			return src
+		},
 	}
 	return s.htmlRender.Init(funcMap)
 }

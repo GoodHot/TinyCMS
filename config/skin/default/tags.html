@@ -1,7 +1,8 @@
+<h1>Tags</h1>
 <main>
     {{range $i, $tag := .tags}}
     <section class="list-item">
-        <h1 class="title"><a href="{{$tag.Link}}">{{$tag.Name}}</a></h1>
+        <h2 class="title"><a href="{{$tag.Link}}">{{$tag.Name}}</a></h2>
         <span class="sub-title">Post Count: {{$tag.ArticleCount}}</span>
         <div class="description">
             {{$tag.Description}}

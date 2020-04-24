@@ -7,8 +7,10 @@ import (
 )
 
 type IndexCtrl struct {
-	ArticleService *service.ArticleService `ioc:"auto"`
-	TagService     *service.TagService     `ioc:"auto"`
+	ArticleService  *service.ArticleService  `ioc:"auto"`
+	TagService      *service.TagService      `ioc:"auto"`
+	UserService     *service.UserService     `ioc:"auto"`
+	CategoryService *service.CategoryService `ioc:"auto"`
 }
 
 func (s *IndexCtrl) Index(ctx *ctrl.HTTPContext) error {
@@ -44,4 +46,36 @@ func (s *IndexCtrl) Tag(ctx *ctrl.HTTPContext) error {
 	ctx.Put("page", page)
 	ctx.Put("tag", tag)
 	return ctx.HTML("tag")
+}
+
+func (s *IndexCtrl) Authors(ctx *ctrl.HTTPContext) error {
+	ctx.Put("users", s.UserService.VisibleUser())
+	return ctx.HTML("authors")
+}
+
+func (s *IndexCtrl) Author(ctx *ctrl.HTTPContext) error {
+	username := ctx.Param("username")
+	user := s.UserService.GetByUsername(username)
+	page := s.ArticleService.Page(1, &service.ArticlePageQuery{
+		UserID: user.ID,
+	})
+	ctx.Put("user", user)
+	ctx.Put("page", page)
+	return ctx.HTML("author")
+}
+
+func (s *IndexCtrl) Categorys(ctx *ctrl.HTTPContext) error {
+	ctx.Put("categorys", s.CategoryService.Tree())
+	return ctx.HTML("categorys")
+}
+
+func (s *IndexCtrl) Category(ctx *ctrl.HTTPContext) error {
+	path := ctx.Param("path")
+	category := s.CategoryService.GetByPath(path)
+	page := s.ArticleService.Page(1, &service.ArticlePageQuery{
+		CategoryID: category.ID,
+	})
+	ctx.Put("category", category)
+	ctx.Put("page", page)
+	return ctx.HTML("category")
 }
