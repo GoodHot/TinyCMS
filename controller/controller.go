@@ -87,6 +87,9 @@ func (s *Controller) registerAdmin(group *echo.Group) {
 
 	// user
 	router.GET("/user/all", s.AdminAuthCtrl.All)
+	router.GET("/user/:id", s.AdminAuthCtrl.Get)
+	router.PUT("/user/password/:id", s.AdminAuthCtrl.Password)
+	router.POST("/user", s.AdminAuthCtrl.Save)
 
 	// article
 	router.POST("/article", s.AdminArticleCtrl.Publish)

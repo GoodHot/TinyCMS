@@ -104,6 +104,33 @@ func (s *UserService) Save(user *model.User) error {
 	if exists.ID != 0 {
 		return errors.New(strs.Fmt("用户名'%s'已存在", user.Username))
 	}
-	user.Password = s.EncrptyPwd(user.Password)
-	return s.ORM.DB.Save(user).Error
+	s.ORM.DB.Where("nickname = ? and id != ?", user.Nickname, user.ID).First(&exists)
+	if exists.ID != 0 {
+		return errors.New(strs.Fmt("用户昵称'%s'已存在", user.Nickname))
+	}
+	if user.ID == 0 {
+		user.Password = s.EncrptyPwd(user.Password)
+		return s.ORM.DB.Save(user).Error
+	}
+	update := make(map[string]interface{})
+	update["nickname"] = user.Nickname
+	update["username"] = user.Username
+	update["avatar"] = user.Avatar
+	return s.ORM.DB.Model(&model.User{}).Where("id = ?", user.ID).UpdateColumns(update).Error
+}
+
+func (s *UserService) GetByID(id int) *model.User {
+	model := &model.User{}
+	err := s.ORM.DB.Where("id = ?", id).Find(model).Error
+	if err != nil {
+		return nil
+	}
+	return model
+}
+
+func (s *UserService) UpdatePwd(id int, pwd string) error {
+	if pwd == "" {
+		return errors.New("密码不能为空")
+	}
+	return s.ORM.DB.Model(&model.User{}).Where("id = ?", id).Update("password", s.EncrptyPwd(pwd)).Error
 }

@@ -3,6 +3,7 @@ package admin
 import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/model"
+	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/service"
 )
 
@@ -34,6 +35,54 @@ func (s *AdminAuthCtrl) Login(ctx *ctrl.HTTPContext) error {
 
 func (s *AdminAuthCtrl) All(ctx *ctrl.HTTPContext) error {
 	ctx.Put("users", s.UserService.All(ctx.User.ID))
+	return ctx.ResultOK()
+}
+
+type UserCreateForm struct {
+	model.User
+	Password string `json:"password"`
+}
+
+func (s *AdminAuthCtrl) Save(ctx *ctrl.HTTPContext) error {
+	form := new(UserCreateForm)
+	if err := ctx.Bind(form); err != nil {
+		return ctx.ResultErr(err)
+	}
+	user := &model.User{
+		Model: orm.Model{
+			ID: form.ID,
+		},
+		Nickname: form.Nickname,
+		Username: form.Username,
+		Password: form.Password,
+		Avatar:   form.Avatar,
+		Role:     0,
+	}
+	if err := s.UserService.Save(user); err != nil {
+		return ctx.ResultErr(err)
+	}
+	return ctx.ResultOK()
+}
+
+type UpdatePwdForm struct {
+	Password string
+}
+
+func (s *AdminAuthCtrl) Password(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	form := new(UpdatePwdForm)
+	if err := ctx.Bind(form); err != nil {
+		return ctx.ResultErr(err)
+	}
+	if err := s.UserService.UpdatePwd(id, form.Password); err != nil {
+		return ctx.ResultErr(err)
+	}
+	return ctx.ResultOK()
+}
+
+func (s *AdminAuthCtrl) Get(ctx *ctrl.HTTPContext) error {
+	id := ctx.ParamInt("id")
+	ctx.Put("user", s.UserService.GetByID(id))
 	return ctx.ResultOK()
 }
 

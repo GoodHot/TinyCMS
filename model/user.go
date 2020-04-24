@@ -10,6 +10,7 @@ type User struct {
 	Nickname string `gorm:"type:varchar(60)" json:"nickname"`
 	Username string `gorm:"type:varchar(60);unique_index" json:"username"`
 	Password string `gorm:"type:varchar(60);not null" json:"-"`
+	Avatar   string `json:"avatar"` // 头像
 	Role     int    `json:"role"`
 }
 
