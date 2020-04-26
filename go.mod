@@ -3,6 +3,7 @@ module github.com/GoodHot/TinyCMS
 go 1.13
 
 require (
+	github.com/88250/lute v1.3.1
 	github.com/armon/go-radix v1.0.0
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/coocood/freecache v1.1.0

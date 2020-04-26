@@ -1,11 +1,11 @@
 package service
 
 import (
+	"github.com/88250/lute"
 	"github.com/GoodHot/TinyCMS/common/consts"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/go-ego/gse"
-	"github.com/gomarkdown/markdown"
 	"github.com/jinzhu/gorm"
 	"github.com/teris-io/shortid"
 	"regexp"
@@ -113,9 +113,9 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 	}
 	// 1. 保存content
 	contentTable := s.ORM.ArticleContentTableName(article.Article.ID % s.ArticleSubTableCount)
+	luteEngine := lute.New()
 	// TODO 这里默认把markdown转成html
-	md := []byte(article.Content.Source)
-	article.Content.Html = string(markdown.ToHTML(md, nil, nil))
+	article.Content.Html =luteEngine.MarkdownStr("demo", article.Content.Source)
 	// 暂时这样处理 👆
 	if isInsert {
 		s.ORM.DB.Table(contentTable).Save(article.Content)

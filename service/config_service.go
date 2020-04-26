@@ -32,6 +32,15 @@ func (s *ConfigService) Startup() error {
 		ConfigGroup: model.DictGroupSystem,
 	})
 	s.createConfig(&model.Config{
+		Name:        "默认头像",
+		Description: "用户默认头像",
+		Key:         "default_avatar",
+		Value:       "http://wx1.sinaimg.cn/mw600/0085KTY1gy1ge6320neakj30sg0mp3z9.jpg",
+		OptType:     model.OptTypeUploadImage,
+		Visible:     true,
+		ConfigGroup: model.DictGroupSystem,
+	})
+	s.createConfig(&model.Config{
 		Name:        "关键字",
 		Description: "seo关键字",
 		Key:         "seo_keyword",
