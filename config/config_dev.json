@@ -3,6 +3,7 @@
     "dialect": "sqlite3",
     "url": "cms.db",
     "table_prefix": "t_",
+    "sql_log": false,
     "physical_deletion": false,
     "article_sub_table_count": 10
   },

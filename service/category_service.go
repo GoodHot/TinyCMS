@@ -29,7 +29,8 @@ func (s *CategoryService) Save(category *model.Category) error {
 	//if len(s.GetByName(category.Name)) > 0 {
 	//	return errors.New(strs.Fmt("分类[%s]已存在", category.Name))
 	//}
-	if s.GetByPath(category.Path).Name != "" {
+	exists := s.GetByPath(category.Path)
+	if exists.Name != "" && exists.ID != category.ID {
 		return errors.New(strs.Fmt("路径[%s]已存在", category.Path))
 	}
 	return s.ORM.DB.Save(category).Error

@@ -24,6 +24,7 @@ type ORM struct {
 	Dialect              string       `val:"${db.dialect}"`
 	URL                  string       `val:"${db.url}"`
 	TablePrefix          string       `val:"${db.table_prefix}"`
+	SQLLog     bool         `val:"${db.sql_log}"`
 	PhysicalDeletion     bool         `val:"${db.physical_deletion}"`
 	ArticleSubTableCount int          `val:"${db.article_sub_table_count}"`
 	DB                   *gorm.DB
@@ -40,7 +41,7 @@ func (s *ORM) Startup() error {
 		return err
 	}
 	s.DB = db
-	s.DB.LogMode(true)
+	s.DB.LogMode(s.SQLLog)
 	s.DB.SingularTable(true)
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return s.TablePrefix + defaultTableName
