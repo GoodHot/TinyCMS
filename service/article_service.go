@@ -164,10 +164,6 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 		if article.Article.CategoryID != 0 {
 			s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
 		}
-	} else {
-		if article.Article.CategoryID != 0 {
-			s.ORM.DB.Model(&model.Category{}).Where("id = ?", article.Article.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count + ?", 1))
-		}
 	}
 	// 4. 更新article
 	return s.ORM.DB.Model(&model.Article{}).Where("id = ?", article.Article.ID).Updates(updateMap).Error
