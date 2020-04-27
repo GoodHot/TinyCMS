@@ -1,10 +1,12 @@
 package test
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 	"testing"
 )
 
@@ -26,7 +28,8 @@ func TestProxy(t *testing.T) {
 var (
 	// 建立域名和目标map
 	hostTarget = map[string]string{
-		"localhost:8080": "http://false.run",
+		"/false": "http://false.run/",
+		"/p31": "https://www.p31.net/",
 	}
 	// 用于缓存 httputil.ReverseProxy
 	hostProxy map[string]*httputil.ReverseProxy
@@ -35,10 +38,11 @@ var (
 type baseHandle struct{}
 
 func (h *baseHandle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	host := r.Host
+	host := r.RequestURI
 
 	// 直接从缓存取出
 	if fn, ok := hostProxy[host]; ok {
+		r.RequestURI = strings.ReplaceAll(r.RequestURI, host, "")
 		fn.ServeHTTP(w, r)
 		return
 	}
@@ -71,4 +75,14 @@ func TestProxy2(t *testing.T) {
 		Handler: h,
 	}
 	log.Fatal(server.ListenAndServe())
+}
+
+func TestProxy3(t *testing.T) {
+	url1, _ := url.Parse("http://false.run")
+	proxy := httputil.NewSingleHostReverseProxy(url1)
+	director := proxy.Director
+	proxy.Director = func(r *http.Request) {
+		fmt.Println(r)
+		director(r)
+	}
 }

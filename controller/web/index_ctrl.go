@@ -4,6 +4,7 @@ import (
 	"github.com/GoodHot/TinyCMS/common/ctrl"
 	"github.com/GoodHot/TinyCMS/model"
 	"github.com/GoodHot/TinyCMS/service"
+	"net/http"
 )
 
 type IndexCtrl struct {
@@ -78,4 +79,45 @@ func (s *IndexCtrl) Category(ctx *ctrl.HTTPContext) error {
 	ctx.Put("category", category)
 	ctx.Put("page", page)
 	return ctx.HTML("category")
+}
+
+type proxyWrite struct {
+	html   []byte
+	header http.Header
+	code   int
+}
+
+func (s *proxyWrite) Header() http.Header {
+	return s.header
+}
+
+func (s *proxyWrite) Write(b []byte) (int, error) {
+	s.html = b
+	return len(s.html), nil
+}
+
+func (s *proxyWrite) WriteHeader(statusCode int) {
+	s.code = statusCode
+}
+
+func (s *IndexCtrl) Plugin(ctx *ctrl.HTTPContext) error {
+	//url1, _ := url.Parse("https://www.baidu.com/")
+	//proxy := httputil.NewSingleHostReverseProxy(url1)
+	//director := proxy.Director
+	//proxy.Director = func(r *http.Request) {
+	//	director(r)
+	//}
+	//req := &http.Request{
+	//	Method: "GET",
+	//	URL:    url1,
+	//	Header: ctx.Context.Request().Header,
+	//}
+	//pw := &proxyWrite{
+	//	header: make(map[string][]string),
+	//}
+	//proxy.ServeHTTP(pw, req)
+	//html := string(pw.html)
+	//html = strings.ReplaceAll(html, "href=\"/", "href=\"/plugin/")
+	//return ctx.Context.HTML(pw.code, html)
+	return nil
 }
