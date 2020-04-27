@@ -3,7 +3,7 @@
     "dialect": "sqlite3",
     "url": "cms.db",
     "table_prefix": "t_",
-    "sql_log": false,
+    "sql_log": true,
     "physical_deletion": false,
     "article_sub_table_count": 10
   },
@@ -13,6 +13,7 @@
   },
   "server": {
     "port": 9000,
+    "reverseProxy": 9001,
     "static": "static",
     "template": "template",
     "admin_prefix": "/admin",
