@@ -11,7 +11,7 @@ import (
 )
 
 func TestProxy(t *testing.T) {
-	backendService := "https://jandan.net"
+	backendService := "http://false.run"
 	rpURL, err := url.Parse(backendService)
 	if err != nil {
 		panic(err)
@@ -28,8 +28,8 @@ func TestProxy(t *testing.T) {
 var (
 	// 建立域名和目标map
 	hostTarget = map[string]string{
-		"/false": "http://false.run/",
-		"/p31": "https://www.p31.net/",
+		"false": "http://false.run/",
+		"ryf": "https://wangdoc.com/",
 	}
 	// 用于缓存 httputil.ReverseProxy
 	hostProxy map[string]*httputil.ReverseProxy
@@ -38,7 +38,7 @@ var (
 type baseHandle struct{}
 
 func (h *baseHandle) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	host := r.RequestURI
+	host := r.URL.Query()["r"][0]
 
 	// 直接从缓存取出
 	if fn, ok := hostProxy[host]; ok {

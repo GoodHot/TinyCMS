@@ -15,7 +15,7 @@ import (
 
 type ArticleService struct {
 	CategoryService      *CategoryService `ioc:"auto"`
-	AdminService         *UserService     `ioc:"auto"`
+	UserService         *UserService     `ioc:"auto"`
 	TagService           *TagService      `ioc:"auto"`
 	ORM                  *orm.ORM         `ioc:"auto"`
 	PageSize             int              `val:"${website.page_size}"`
@@ -115,7 +115,7 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 	contentTable := s.ORM.ArticleContentTableName(article.Article.ID % s.ArticleSubTableCount)
 	luteEngine := lute.New()
 	// TODO 这里默认把markdown转成html
-	article.Content.Html =luteEngine.MarkdownStr("demo", article.Content.Source)
+	article.Content.Html = luteEngine.MarkdownStr("demo", article.Content.Source)
 	// 暂时这样处理 👆
 	if isInsert {
 		s.ORM.DB.Table(contentTable).Save(article.Content)
@@ -157,7 +157,7 @@ func (s *ArticleService) Publish(article *model.ArticlePublish, adminID int) err
 		updateMap["tags"] = strings.Join(tagNames, ",")
 	}
 	// 3. 保存category
-	if  oldArticle != nil && article.Article.CategoryID != oldArticle.CategoryID {
+	if oldArticle != nil && article.Article.CategoryID != oldArticle.CategoryID {
 		if oldArticle.CategoryID != 0 {
 			s.ORM.DB.Model(&model.Category{}).Where("id = ?", oldArticle.CategoryID).UpdateColumn("article_count", gorm.Expr("article_count - ?", 1))
 		}
@@ -213,6 +213,11 @@ type ArticlePageQuery struct {
 	Visible    int
 }
 
+type ArticleResult struct {
+	*model.Article
+	AuthorName string `json:"author_name"`
+}
+
 func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 	where := "1 = 1"
 	var param []interface{}
@@ -258,6 +263,22 @@ func (s *ArticleService) Page(page int, query *ArticlePageQuery) *orm.Page {
 		Where:    orm.Where(where, param...),
 		OrderBy:  "status desc, updated_at desc",
 	})
+	if len(article) > 0 {
+		var list []*ArticleResult
+		for _, art := range article {
+			uid := art.AuthorID
+			if uid == 0 {
+				uid = art.CreatorID
+			}
+			user := s.UserService.TrieGet(uid)
+			temp := &ArticleResult{
+				Article:    art,
+				AuthorName: user.Nickname,
+			}
+			list = append(list, temp)
+		}
+		result.List = list
+	}
 	return result
 }
 
