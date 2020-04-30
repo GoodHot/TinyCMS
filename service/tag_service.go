@@ -22,6 +22,12 @@ func (s *TagService) GetByName(name string) *model.Tag {
 	return &tag
 }
 
+func (s *TagService) GetByPath(path string) *model.Tag {
+	var tag model.Tag
+	s.ORM.DB.Where("path = ?", path).First(&tag)
+	return &tag
+}
+
 func (s *TagService) GetByArticleID(id int) []*model.Tag {
 	var rel []*model.RelTagArticle
 	s.ORM.DB.Where("article_id = ?", id).Find(&rel)

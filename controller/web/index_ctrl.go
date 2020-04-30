@@ -39,7 +39,7 @@ func (s *IndexCtrl) Tags(ctx *ctrl.HTTPContext) error {
 
 func (s *IndexCtrl) Tag(ctx *ctrl.HTTPContext) error {
 	name := ctx.Param("tag")
-	tag := s.TagService.GetByName(name)
+	tag := s.TagService.GetByPath(name)
 	page := s.ArticleService.Page(1, &service.ArticlePageQuery{
 		TagID: tag.ID,
 	})
