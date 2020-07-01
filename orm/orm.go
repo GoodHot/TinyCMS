@@ -24,7 +24,7 @@ type ORM struct {
 	Dialect              string       `val:"${db.dialect}"`
 	URL                  string       `val:"${db.url}"`
 	TablePrefix          string       `val:"${db.table_prefix}"`
-	SQLLog     bool         `val:"${db.sql_log}"`
+	SQLLog               bool         `val:"${db.sql_log}"`
 	PhysicalDeletion     bool         `val:"${db.physical_deletion}"`
 	ArticleSubTableCount int          `val:"${db.article_sub_table_count}"`
 	DB                   *gorm.DB
