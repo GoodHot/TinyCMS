@@ -1,9 +1,0 @@
-<h1>Authors</h1>
-<main class="list d-flex">
-    {{range $i, $user := .users}}
-    <section class="list-img">
-        <a href="{{$user.Link}}" class="a-normal"><img src="{{$user.Avatar}}" alt="{{$user.Nickname}}"></a>
-        <a href="{{$user.Link}}">{{$user.Nickname}}</a>
-    </section>
-    {{end}}
-</main>
