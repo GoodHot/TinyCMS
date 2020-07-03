@@ -1,5 +1,6 @@
 package core
 
-type IOC struct {
-
+type IoC interface {
+	Reg(i interface{})
+	Singleton()
 }
