@@ -1,0 +1,5 @@
+{
+  "env": "dev",
+  "appName": "TinyCMS",
+  "config": "config-${env}.json"
+}

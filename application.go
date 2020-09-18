@@ -1,14 +1,13 @@
 package main
 
 import (
-	"github.com/labstack/echo"
-	"net/http"
+	"github.com/GoodHot/TinyCMS/core"
+	"github.com/GoodHot/TinyCMS/server"
 )
 
 func main() {
-	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	e.Logger.Fatal(e.Start(":1323"))
+	ioc := new(core.IOC)
+	ioc.Init(&server.HTTPServer{}, "./config/config.json")
+	httpServer := ioc.GetMain().(*server.HTTPServer)
+	httpServer.Startup()
 }
