@@ -27,25 +27,34 @@ func (cfg *Config) ReadConfig(cfgPath string) error {
 	if err != nil {
 		return err
 	}
-	cfg.replaceValue()
+	cfg.replaceValue(cfg.cfgMap)
+	fmt.Println(cfg.cfgMap)
 	return nil
 }
 
-func (cfg *Config) replaceValue() error {
-	for k, v := range cfg.cfgMap {
-		fmt.Println(k, v)
-		//vt := reflect.TypeOf(v)
-		//if vt.Kind().String() == "string" {
-		//	if has, repKey := cfg.hasReplace(v.(string)); has {
-		//		fmt.Println(k, v, repKey)
-		//		data, exists := cfg.Get(repKey)
-		//		if !exists {
-		//			return errors.New(fmt.Sprintf("%v is not exists"))
-		//		}
-		//
-		//	}
-		//}
+func (cfg *Config) replaceValue(cfgMap map[string]interface{}) error {
+	for key, val := range cfgMap {
+		vt := reflect.TypeOf(val)
+		if vt.Kind().String() == "string" {
+			cfg.replaceValueByKey(key, cfgMap)
+		}
 	}
+	return nil
+}
+
+func (cfg *Config) replaceValueByKey(key string, cfgMap map[string]interface{}) error {
+	value := cfgMap[key]
+	if hasReplace, repKey := cfg.hasReplace(value.(string)); hasReplace {
+		data, ok := cfgMap[repKey]
+		if !ok {
+			return errors.New(fmt.Sprintf("%v is not exists", repKey))
+		}
+		if hr, _ := cfg.hasReplace(data.(string)); hr {
+			cfg.replaceValueByKey(repKey, cfgMap)
+		}
+		cfgMap[key] = hasReplaceRegex.ReplaceAllString(cfgMap[key].(string), data.(string))
+	}
+	return nil
 }
 
 func (cfg *Config) hasReplace(value string) (has bool, key string) {
