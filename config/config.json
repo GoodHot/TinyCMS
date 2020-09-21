@@ -1,5 +1,8 @@
 {
   "env": "dev",
   "appName": "TinyCMS",
-  "config": "config-${env}.json"
+  "props": "config-${env}.json",
+  "map": {
+    "a": 1
+  }
 }
