@@ -7,7 +7,10 @@ import (
 
 func main() {
 	ioc := new(core.IOC)
-	ioc.Init(&server.HTTPServer{}, "./config/config.json")
+	err := ioc.Init(&server.HTTPServer{}, "./config/config.json")
+	if err != nil {
+		panic(err)
+	}
 	httpServer := ioc.GetMain().(*server.HTTPServer)
 	httpServer.Startup()
 }

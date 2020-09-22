@@ -34,7 +34,27 @@ func (cfg *Config) ReadConfig(cfgPath string) error {
 			return err
 		}
 	}
-	fmt.Println(cfg.cfgMap)
+	props, err := cfg.GetStr("props")
+	if err != nil {
+		return err
+	}
+	props = cfgPath[0:strings.LastIndex(cfgPath, `/`)+1] + props
+	propData, err := ioutil.ReadFile(props)
+	if err != nil {
+		return err
+	}
+	propMap := make(map[string]interface{})
+	err = json.Unmarshal(propData, &propMap)
+	if err != nil {
+		return err
+	}
+	cfg.cfgMap["props"] = propMap
+	for again := true; again; {
+		again, err = cfg.replaceValue(cfg.cfgMap)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
