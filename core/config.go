@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	hasReplaceRegex, _ = regexp.Compile(`\$\{(.+?)\}`)
+	hasReplaceRegex = regexp.MustCompile(`\$\{(.+?)\}`)
 )
 
 type Config struct {
