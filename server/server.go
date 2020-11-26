@@ -1,9 +1,13 @@
 package server
 
+import "fmt"
+
 type HTTPServer struct {
-	Age  int `val:"${dddd}"`
-	Name string
+	Age  int    `val:"${props.age}"`
+	Name string `val:"我是name"`
 }
 
-func (*HTTPServer) Startup() {
+func (s *HTTPServer) Startup() {
+	fmt.Println(s.Age)
+	fmt.Println(s.Name)
 }

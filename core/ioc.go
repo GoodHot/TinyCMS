@@ -2,8 +2,9 @@ package core
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
+	"regexp"
+	"strconv"
 )
 
 type IOC struct {
@@ -25,17 +26,16 @@ func (ioc *IOC) Register(ins interface{}) {
 func (ioc *IOC) createIns(ins interface{}) {
 	refVal := reflect.ValueOf(ins)
 	refType := reflect.TypeOf(ins)
-	fmt.Println("ddd", refVal.Elem().NumField())
 	for i := 0; i < refVal.Elem().NumField(); i++ {
 		field := refType.Elem().Field(i)
 		iocTag := field.Tag.Get("ioc")
 		valTag := field.Tag.Get("val")
 		if valTag != "" {
-			fmt.Println(valTag)
+			if err := ioc.injectValue(valTag, refVal.Elem().FieldByName(field.Name)); err != nil {
+				panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + "." + field.Name + " [" + err.Error() + "]"))
+			}
 		} else if iocTag != "" {
 
-		} else {
-			continue
 		}
 	}
 
@@ -84,40 +84,52 @@ func (ioc *IOC) createIns(ins interface{}) {
 	//}
 }
 
+var injectValueRegex = regexp.MustCompile("^\\$\\{(.+?)\\}$")
+
 func (ioc *IOC) injectValue(key string, value reflect.Value) error {
-	//compile := regexp.MustCompile("^\\$\\{(.+?)\\}$")
-	//if !compile.MatchString(key) {
-	//	switch value.Kind() {
-	//	case reflect.String:
-	//		value.SetString(key)
-	//	case reflect.Int:
-	//		if v, e := strconv.Atoi(key); e != nil {
-	//			return e
-	//		} else {
-	//			value.SetInt(int64(v))
-	//		}
-	//	case reflect.Bool:
-	//		value.SetBool(key == "true")
-	//	}
-	//	return nil
-	//}
-	//chain := compile.FindAllStringSubmatch(key, -1)[0][1]
-	//data, err := ioc.config.ChainCall(chain)
-	//if err != nil {
-	//	return err
-	//}
-	//if data == nil {
-	//	ioc.log.Error("inject value fail, %s is not found", key)
-	//	return errors.New("inject value fail, " + key + " is not found")
-	//}
-	//switch value.Kind() {
-	//case reflect.String:
-	//	value.SetString(data.(string))
-	//case reflect.Int:
-	//	value.SetInt(int64(data.(float64)))
-	//case reflect.Bool:
-	//	value.SetBool(data.(bool))
-	//}
+	var tmpVal interface{}
+	if !injectValueRegex.MatchString(key) {
+		tmpVal = key
+	} else {
+		match := injectValueRegex.FindAllStringSubmatch(key, -1)
+		val, exists := ioc.cfg.GetVal(match[0][1])
+		if !exists {
+			return errors.New("inject value fail, " + key + " is not found")
+		}
+		tmpVal = val
+	}
+	valKind := reflect.TypeOf(tmpVal).Kind()
+	switch value.Kind() {
+	case reflect.String:
+		value.SetString(tmpVal.(string))
+	case reflect.Int:
+		switch valKind {
+		case reflect.Int:
+			value.SetInt(int64(tmpVal.(int)))
+		case reflect.Int64:
+			value.SetInt(tmpVal.(int64))
+		case reflect.Float32:
+			value.SetInt(int64(tmpVal.(float32)))
+		case reflect.Float64:
+			value.SetInt(int64(tmpVal.(float64)))
+		case reflect.String:
+			if v, err := strconv.Atoi(tmpVal.(string)); err != nil {
+				panic("inject value fail, can not convert " + tmpVal.(string) + " to int")
+			} else {
+				value.SetInt(int64(v))
+			}
+		default:
+			panic("inject value fail, can not convert " + valKind.String() + " to bool")
+		}
+	case reflect.Bool:
+		if valKind == reflect.Bool {
+			value.SetBool(tmpVal.(bool))
+		} else if valKind == reflect.String {
+			value.SetBool(tmpVal.(string) == "true")
+		} else {
+			panic("inject value fail, can not convert " + valKind.String() + " to bool")
+		}
+	}
 	return nil
 }
 

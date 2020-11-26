@@ -123,3 +123,26 @@ func (cfg *Config) hasReplace(value string) (has bool, keys []string) {
 	}
 	return
 }
+
+func (cfg *Config) GetVal(key string) (value interface{}, exists bool) {
+	keyChain := strings.Split(key, ".")
+	swapMap := cfg.cfgMap
+	length := len(keyChain) - 1
+	for i, k := range keyChain {
+		val := swapMap[k]
+		if val == nil {
+			return
+		}
+		if i == length {
+			value = val
+			exists = true
+			return
+		}
+		if tmpMap, ok := val.(map[string]interface{}); !ok {
+			return
+		} else {
+			swapMap = tmpMap
+		}
+	}
+	return nil, false
+}
