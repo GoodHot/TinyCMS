@@ -1,16 +1,17 @@
 package server
 
-type IOCTester struct {
-	Name string `val:"我是IOC测试"`
-	Age  int    `val:"${props.age}"`
-}
+import "github.com/gin-gonic/gin"
 
 type HTTPServer struct {
-	Age       int        `val:"${props.age}"`
-	Name      string     `val:"我是name"`
-	IOCTester *IOCTester `ioc:"auto"`
+	ServerAddr string `val:"${server.addr}"`
 }
 
-func (s *HTTPServer) Startup() {
-
+func (server *HTTPServer) Startup() {
+	router := gin.Default()
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	router.Run(server.ServerAddr)
 }
