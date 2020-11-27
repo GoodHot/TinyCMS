@@ -35,53 +35,24 @@ func (ioc *IOC) createIns(ins interface{}) {
 				panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + "." + field.Name + " [" + err.Error() + "]"))
 			}
 		} else if iocTag != "" {
-
+			value := refVal.Elem().FieldByName(field.Name)
+			if iocTag == "auto" && field.Type.Kind() == reflect.Ptr {
+				insName := ioc.instanceName(field.Type)
+				instance := ioc.insMap[insName]
+				if instance != nil {
+					value.Set(reflect.ValueOf(instance))
+				} else {
+					newIns := reflect.New(field.Type.Elem())
+					value.Set(newIns)
+					newInterface := newIns.Interface()
+					ioc.insMap[ioc.instanceName(field.Type)] = newInterface
+					ioc.createIns(newInterface)
+				}
+			} else {
+				panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + "." + field.Name + " can not inject, please try *" + field.Name))
+			}
 		}
 	}
-
-	//refType := reflect.TypeOf(x)
-	//refVal := reflect.ValueOf(x)
-	//for i := 0; i < refType.Elem().NumField(); i++ {
-	//	field := refType.Elem().Field(i)
-	//	value := refVal.Elem().FieldByName(field.Name)
-	//	valTag := field.Tag.Get("val")
-	//	if valTag != "" {
-	//		err := ioc.injectValue(valTag, value)
-	//		if err != nil {
-	//			panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + "." + field.Name + " [" + err.Error() + "]"))
-	//		}
-	//		continue
-	//	}
-	//	iocTag := field.Tag.Get("ioc")
-	//	if iocTag == "" || iocTag != "auto" || (field.Type.Kind() != reflect.Ptr && field.Type.Kind() != reflect.Interface) {
-	//		continue
-	//	}
-	//	var insName string
-	//	if field.Type.Kind() == reflect.Ptr {
-	//		insName = ioc.instanceName(field.Type)
-	//	} else {
-	//		insName = field.Type.PkgPath() + "/" + field.Type.Name()
-	//	}
-	//	ins := ioc.Get(insName)
-	//	if ins != nil {
-	//		value.Set(reflect.ValueOf(ins))
-	//	} else {
-	//		newIns := reflect.New(field.Type.Elem())
-	//		value.Set(newIns)
-	//		newInterface := newIns.Interface()
-	//		ioc.setIns(ioc.instanceName(field.Type), newInterface, false)
-	//		ioc.createIns(newInterface)
-	//	}
-	//}
-	//method := refVal.MethodByName("Startup")
-	//if method.Kind() == reflect.Func {
-	//	err := method.Call(nil)[0]
-	//	if !err.IsNil() {
-	//		msg := err.Interface().(error).Error()
-	//		errMsg := refType.Elem().PkgPath() + "/" + refType.Elem().Name() + " -> call Startup function error, error msg:" + msg
-	//		panic(errors.New(errMsg))
-	//	}
-	//}
 }
 
 var injectValueRegex = regexp.MustCompile("^\\$\\{(.+?)\\}$")
