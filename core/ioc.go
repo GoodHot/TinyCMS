@@ -105,8 +105,14 @@ func (ioc *IOC) injectValue(key string, value reflect.Value) error {
 }
 
 func (ioc *IOC) instanceName(ins interface{}) string {
-	insType := reflect.TypeOf(ins)
-	return insType.Elem().PkgPath() + "/" + insType.Elem().Name()
+	switch ins.(type) {
+	case reflect.Type:
+		tp := ins.(reflect.Type)
+		return tp.Elem().PkgPath() + "/" + tp.Elem().Name()
+	default:
+		insType := reflect.TypeOf(ins)
+		return insType.Elem().PkgPath() + "/" + insType.Elem().Name()
+	}
 }
 
 func (ioc *IOC) Init(main interface{}, cfgPath string) error {

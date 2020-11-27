@@ -1,17 +1,18 @@
 package server
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/GoodHot/TinyCMS/server/router"
+	"github.com/gin-gonic/gin"
+)
 
 type HTTPServer struct {
-	ServerAddr string `val:"${server.addr}"`
+	ServerAddr string         `val:"${server.addr}"`
+	Router     *router.Router `ioc:"auto"`
 }
 
+// 启动服务
 func (server *HTTPServer) Startup() {
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	router.Run(server.ServerAddr)
+	engine := gin.Default()
+	server.Router.Register(engine.Group("/"))
+	engine.Run(server.ServerAddr)
 }
