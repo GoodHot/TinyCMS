@@ -23,7 +23,7 @@ type Cache struct {
 	instance ICache
 }
 
-func (cache *Cache) Get() ICache {
+func (cache *Cache) Ins() ICache {
 	if cache.instance != nil {
 		return cache.instance
 	}

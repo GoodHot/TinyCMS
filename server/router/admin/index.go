@@ -11,7 +11,7 @@ type Index struct {
 }
 
 func (my *Index) Index(ctx *http.Context) error {
-	my.Cache.Get().Get("aaa", "bbb")
+	my.Cache.Ins().Get("aaa", "bbb")
 	fmt.Println("in index ctx")
 	return nil
 }

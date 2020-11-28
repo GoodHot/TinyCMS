@@ -13,5 +13,10 @@
       "password": "",
       "db": 0
     }
+  },
+  "orm": {
+    "type": "levelDB",
+    "levelDB": {},
+    "mongodb": {}
   }
 }
