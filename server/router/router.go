@@ -23,7 +23,7 @@ func (router *Router) Register(group *gin.RouterGroup) {
 
 func (router *Router) registerAdmin(group *gin.RouterGroup) {
 	register := http.RouterRegister{Group: group}
-	register.GET("/index", router.AdminIndex.Index)
+	register.GET("/", router.AdminIndex.Index)
 }
 
 func (*Router) registerWeb(router *gin.RouterGroup) {

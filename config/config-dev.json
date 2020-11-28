@@ -2,5 +2,16 @@
   "router": {
     "admin": "/admin",
     "web": "/"
+  },
+  "cache": {
+    "type": "mem",
+    "freecache": {
+      "cacheSize": 10485760
+    },
+    "redis": {
+      "addr": "localhost:6379",
+      "password": "",
+      "db": 0
+    }
   }
 }

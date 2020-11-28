@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"errors"
 	"reflect"
 	"regexp"
@@ -31,7 +32,7 @@ func (ioc *IOC) createIns(ins interface{}) {
 		iocTag := field.Tag.Get("ioc")
 		valTag := field.Tag.Get("val")
 		if valTag != "" {
-			if err := ioc.injectValue(valTag, refVal.Elem().FieldByName(field.Name)); err != nil {
+			if err := ioc.injectValue(valTag, refVal.Elem().FieldByName(field.Name), field); err != nil {
 				panic(errors.New(refType.Elem().PkgPath() + "/" + refType.Elem().Name() + "." + field.Name + " [" + err.Error() + "]"))
 			}
 		} else if iocTag != "" {
@@ -57,7 +58,7 @@ func (ioc *IOC) createIns(ins interface{}) {
 
 var injectValueRegex = regexp.MustCompile("^\\$\\{(.+?)\\}$")
 
-func (ioc *IOC) injectValue(key string, value reflect.Value) error {
+func (ioc *IOC) injectValue(key string, value reflect.Value, field reflect.StructField) error {
 	var tmpVal interface{}
 	if !injectValueRegex.MatchString(key) {
 		tmpVal = key
@@ -71,6 +72,17 @@ func (ioc *IOC) injectValue(key string, value reflect.Value) error {
 	}
 	valKind := reflect.TypeOf(tmpVal).Kind()
 	switch value.Kind() {
+	case reflect.Struct:
+		newIns := reflect.New(field.Type)
+		newInterface := newIns.Interface()
+		data, err := json.Marshal(tmpVal)
+		if err != nil {
+			panic("inject value fail, can not convert " + tmpVal.(string) + " to struct")
+		}
+		if err = json.Unmarshal(data, newInterface); err != nil {
+			panic("inject value fail, can not convert " + tmpVal.(string) + " to struct")
+		}
+		value.Set(newIns)
 	case reflect.String:
 		value.SetString(tmpVal.(string))
 	case reflect.Int:
