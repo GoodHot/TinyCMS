@@ -8,7 +8,7 @@ type RouterRegister struct {
 	Group *gin.RouterGroup
 }
 
-func (reg *RouterRegister) POST(relativePath string) {
+func (reg *RouterRegister) POST(relativePath string, handlerFunc HandlerFunc) {
 }
 
 func (reg *RouterRegister) GET(relativePath string, handlerFunc HandlerFunc) {
@@ -20,20 +20,20 @@ func (reg *RouterRegister) GET(relativePath string, handlerFunc HandlerFunc) {
 	})
 }
 
-func (reg *RouterRegister) DELETE(relativePath string) {
+func (reg *RouterRegister) DELETE(relativePath string, handlerFunc HandlerFunc) {
 }
 
-func (reg *RouterRegister) PATCH(relativePath string) {
+func (reg *RouterRegister) PATCH(relativePath string, handlerFunc HandlerFunc) {
 }
 
-func (reg *RouterRegister) PUT(relativePath string) {
+func (reg *RouterRegister) PUT(relativePath string, handlerFunc HandlerFunc) {
 }
 
-func (reg *RouterRegister) OPTIONS(relativePath string) {
+func (reg *RouterRegister) OPTIONS(relativePath string, handlerFunc HandlerFunc) {
 }
 
-func (reg *RouterRegister) HEAD(relativePath string) {
+func (reg *RouterRegister) HEAD(relativePath string, handlerFunc HandlerFunc) {
 }
 
-func (reg *RouterRegister) Any(relativePath string) {
+func (reg *RouterRegister) Any(relativePath string, handlerFunc HandlerFunc) {
 }

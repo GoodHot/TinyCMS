@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common"
 	"github.com/GoodHot/TinyCMS/server/router/http"
+	"github.com/gin-gonic/gin"
 	"time"
 )
 
@@ -12,7 +13,8 @@ type Index struct {
 }
 
 func (my *Index) Index(ctx *http.Context) error {
-	time.Sleep(3 * time.Second)
+	go time.Sleep(3 * time.Second)
+	ctx.Ctx.JSON(200, gin.H{"hello": "world"})
 	return nil
 }
 
