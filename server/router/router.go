@@ -24,43 +24,43 @@ func (router *Router) Register(group *gin.RouterGroup) {
 func (router *Router) registerAdmin(group *gin.RouterGroup) {
 	register := http.RouterRegister{Group: group}
 	// 登录
-	register.POST("/login", router.AdminIndex.Index)
+	register.POST("/signin", router.AdminIndex.Signin)
 	// 获取当前用户
-	register.POST("/user", router.AdminIndex.Index)
-	// 获取文章列表 :status = [published(default), drafts, scheduled]
-	register.GET("/posts/:status", router.AdminIndex.List)
-	// 获取频道
-	register.GET("/channels", router.AdminIndex.List)
-	// 获取标签
-	register.GET("/tags", router.AdminIndex.List)
-	// 获取页面
-	register.GET("/pages", router.AdminIndex.List)
-	// 站点设置
-	register.GET("/general", router.AdminIndex.List)
-	// 修改站点设置
-	register.PUT("/general/:key", router.AdminIndex.List)
-	// 页面设计
-	register.GET("/design", router.AdminIndex.List)
-	// 代码块注入
-	register.GET("/code-injection", router.AdminIndex.List)
+	//register.POST("/user", router.AdminIndex.Index)
+	//// 获取文章列表 :status = [published(default), drafts, scheduled]
+	//register.GET("/posts/:status", router.AdminIndex.List)
+	//// 获取频道
+	//register.GET("/channels", router.AdminIndex.List)
+	//// 获取标签
+	//register.GET("/tags", router.AdminIndex.List)
+	//// 获取页面
+	//register.GET("/pages", router.AdminIndex.List)
+	//// 站点设置
+	//register.GET("/general", router.AdminIndex.List)
+	//// 修改站点设置
+	//register.PUT("/general/:key", router.AdminIndex.List)
+	//// 页面设计
+	//register.GET("/design", router.AdminIndex.List)
+	//// 代码块注入
+	//register.GET("/code-injection", router.AdminIndex.List)
 
 }
 
 func (router *Router) registerWeb(group *gin.RouterGroup) {
-	register := http.RouterRegister{Group: group}
-	// 首页
-	register.GET("/", router.AdminIndex.List)
-	// 查询文章列表
-	register.GET("/posts/:page", router.AdminIndex.List)
-	// 查询文章详情
-	register.GET("/post/:name", router.AdminIndex.List)
-	// 查询所有页面
-	register.GET("/pages", router.AdminIndex.List)
-	// 查询页面详情
-	register.GET("/page/:name", router.AdminIndex.List)
-	// 查询所有标签
-	register.GET("/tags", router.AdminIndex.List)
-	// 查询某个标签下所有文章
-	register.GET("/tag/:name", router.AdminIndex.List)
+	//register := http.RouterRegister{Group: group}
+	//// 首页
+	//register.GET("/", router.AdminIndex.List)
+	//// 查询文章列表
+	//register.GET("/posts/:page", router.AdminIndex.List)
+	//// 查询文章详情
+	//register.GET("/post/:name", router.AdminIndex.List)
+	//// 查询所有页面
+	//register.GET("/pages", router.AdminIndex.List)
+	//// 查询页面详情
+	//register.GET("/page/:name", router.AdminIndex.List)
+	//// 查询所有标签
+	//register.GET("/tags", router.AdminIndex.List)
+	//// 查询某个标签下所有文章
+	//register.GET("/tag/:name", router.AdminIndex.List)
 
 }
