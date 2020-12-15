@@ -34,7 +34,7 @@ type signinForm struct {
 
 func (my *Index) Signin(ctx *http.Context) error {
 	var signin signinForm
-	if ctx.BindJSON(&signin) == nil {
+	if ctx.Bind(&signin) == nil {
 		log.Println(signin.Account)
 		log.Println(signin.Password)
 	}

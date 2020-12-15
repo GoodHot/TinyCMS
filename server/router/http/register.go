@@ -1,12 +1,17 @@
 package http
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"github.com/labstack/echo"
 	"net/http"
 )
 
 type RouterRegister struct {
-	Group *gin.RouterGroup
+	Group *echo.Group
+}
+
+func (reg *RouterRegister) Middleware(middleware echo.MiddlewareFunc) {
+	reg.Group.Use(middleware)
 }
 
 func (reg *RouterRegister) POST(relativePath string, handlerFunc HandlerFunc) {
@@ -50,63 +55,64 @@ func (reg *RouterRegister) Any(relativePath string, handlerFunc HandlerFunc) {
 }
 
 func (reg *RouterRegister) register(method string, relativePath, suffix string, handlerFunc HandlerFunc) {
+	fmt.Printf("register:%v%v\n", relativePath, suffix)
 	relativePath = relativePath + suffix
 	if method == http.MethodGet {
-		reg.Group.POST(relativePath, func(context *gin.Context) {
+		reg.Group.POST(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else if method == http.MethodHead {
-		reg.Group.HEAD(relativePath, func(context *gin.Context) {
+		reg.Group.HEAD(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx:    context,
 				Suffix: suffix,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else if method == http.MethodPost {
-		reg.Group.POST(relativePath, func(context *gin.Context) {
+		reg.Group.POST(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else if method == http.MethodPut {
-		reg.Group.PUT(relativePath, func(context *gin.Context) {
+		reg.Group.PUT(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else if method == http.MethodPatch {
-		reg.Group.PATCH(relativePath, func(context *gin.Context) {
+		reg.Group.PATCH(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else if method == http.MethodDelete {
-		reg.Group.DELETE(relativePath, func(context *gin.Context) {
+		reg.Group.DELETE(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else if method == http.MethodOptions {
-		reg.Group.OPTIONS(relativePath, func(context *gin.Context) {
+		reg.Group.OPTIONS(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	} else {
-		reg.Group.Any(relativePath, func(context *gin.Context) {
+		reg.Group.Any(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
 			}
-			handlerFunc(ctx)
+			return handlerFunc(ctx)
 		})
 	}
 }

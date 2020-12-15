@@ -3,7 +3,9 @@ package router
 import (
 	"github.com/GoodHot/TinyCMS/server/router/admin"
 	"github.com/GoodHot/TinyCMS/server/router/http"
-	"github.com/gin-gonic/gin"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 type Router struct {
@@ -12,7 +14,7 @@ type Router struct {
 	AdminIndex  *admin.Index `ioc:"auto"`
 }
 
-func (router *Router) Register(group *gin.RouterGroup) {
+func (router *Router) Register(group *echo.Group) {
 	// 注册admin路由
 	adminRouter := group.Group(router.RouterAdmin)
 	router.registerAdmin(adminRouter)
@@ -21,8 +23,14 @@ func (router *Router) Register(group *gin.RouterGroup) {
 	router.registerWeb(webRouter)
 }
 
-func (router *Router) registerAdmin(group *gin.RouterGroup) {
+func (router *Router) registerAdmin(group *echo.Group) {
 	register := http.RouterRegister{Group: group}
+	register.Middleware(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningMethod: middleware.AlgorithmHS256,
+		TokenLookup:   "header:" + echo.HeaderAuthorization,
+		SigningKey:    []byte("secret"),
+		Claims:        jwt.MapClaims{},
+	}))
 	// 登录
 	register.POST("/signin", router.AdminIndex.Signin)
 	// 获取当前用户
@@ -46,7 +54,7 @@ func (router *Router) registerAdmin(group *gin.RouterGroup) {
 
 }
 
-func (router *Router) registerWeb(group *gin.RouterGroup) {
+func (router *Router) registerWeb(group *echo.Group) {
 	//register := http.RouterRegister{Group: group}
 	//// 首页
 	//register.GET("/", router.AdminIndex.List)

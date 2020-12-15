@@ -1,6 +1,8 @@
 package http
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/labstack/echo"
+)
 
 const (
 	SuffixJSON = ".json"
@@ -8,7 +10,7 @@ const (
 )
 
 type Context struct {
-	Ctx    *gin.Context
+	Ctx    echo.Context
 	Suffix string
 }
 
@@ -17,17 +19,13 @@ func (*Context) IPAddr() string {
 	return ""
 }
 
-func (ctx *Context) ShouldBind(i interface{}) error {
-	return ctx.Ctx.ShouldBindUri(i)
-}
-
 func (ctx *Context) HTML(html string) error {
 	ctx.Ctx.String(200, html)
 	return nil
 }
 
-func (ctx *Context) BindJSON(i interface{}) error {
-	return ctx.Ctx.BindJSON(i)
+func (ctx *Context) Bind(i interface{}) error {
+	return ctx.Ctx.Bind(i)
 }
 
 type HandlerFunc func(ctx *Context) error

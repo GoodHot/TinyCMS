@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/GoodHot/TinyCMS/server/router"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo"
 )
 
 type HTTPServer struct {
@@ -12,7 +12,7 @@ type HTTPServer struct {
 
 // 启动服务
 func (server *HTTPServer) Startup() {
-	engine := gin.Default()
-	server.Router.Register(engine.Group("/"))
-	engine.Run(server.ServerAddr)
+	engine := echo.New()
+	server.Router.Register(engine.Group(""))
+	engine.Logger.Fatal(engine.Start(server.ServerAddr))
 }
