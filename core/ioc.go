@@ -54,6 +54,15 @@ func (ioc *IOC) createIns(ins interface{}) {
 			}
 		}
 	}
+	method := refVal.MethodByName("Startup")
+	if method.Kind() == reflect.Func {
+		err := method.Call(nil)[0]
+		if !err.IsNil() {
+			msg := err.Interface().(error).Error()
+			errMsg := refType.Elem().PkgPath() + "/" + refType.Elem().Name() + " -> call Startup function error, error msg:" + msg
+			panic(errors.New(errMsg))
+		}
+	}
 }
 
 var injectValueRegex = regexp.MustCompile("^\\$\\{(.+?)\\}$")

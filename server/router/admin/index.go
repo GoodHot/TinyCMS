@@ -1,31 +1,18 @@
 package admin
 
 import (
-	"fmt"
+	"errors"
 	"github.com/GoodHot/TinyCMS/common"
 	"github.com/GoodHot/TinyCMS/server/router/http"
 	"github.com/GoodHot/TinyCMS/service"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
-	"github.com/labstack/echo"
 	"time"
 )
 
 type Index struct {
+	JWTSecret    string                `val:"${props.secret.jwt}"`
 	Cache        *common.Cache         `ioc:"auto"`
 	AdminService *service.AdminService `ioc:"auto"`
-}
-
-func (my *Index) Index(ctx *http.Context) error {
-	go time.Sleep(3 * time.Second)
-	ctx.Ctx.JSON(200, gin.H{"hello": "world"})
-	return nil
-}
-
-func (my *Index) List(ctx *http.Context) error {
-	my.Cache.Ins().Get("aaa", "bbb")
-	fmt.Println("in index ctx")
-	return nil
 }
 
 type signinForm struct {
@@ -34,8 +21,8 @@ type signinForm struct {
 }
 
 type jwtCustomClaims struct {
-	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
+	ID       int    `json:"id"`
+	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
@@ -44,23 +31,24 @@ func (my *Index) Signin(ctx *http.Context) error {
 	if err := ctx.Bind(&signin); err != nil {
 		return err
 	}
-	if signin.Account != "x" && signin.Password != "x" {
-		return echo.ErrUnauthorized
+	admin, err := my.AdminService.GetByUsernameOrEmail(signin.Account)
+	if err != nil {
+		return err
+	}
+	if !my.AdminService.CheckPwd(signin.Account, signin.Password) {
+		return errors.New("Password fail")
 	}
 	claims := &jwtCustomClaims{
-		"Jon Snow",
-		true,
+		admin.ID,
+		admin.Username,
 		jwt.StandardClaims{
-
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
 	}
-
 	// Create token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
 	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte("secret"))
+	t, err := token.SignedString([]byte(my.JWTSecret))
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,7 @@
 {
+  "secret": {
+    "jwt": "FH!JbV$Uwp9qS2Xl"
+  },
   "router": {
     "admin": "/admin",
     "web": "/"
@@ -15,7 +18,7 @@
     }
   },
   "orm": {
-    "type": "levelDB",
+    "type": "sqlite",
     "levelDB": {},
     "mongodb": {}
   }

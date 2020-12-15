@@ -10,6 +10,7 @@ import (
 )
 
 type Router struct {
+	JWTSecret   string       `val:"${props.secret.jwt}"`
 	RouterAdmin string       `val:"${props.router.admin}"`
 	RouterWeb   string       `val:"${props.router.web}"`
 	AdminIndex  *admin.Index `ioc:"auto"`
@@ -30,17 +31,16 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		Skipper: func(context echo.Context) bool {
 			url := context.Request().URL
 			uri := url.Path[:strings.LastIndex(url.Path, ".")]
-			return uri == prefix + "/signin"
+			return uri == prefix+"/signin"
 		},
 		SigningMethod: middleware.AlgorithmHS256,
 		TokenLookup:   "header:" + echo.HeaderAuthorization,
-		SigningKey:    []byte("secret"),
+		SigningKey:    []byte(router.JWTSecret),
 		Claims:        jwt.MapClaims{},
 		AuthScheme:    "TinyCMS",
 	}))
 	// 登录
 	register.POST("/signin", router.AdminIndex.Signin)
-	register.POST("/signina", router.AdminIndex.List)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]

@@ -1,4 +1,4 @@
-package orm
+package trait
 
 type Admin struct {
 	ID       int
@@ -8,4 +8,6 @@ type Admin struct {
 }
 
 type AdminORM interface {
+	GetByUsername(username string) (*Admin, error)
+	GetByEmail(email string) (*Admin, error)
 }
