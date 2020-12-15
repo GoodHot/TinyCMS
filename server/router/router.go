@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"strings"
 )
 
 type Router struct {
@@ -17,15 +18,20 @@ type Router struct {
 func (router *Router) Register(group *echo.Group) {
 	// 注册admin路由
 	adminRouter := group.Group(router.RouterAdmin)
-	router.registerAdmin(adminRouter)
+	router.registerAdmin(adminRouter, router.RouterAdmin)
 	// 注册web路由
 	webRouter := group.Group(router.RouterWeb)
 	router.registerWeb(webRouter)
 }
 
-func (router *Router) registerAdmin(group *echo.Group) {
-	register := http.RouterRegister{Group: group}
+func (router *Router) registerAdmin(group *echo.Group, prefix string) {
+	register := http.RouterRegister{Group: group, Prefix: prefix}
 	register.Middleware(middleware.JWTWithConfig(middleware.JWTConfig{
+		Skipper: func(context echo.Context) bool {
+			url := context.Request().URL
+			uri := url.Path[:strings.LastIndex(url.Path, ".")]
+			return uri == prefix + "/signin"
+		},
 		SigningMethod: middleware.AlgorithmHS256,
 		TokenLookup:   "header:" + echo.HeaderAuthorization,
 		SigningKey:    []byte("secret"),
@@ -33,6 +39,7 @@ func (router *Router) registerAdmin(group *echo.Group) {
 	}))
 	// 登录
 	register.POST("/signin", router.AdminIndex.Signin)
+	register.POST("/signina", router.AdminIndex.Signin)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]

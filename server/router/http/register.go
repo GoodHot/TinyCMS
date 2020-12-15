@@ -7,7 +7,8 @@ import (
 )
 
 type RouterRegister struct {
-	Group *echo.Group
+	Group  *echo.Group
+	Prefix string
 }
 
 func (reg *RouterRegister) Middleware(middleware echo.MiddlewareFunc) {
@@ -61,6 +62,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.POST(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})
@@ -76,6 +78,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.POST(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})
@@ -83,6 +86,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.PUT(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})
@@ -90,6 +94,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.PATCH(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})
@@ -97,6 +102,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.DELETE(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})
@@ -104,6 +110,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.OPTIONS(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})
@@ -111,6 +118,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 		reg.Group.Any(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx: context,
+				Suffix: suffix,
 			}
 			return handlerFunc(ctx)
 		})

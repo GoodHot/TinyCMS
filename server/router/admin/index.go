@@ -5,8 +5,9 @@ import (
 	"github.com/GoodHot/TinyCMS/common"
 	"github.com/GoodHot/TinyCMS/server/router/http"
 	"github.com/GoodHot/TinyCMS/service"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/labstack/echo"
 	"time"
 )
 
@@ -32,11 +33,36 @@ type signinForm struct {
 	Password string `json:"password"`
 }
 
+type jwtCustomClaims struct {
+	Name  string `json:"name"`
+	Admin bool   `json:"admin"`
+	jwt.StandardClaims
+}
+
 func (my *Index) Signin(ctx *http.Context) error {
 	var signin signinForm
-	if ctx.Bind(&signin) == nil {
-		log.Println(signin.Account)
-		log.Println(signin.Password)
+	if err := ctx.Bind(&signin); err != nil {
+		return err
 	}
-	return ctx.HTML("hello")
+	if signin.Account != "x" && signin.Password != "x" {
+		return echo.ErrUnauthorized
+	}
+	claims := &jwtCustomClaims{
+		"Jon Snow",
+		true,
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+		},
+	}
+
+	// Create token with claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		return err
+	}
+	ctx.Put("token", t)
+	return ctx.JSON()
 }
