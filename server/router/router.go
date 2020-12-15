@@ -36,10 +36,11 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		TokenLookup:   "header:" + echo.HeaderAuthorization,
 		SigningKey:    []byte("secret"),
 		Claims:        jwt.MapClaims{},
+		AuthScheme:    "TinyCMS",
 	}))
 	// 登录
 	register.POST("/signin", router.AdminIndex.Signin)
-	register.POST("/signina", router.AdminIndex.Signin)
+	register.POST("/signina", router.AdminIndex.List)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]

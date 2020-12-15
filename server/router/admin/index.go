@@ -51,6 +51,7 @@ func (my *Index) Signin(ctx *http.Context) error {
 		"Jon Snow",
 		true,
 		jwt.StandardClaims{
+
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
 	}
