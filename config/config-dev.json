@@ -19,7 +19,8 @@
   },
   "orm": {
     "type": "sqlite",
-    "levelDB": {},
-    "mongodb": {}
+    "sqlite": {
+      "db": "./data.db"
+    }
   }
 }

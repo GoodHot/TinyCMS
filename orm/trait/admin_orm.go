@@ -8,6 +8,7 @@ type Admin struct {
 }
 
 type AdminORM interface {
+	Initial() error
 	GetByUsername(username string) (*Admin, error)
 	GetByEmail(email string) (*Admin, error)
 }

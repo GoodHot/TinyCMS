@@ -5,6 +5,10 @@ import "github.com/GoodHot/TinyCMS/orm/trait"
 type AdminORMImpl struct {
 }
 
+func (a AdminORMImpl) Initial() error {
+	panic("implement me")
+}
+
 func (a AdminORMImpl) GetByUsername(username string) (*trait.Admin, error) {
 	panic("implement me")
 }

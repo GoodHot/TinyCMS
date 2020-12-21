@@ -2,6 +2,7 @@ package orm
 
 import (
 	"errors"
+	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/impl/mongodb"
 	"github.com/GoodHot/TinyCMS/orm/impl/mysql"
 	"github.com/GoodHot/TinyCMS/orm/impl/sqlite"
@@ -9,13 +10,14 @@ import (
 )
 
 type AdminORMFactory struct {
-	DBType string `val:"${props.orm.type}"`
+	Config *core.Config `ioc:"auto"`
+	DBType string       `val:"${props.orm.type}"`
 	impl   trait.AdminORM
 }
 
 func (factory *AdminORMFactory) Startup() error {
 	if factory.DBType == "sqlite" {
-		factory.impl = &sqlite.AdminORMImpl{}
+		factory.impl = &sqlite.AdminORMImpl{Cfg: factory.Config}
 	} else if factory.DBType == "mysql" {
 		factory.impl = &mysql.AdminORMImpl{}
 	} else if factory.DBType == "mongodb" {
@@ -23,7 +25,7 @@ func (factory *AdminORMFactory) Startup() error {
 	} else {
 		return errors.New("can not found " + factory.DBType + " orm db type")
 	}
-	return nil
+	return factory.impl.Initial()
 }
 
 func (factory *AdminORMFactory) Ins() trait.AdminORM {

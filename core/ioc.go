@@ -17,6 +17,7 @@ type IOC struct {
 func (ioc *IOC) Register(ins interface{}) {
 	if ioc.insMap == nil {
 		ioc.insMap = make(map[string]interface{})
+		ioc.insMap[ioc.instanceName(ioc.cfg)] = ioc.cfg
 	}
 	insName := ioc.instanceName(ins)
 	if ioc.Get(insName) != nil {
