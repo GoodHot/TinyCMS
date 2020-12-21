@@ -7,27 +7,45 @@ import (
 	"github.com/GoodHot/TinyCMS/orm/impl/mysql"
 	"github.com/GoodHot/TinyCMS/orm/impl/sqlite"
 	"github.com/GoodHot/TinyCMS/orm/trait"
+	"github.com/jmoiron/sqlx"
+	"io/ioutil"
 )
 
-type AdminORMFactory struct {
+type ORMFactory struct {
 	Config *core.Config `ioc:"auto"`
 	DBType string       `val:"${props.orm.type}"`
-	impl   trait.AdminORM
+	Admin  trait.AdminORM
 }
 
-func (factory *AdminORMFactory) Startup() error {
+func (factory *ORMFactory) Startup() error {
 	if factory.DBType == "sqlite" {
-		factory.impl = &sqlite.AdminORMImpl{Cfg: factory.Config}
+		return factory.initSqlite()
 	} else if factory.DBType == "mysql" {
-		factory.impl = &mysql.AdminORMImpl{}
+		factory.Admin = &mysql.AdminORMImpl{}
 	} else if factory.DBType == "mongodb" {
-		factory.impl = &mongodb.AdminORMImpl{}
+		factory.Admin = &mongodb.AdminORMImpl{}
 	} else {
 		return errors.New("can not found " + factory.DBType + " orm db type")
 	}
-	return factory.impl.Initial()
+	return errors.New("not found database adapter")
 }
 
-func (factory *AdminORMFactory) Ins() trait.AdminORM {
-	return factory.impl
+func (factory *ORMFactory) initSqlite() error {
+	dbName, err := factory.Config.GetStr("props.orm.sqlite.db")
+	if err != nil {
+		return err
+	}
+	db, err := sqlx.Open("sqlite3", dbName)
+	if err != nil {
+		return err
+	}
+	schema, err := ioutil.ReadFile("./config/sqlite/init.sql")
+	if err != nil {
+		return err
+	}
+	if _, err := db.Exec(string(schema)); err != nil {
+		return err
+	}
+	factory.Admin = &sqlite.AdminORMImpl{DB: db}
+	return nil
 }

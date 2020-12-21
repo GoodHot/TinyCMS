@@ -6,7 +6,7 @@ import (
 )
 
 type AdminService struct {
-	AdminORM *orm.AdminORMFactory `ioc:"auto"`
+	ORM *orm.ORMFactory `ioc:"auto"`
 }
 
 func (*AdminService) GetByID(id int) {
@@ -14,7 +14,7 @@ func (*AdminService) GetByID(id int) {
 }
 
 func (s *AdminService) GetByUsernameOrEmail(account string) (*trait.Admin, error) {
-	return s.AdminORM.Ins().GetByUsername(account)
+	return s.ORM.Admin.GetByUsername(account)
 }
 
 func (*AdminService) CheckPwd(oldPwd, newPwd string) bool {
