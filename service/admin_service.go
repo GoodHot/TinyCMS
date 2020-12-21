@@ -14,7 +14,7 @@ func (*AdminService) GetByID(id int) {
 }
 
 func (s *AdminService) GetByUsernameOrEmail(account string) (*trait.Admin, error) {
-	return s.AdminORM.Get().GetByUsername(account)
+	return s.AdminORM.Ins().GetByUsername(account)
 }
 
 func (*AdminService) CheckPwd(oldPwd, newPwd string) bool {
