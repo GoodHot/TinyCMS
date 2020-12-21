@@ -36,7 +36,7 @@ func (my *Index) Signin(ctx *http.Context) error {
 		return err
 	}
 	if !my.AdminService.CheckPwd(signin.Account, signin.Password) {
-		return errors.New("Password fail")
+		return errors.New("password fail")
 	}
 	claims := &jwtCustomClaims{
 		admin.ID,
