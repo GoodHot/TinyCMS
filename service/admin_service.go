@@ -1,7 +1,7 @@
 package service
 
 import (
-	"errors"
+	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"strings"
@@ -15,9 +15,9 @@ func (*AdminService) GetByID(id int) {
 
 }
 
-func (s *AdminService) GetByUsernameOrEmail(account string) (*trait.Admin, error) {
+func (s *AdminService) GetByUsernameOrEmail(account string) (*trait.Admin, *core.Err) {
 	if strings.TrimSpace(account) == "" {
-		return nil, errors.New("not found")
+		return nil, core.NewErr(core.Err_Auth)
 	}
 	if strings.Contains(account, "@") {
 		return s.ORM.Admin.GetByEmail(account)

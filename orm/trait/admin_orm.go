@@ -1,5 +1,7 @@
 package trait
 
+import "github.com/GoodHot/TinyCMS/core"
+
 type Admin struct {
 	BaseORM
 	Username string
@@ -8,6 +10,6 @@ type Admin struct {
 }
 
 type AdminORM interface {
-	GetByUsername(username string) (*Admin, error)
-	GetByEmail(email string) (*Admin, error)
+	GetByUsername(username string) (*Admin, *core.Err)
+	GetByEmail(email string) (*Admin, *core.Err)
 }

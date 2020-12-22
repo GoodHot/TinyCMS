@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/GoodHot/TinyCMS/core"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -37,8 +38,12 @@ func (ctx *Context) Bind(i interface{}) error {
 	return ctx.Ctx.Bind(i)
 }
 
-func (ctx *Context) JSON() error {
-	return ctx.Ctx.JSON(http.StatusOK, ctx.data)
+func (ctx *Context) JSON() *core.Err {
+	err := ctx.Ctx.JSON(http.StatusOK, ctx.data)
+	if err != nil {
+		return core.NewErr(core.Err_Sys_Server)
+	}
+	return nil
 }
 
-type HandlerFunc func(ctx *Context) error
+type HandlerFunc func(ctx *Context) *core.Err
