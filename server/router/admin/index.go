@@ -35,8 +35,11 @@ func (my *Index) Signin(ctx *http.Context) *core.Err {
 	if err != nil {
 		return err
 	}
-	if !my.AdminService.CheckPwd(signin.Account, signin.Password) {
-		return core.NewErr(core.Err_Sys_Server)
+	if admin.ID == 0 {
+		return core.NewErr(core.Err_Auth_Account_Fail)
+	}
+	if !my.AdminService.CheckPwd(admin.Password, signin.Password) {
+		return core.NewErr(core.Err_Auth_Account_Fail)
 	}
 	claims := &jwtCustomClaims{
 		admin.ID,

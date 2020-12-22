@@ -11,6 +11,20 @@ const (
 	SuffixHTML = ".html"
 )
 
+type RespResult struct {
+	Code int                    `json:"code"`
+	Msg  string                 `json:"msg"`
+	Data map[string]interface{} `json:"data"`
+}
+
+func NewRespResult(code int, msg string, data map[string]interface{}) *RespResult {
+	return &RespResult{
+		Code: code,
+		Msg:  msg,
+		Data: data,
+	}
+}
+
 type Context struct {
 	Ctx    echo.Context
 	Suffix string
@@ -39,7 +53,8 @@ func (ctx *Context) Bind(i interface{}) error {
 }
 
 func (ctx *Context) JSON() *core.Err {
-	err := ctx.Ctx.JSON(http.StatusOK, ctx.data)
+	result := NewRespResult(int(core.ErrTypeOK.Code), core.ErrTypeOK.Msg, ctx.data)
+	err := ctx.Ctx.JSON(http.StatusOK, result)
 	if err != nil {
 		return core.NewErr(core.Err_Sys_Server)
 	}

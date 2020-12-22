@@ -60,8 +60,8 @@ func (reg *RouterRegister) errorHandler(ctx *Context, err *core.Err) error {
 	if err == nil {
 		return nil
 	}
-	// TODO 处理异常情况
-	return err
+	result := NewRespResult(int(err.ErrType.Code), err.Error(), nil)
+	return ctx.Ctx.JSON(err.ErrType.RespStatus, result)
 }
 
 func (reg *RouterRegister) register(method string, relativePath, suffix string, handlerFunc HandlerFunc) {

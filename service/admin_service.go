@@ -17,7 +17,7 @@ func (*AdminService) GetByID(id int) {
 
 func (s *AdminService) GetByUsernameOrEmail(account string) (*trait.Admin, *core.Err) {
 	if strings.TrimSpace(account) == "" {
-		return nil, core.NewErr(core.Err_Auth)
+		return nil, core.NewErr(core.Err_Auth_Account_Fail)
 	}
 	if strings.Contains(account, "@") {
 		return s.ORM.Admin.GetByEmail(account)
