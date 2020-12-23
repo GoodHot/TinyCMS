@@ -61,4 +61,14 @@ func (ctx *Context) JSON() *core.Err {
 	return nil
 }
 
+func (ctx *Context) ResultOK(html string) *core.Err {
+	// TODO 判断返回类型，如果是JSON返回JSON，如果是HTML返回HTML
+	result := NewRespResult(int(core.ErrTypeOK.Code), core.ErrTypeOK.Msg, ctx.data)
+	err := ctx.Ctx.JSON(http.StatusOK, result)
+	if err != nil {
+		return core.NewErr(core.Err_Sys_Server)
+	}
+	return nil
+}
+
 type HandlerFunc func(ctx *Context) *core.Err

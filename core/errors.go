@@ -17,6 +17,7 @@ var (
 	Err_Auth_Account_Fail = ErrType{Code: 0x2001, Msg: "Account Fail", RespStatus: http.StatusOK}
 	Err_Auth_Not_Username = ErrType{Code: 0x2002, Msg: "Not Username", RespStatus: http.StatusOK}
 	Err_Auth_Not_Email    = ErrType{Code: 0x2003, Msg: "Not Email", RespStatus: http.StatusOK}
+	Err_Channel_Save_fail = ErrType{Code: 0x3001, Msg: "Save Channel Fail", RespStatus: http.StatusOK}
 )
 
 type Err struct {

@@ -8,8 +8,7 @@ import (
 )
 
 type AdminORMImpl struct {
-	isInitial bool
-	DB        *sqlx.DB
+	DB *sqlx.DB
 }
 
 func (orm *AdminORMImpl) GetByUsername(username string) (*trait.Admin, *core.Err) {

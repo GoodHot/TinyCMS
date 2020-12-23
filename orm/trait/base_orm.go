@@ -3,7 +3,7 @@ package trait
 import "time"
 
 type BaseORM struct {
-	ID       int
-	Created  *time.Time
-	Modified *time.Time
+	ID       int        `json:"id"`
+	Created  *time.Time `json:"created"`
+	Modified *time.Time `json:"modified"`
 }

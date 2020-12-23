@@ -12,9 +12,10 @@ import (
 )
 
 type ORMFactory struct {
-	Config *core.Config `ioc:"auto"`
-	DBType string       `val:"${props.orm.type}"`
-	Admin  trait.AdminORM
+	Config  *core.Config `ioc:"auto"`
+	DBType  string       `val:"${props.orm.type}"`
+	Admin   trait.AdminORM
+	Channel trait.ChannelORM
 }
 
 func (factory *ORMFactory) Startup() error {
@@ -47,5 +48,6 @@ func (factory *ORMFactory) initSqlite() error {
 		return err
 	}
 	factory.Admin = &sqlite.AdminORMImpl{DB: db}
+	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
 	return nil
 }

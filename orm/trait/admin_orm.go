@@ -4,9 +4,9 @@ import "github.com/GoodHot/TinyCMS/core"
 
 type Admin struct {
 	BaseORM
-	Username string
-	Email    string
-	Password string
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"_"`
 }
 
 type AdminORM interface {

@@ -10,10 +10,11 @@ import (
 )
 
 type Router struct {
-	JWTSecret   string       `val:"${props.secret.jwt}"`
-	RouterAdmin string       `val:"${props.router.admin}"`
-	RouterWeb   string       `val:"${props.router.web}"`
-	AdminIndex  *admin.Index `ioc:"auto"`
+	JWTSecret    string         `val:"${props.secret.jwt}"`
+	RouterAdmin  string         `val:"${props.router.admin}"`
+	RouterWeb    string         `val:"${props.router.web}"`
+	AdminIndex   *admin.Index   `ioc:"auto"`
+	AdminChannel *admin.Channel `ioc:"auto"`
 }
 
 func (router *Router) Register(group *echo.Group) {
@@ -31,7 +32,7 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		Skipper: func(context echo.Context) bool {
 			url := context.Request().URL
 			uri := url.Path[:strings.LastIndex(url.Path, ".")]
-			return uri == prefix+"/signin"
+			return uri == prefix+"/auth/signin"
 		},
 		SigningMethod: middleware.AlgorithmHS256,
 		TokenLookup:   "header:" + echo.HeaderAuthorization,
@@ -40,7 +41,9 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		AuthScheme:    "TinyCMS",
 	}))
 	// 登录
-	register.POST("/signin", router.AdminIndex.Signin)
+	register.POST("/auth/signin", router.AdminIndex.Signin)
+	// 保存频道
+	register.POST("/channel", router.AdminChannel.Save)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]
