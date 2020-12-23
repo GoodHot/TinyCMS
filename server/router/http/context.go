@@ -1,7 +1,10 @@
 package http
 
 import (
+	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/core"
+	"github.com/GoodHot/TinyCMS/orm/trait"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -69,6 +72,21 @@ func (ctx *Context) ResultOK(html string) *core.Err {
 		return core.NewErr(core.Err_Sys_Server)
 	}
 	return nil
+}
+
+func (ctx *Context) CurrAdmin() *trait.Admin {
+	user := ctx.Ctx.Get(config.JWTContextKey).(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	return &trait.Admin{
+		BaseORM: trait.BaseORM{
+			ID: int(claims["id"].(float64)),
+		},
+		Username: claims["username"].(string),
+	}
+}
+
+func (ctx *Context) QueryParam(name string) string {
+	return ctx.Ctx.QueryParam(name)
 }
 
 type HandlerFunc func(ctx *Context) *core.Err

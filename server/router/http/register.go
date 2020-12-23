@@ -68,7 +68,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 	fmt.Printf("register:%v%v\n", relativePath, suffix)
 	relativePath = relativePath + suffix
 	if method == http.MethodGet {
-		reg.Group.POST(relativePath, func(context echo.Context) error {
+		reg.Group.GET(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx:    context,
 				Suffix: suffix,

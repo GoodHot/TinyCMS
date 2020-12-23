@@ -7,6 +7,7 @@ import (
 )
 
 type HTTPServer struct {
+	Env        string         `val:"${env}"`
 	ServerAddr string         `val:"${server.addr}"`
 	Router     *router.Router `ioc:"auto"`
 }
@@ -14,14 +15,16 @@ type HTTPServer struct {
 // 启动服务
 func (server *HTTPServer) Startup() {
 	engine := echo.New()
-	engine.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{"*"},
-		AllowMethods: []string{"*"},
-	}))
-	engine.OPTIONS("*", func(context echo.Context) error {
-		return nil
-	})
+	if server.Env == "dev" || server.Env == "test" {
+		engine.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: []string{"*"},
+			AllowHeaders: []string{"*"},
+			AllowMethods: []string{"*"},
+		}))
+		engine.OPTIONS("*", func(context echo.Context) error {
+			return nil
+		})
+	}
 	server.Router.Register(engine.Group(""))
 	engine.Logger.Fatal(engine.Start(server.ServerAddr))
 }

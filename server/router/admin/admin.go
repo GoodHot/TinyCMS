@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type Index struct {
+type Admin struct {
 	JWTSecret    string                `val:"${props.secret.jwt}"`
 	Cache        *common.Cache         `ioc:"auto"`
 	AdminService *service.AdminService `ioc:"auto"`
@@ -26,7 +26,7 @@ type jwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func (my *Index) Signin(ctx *http.Context) *core.Err {
+func (my *Admin) Signin(ctx *http.Context) *core.Err {
 	var signin signinForm
 	if err := ctx.Bind(&signin); err != nil {
 		return core.NewErr(core.Err_Sys_Server)
@@ -41,20 +41,29 @@ func (my *Index) Signin(ctx *http.Context) *core.Err {
 	if !my.AdminService.CheckPwd(admin.Password, signin.Password) {
 		return core.NewErr(core.Err_Auth_Account_Fail)
 	}
-	claims := &jwtCustomClaims{
-		admin.ID,
-		admin.Username,
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-		},
-	}
-	// Create token with claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// Generate encoded token and send it as response.
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["id"] = admin.ID
+	claims["username"] = admin.Username
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+
 	t, e := token.SignedString([]byte(my.JWTSecret))
 	if e != nil {
 		return err
 	}
 	ctx.Put("token", t)
 	return ctx.JSON()
+}
+
+func (my *Admin) Info(ctx *http.Context) *core.Err {
+	full := ctx.QueryParam("full")
+	if full != "" {
+		// TODO 查询Admin完整信息
+		ctx.Put("type", "full")
+	} else {
+		ctx.Put("info", ctx.CurrAdmin())
+		ctx.Put("type", "simple")
+	}
+	return ctx.ResultOK("ok")
 }

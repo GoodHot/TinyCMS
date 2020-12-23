@@ -1,11 +1,13 @@
 package router
 
 import (
+	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/server/router/admin"
 	"github.com/GoodHot/TinyCMS/server/router/http"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	http2 "net/http"
 	"strings"
 )
 
@@ -13,7 +15,7 @@ type Router struct {
 	JWTSecret    string         `val:"${props.secret.jwt}"`
 	RouterAdmin  string         `val:"${props.router.admin}"`
 	RouterWeb    string         `val:"${props.router.web}"`
-	AdminIndex   *admin.Index   `ioc:"auto"`
+	AdminAdmin   *admin.Admin   `ioc:"auto"`
 	AdminChannel *admin.Channel `ioc:"auto"`
 }
 
@@ -34,6 +36,14 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 			uri := url.Path[:strings.LastIndex(url.Path, ".")]
 			return uri == prefix+"/auth/signin"
 		},
+		ErrorHandler: func(err error) error {
+			return &echo.HTTPError{
+				Code:     http2.StatusUnauthorized,
+				Message:  "please login",
+				Internal: err,
+			}
+		},
+		ContextKey:    config.JWTContextKey,
 		SigningMethod: middleware.AlgorithmHS256,
 		TokenLookup:   "header:" + echo.HeaderAuthorization,
 		SigningKey:    []byte(router.JWTSecret),
@@ -41,7 +51,9 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		AuthScheme:    "TinyCMS",
 	}))
 	// 登录
-	register.POST("/auth/signin", router.AdminIndex.Signin)
+	register.POST("/auth/signin", router.AdminAdmin.Signin)
+	// 获取当前用户
+	register.GET("/auth/info", router.AdminAdmin.Info)
 	// 保存频道
 	register.POST("/channel", router.AdminChannel.Save)
 	// 获取当前用户

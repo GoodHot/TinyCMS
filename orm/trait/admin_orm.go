@@ -6,7 +6,7 @@ type Admin struct {
 	BaseORM
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	Password string `json:"_"`
+	Password string `json:"-"`
 }
 
 type AdminORM interface {

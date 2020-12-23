@@ -2,7 +2,7 @@
   "env": "dev",
   "appName": "TinyCMS",
   "server": {
-    "addr": "localhost:8080"
+    "addr": "localhost:8888"
   },
   "props": "config-${env}.json"
 }
