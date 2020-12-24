@@ -13,3 +13,7 @@ type ChannelService struct {
 func (my *ChannelService) Save(channel *trait.Channel) *core.Err {
 	return my.ORM.Channel.Save(channel)
 }
+
+func (my *ChannelService) GetByPath(path string) (*trait.Channel, *core.Err) {
+	return my.ORM.Channel.GetByPath(path)
+}

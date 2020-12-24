@@ -17,6 +17,10 @@ func (my *Channel) Save(ctx *http.Context) *core.Err {
 		return core.NewErr(core.Err_Sys_Server)
 	}
 	// TODO 验证channel合法性
+	cn, _ := my.ChannelService.GetByPath(channel.Path)
+	if cn != nil {
+		return core.NewErr(core.Err_Channel_Path_Exists)
+	}
 	if err := my.ChannelService.Save(&channel); err != nil {
 		return err
 	}

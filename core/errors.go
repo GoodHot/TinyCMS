@@ -12,12 +12,17 @@ type ErrType struct {
 }
 
 var (
-	ErrTypeOK             = ErrType{Code: 0, Msg: "ok", RespStatus: http.StatusOK}
-	Err_Sys_Server        = ErrType{Code: 0x1001, Msg: "Param Bind Error", RespStatus: http.StatusInternalServerError}
+	ErrTypeOK = ErrType{Code: 0, Msg: "ok", RespStatus: http.StatusOK}
+
+	Err_Sys_Server = ErrType{Code: 0x1001, Msg: "Param Bind Error", RespStatus: http.StatusInternalServerError}
+
 	Err_Auth_Account_Fail = ErrType{Code: 0x2001, Msg: "Account Fail", RespStatus: http.StatusOK}
 	Err_Auth_Not_Username = ErrType{Code: 0x2002, Msg: "Not Username", RespStatus: http.StatusOK}
 	Err_Auth_Not_Email    = ErrType{Code: 0x2003, Msg: "Not Email", RespStatus: http.StatusOK}
-	Err_Channel_Save_fail = ErrType{Code: 0x3001, Msg: "Save Channel Fail", RespStatus: http.StatusOK}
+
+	Err_Channel_Save_fail         = ErrType{Code: 0x3001, Msg: "Save Channel Fail", RespStatus: http.StatusOK}
+	Err_Channel_Not_Found_By_Path = ErrType{Code: 0x3002, Msg: "channel not found", RespStatus: http.StatusOK}
+	Err_Channel_Path_Exists       = ErrType{Code: 0x3004, Msg: "channel path exists", RespStatus: http.StatusOK}
 )
 
 type Err struct {
