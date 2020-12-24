@@ -26,4 +26,5 @@ type Channel struct {
 type ChannelORM interface {
 	Save(channel *Channel) *core.Err
 	GetByPath(path string) (*Channel, *core.Err)
+	GetAll() (*[]Channel, *core.Err)
 }

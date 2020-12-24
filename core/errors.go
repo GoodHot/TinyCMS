@@ -22,6 +22,7 @@ var (
 
 	Err_Channel_Save_fail         = ErrType{Code: 0x3001, Msg: "Save Channel Fail", RespStatus: http.StatusOK}
 	Err_Channel_Not_Found_By_Path = ErrType{Code: 0x3002, Msg: "channel not found", RespStatus: http.StatusOK}
+	Err_Channel_Can_Not_Get_List  = ErrType{Code: 0x3003, Msg: "can not get list", RespStatus: http.StatusOK}
 	Err_Channel_Path_Exists       = ErrType{Code: 0x3004, Msg: "channel path exists", RespStatus: http.StatusOK}
 )
 

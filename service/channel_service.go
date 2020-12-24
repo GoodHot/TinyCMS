@@ -17,3 +17,8 @@ func (my *ChannelService) Save(channel *trait.Channel) *core.Err {
 func (my *ChannelService) GetByPath(path string) (*trait.Channel, *core.Err) {
 	return my.ORM.Channel.GetByPath(path)
 }
+
+func (my *ChannelService) GetAll() (*[]trait.Channel, *core.Err) {
+	// TODO 给channel排序
+	return my.ORM.Channel.GetAll()
+}

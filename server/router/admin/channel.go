@@ -26,3 +26,12 @@ func (my *Channel) Save(ctx *http.Context) *core.Err {
 	}
 	return ctx.ResultOK("ok")
 }
+
+func (my *Channel) All(ctx *http.Context) *core.Err {
+	cs, err := my.ChannelService.GetAll()
+	if err != nil {
+		return err
+	}
+	ctx.Put("channels", cs)
+	return ctx.ResultOK("ok")
+}

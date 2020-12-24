@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"fmt"
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/jmoiron/sqlx"
@@ -10,21 +11,29 @@ type ChannelORMImpl struct {
 	DB *sqlx.DB
 }
 
+const allColumn = "id, avatar, name, path, visibility, meta_title as metatitle, meta_description as metadescription, sort, parent_id as parentid"
+
+func (orm ChannelORMImpl) GetAll() (*[]trait.Channel, *core.Err) {
+	sql := `select %v from t_channel`
+	var cs []trait.Channel
+	err := orm.DB.Select(&cs, fmt.Sprintf(sql, allColumn))
+	if err != nil {
+		return nil, core.NewErr(core.Err_Channel_Can_Not_Get_List)
+	}
+	return &cs, nil
+}
+
 func (orm ChannelORMImpl) GetByPath(path string) (*trait.Channel, *core.Err) {
 	sql := `
-		select id, avatar, name, path, visibility, meta_title as metatitle, meta_description as metadescription, sort, parent_id as parentid
+		select %v
 		from t_channel
 		where path = ?
 		limit 1
 	`
-	row := orm.DB.QueryRowx(sql, path)
-	if row.Err() != nil {
-		return nil, core.NewErr(core.Err_Channel_Not_Found_By_Path)
-	}
 	var channel trait.Channel
-	err := row.StructScan(&channel)
+	err := orm.DB.Get(&channel, fmt.Sprintf(sql, allColumn), path)
 	if err != nil {
-		return nil, core.NewErr(core.Err_Sys_Server)
+		return nil, core.NewErr(core.Err_Channel_Not_Found_By_Path)
 	}
 	return &channel, nil
 }
