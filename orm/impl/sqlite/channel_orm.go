@@ -11,7 +11,7 @@ type ChannelORMImpl struct {
 	DB *sqlx.DB
 }
 
-const allColumn = "id, avatar, name, path, visibility, meta_title as metatitle, meta_description as metadescription, sort, parent_id as parentid"
+const allColumn = "id, avatar, avatar_svg as avatarsvg, name, path, visibility, meta_title as metatitle, meta_description as metadescription, sort, parent_id as parentid"
 
 func (orm ChannelORMImpl) GetAll() (*[]trait.Channel, *core.Err) {
 	sql := `select %v from t_channel`

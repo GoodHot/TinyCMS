@@ -14,6 +14,7 @@ const (
 type Channel struct {
 	BaseORM
 	Avatar          string          `json:"avatar"`
+	AvatarSVG       string          `json:"avatar_svg"`
 	Name            string          `json:"name"`
 	Path            string          `json:"path"`
 	Visibility      VisibilityLevel `json:"visibility"`
