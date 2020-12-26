@@ -20,10 +20,11 @@ var (
 	Err_Auth_Not_Username = ErrType{Code: 0x2002, Msg: "Not Username", RespStatus: http.StatusOK}
 	Err_Auth_Not_Email    = ErrType{Code: 0x2003, Msg: "Not Email", RespStatus: http.StatusOK}
 
-	Err_Channel_Save_fail         = ErrType{Code: 0x3001, Msg: "Save Channel Fail", RespStatus: http.StatusOK}
+	Err_Channel_Save_Fail         = ErrType{Code: 0x3001, Msg: "Save Channel Fail", RespStatus: http.StatusOK}
 	Err_Channel_Not_Found_By_Path = ErrType{Code: 0x3002, Msg: "channel not found", RespStatus: http.StatusOK}
 	Err_Channel_Can_Not_Get_List  = ErrType{Code: 0x3003, Msg: "can not get list", RespStatus: http.StatusOK}
 	Err_Channel_Path_Exists       = ErrType{Code: 0x3004, Msg: "channel path exists", RespStatus: http.StatusOK}
+	Err_Channel_Change_Sort_Fail       = ErrType{Code: 0x3005, Msg: "channel path exists", RespStatus: http.StatusOK}
 )
 
 type Err struct {

@@ -22,3 +22,7 @@ func (my *ChannelService) GetAll() (*[]trait.Channel, *core.Err) {
 	// TODO 给channel排序
 	return my.ORM.Channel.GetAll()
 }
+
+func (my *ChannelService) UpdateSort(data []trait.Channel) *core.Err {
+	return my.ORM.Channel.UpdateSort(data)
+}

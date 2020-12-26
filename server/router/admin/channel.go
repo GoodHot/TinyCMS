@@ -35,3 +35,29 @@ func (my *Channel) All(ctx *http.Context) *core.Err {
 	ctx.Put("channels", cs)
 	return ctx.ResultOK("ok")
 }
+
+type ChannelSort struct {
+	Sortable []struct {
+		ID   int `json:"id"`
+		Sort int `json:"sort"`
+	} `json:"sortable"`
+}
+
+func (my *Channel) Sort(ctx *http.Context) *core.Err {
+	var cs ChannelSort
+	err := ctx.Bind(&cs)
+	if err != nil {
+		return core.NewErr(core.Err_Sys_Server)
+	}
+	var data []trait.Channel
+	for _, sort := range cs.Sortable {
+		data = append(data, trait.Channel{
+			BaseORM: trait.BaseORM{
+				ID: sort.ID,
+			},
+			Sort: sort.Sort,
+		})
+	}
+	my.ChannelService.UpdateSort(data)
+	return ctx.ResultOK("ok")
+}

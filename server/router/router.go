@@ -58,6 +58,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.POST("/channel", router.AdminChannel.Save)
 	// 获取所有频道列表
 	register.GET("/channels", router.AdminChannel.All)
+	// 修改频道排序
+	register.PUT("/channels/sort", router.AdminChannel.Sort)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]
