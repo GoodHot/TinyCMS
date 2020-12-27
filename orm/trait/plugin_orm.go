@@ -18,6 +18,16 @@ type Plugin struct {
 	Internal    bool       `json:"internal"` // 是否为内部插件 true为内部，false为外部
 }
 
+type PluginParam struct {
+	BaseORM
+	PID         int
+	Key         string
+	Value       string
+	Description string
+	CanEdit     bool
+	Visible     bool
+}
+
 type PluginORM interface {
 	GetByInfo(name string, version string, pluginType PluginType) (*Plugin, *core.Err)
 	Save(plugin *Plugin) *core.Err

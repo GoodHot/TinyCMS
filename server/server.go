@@ -1,15 +1,17 @@
 package server
 
 import (
+	"github.com/GoodHot/TinyCMS/plugin"
 	"github.com/GoodHot/TinyCMS/server/router"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
 type HTTPServer struct {
-	Env        string         `val:"${env}"`
-	ServerAddr string         `val:"${server.addr}"`
-	Router     *router.Router `ioc:"auto"`
+	Env           string                `val:"${env}"`
+	ServerAddr    string                `val:"${server.addr}"`
+	Router        *router.Router        `ioc:"auto"`
+	PluginManager *plugin.PluginManager `ioc:"auto"`
 }
 
 // 启动服务
@@ -25,6 +27,7 @@ func (server *HTTPServer) Startup() {
 			return nil
 		})
 	}
+	server.PluginManager.Mount()
 	server.Router.Register(engine.Group(""))
 	engine.Logger.Fatal(engine.Start(server.ServerAddr))
 }

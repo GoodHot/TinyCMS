@@ -25,9 +25,14 @@ func (orm *PluginORMImpl) GetByInfo(name string, version string, pluginType trai
 
 func (orm *PluginORMImpl) Save(plugin *trait.Plugin) *core.Err {
 	sql := "insert into t_plugin(name, version, description, type, server, internal) values(?,?,?,?,?,?)"
-	_, err := orm.DB.Exec(sql, plugin.Name, plugin.Version, plugin.Description, plugin.Type, plugin.Server, plugin.Internal)
+	rst, err := orm.DB.Exec(sql, plugin.Name, plugin.Version, plugin.Description, plugin.Type, plugin.Server, plugin.Internal)
 	if err != nil {
 		return core.NewErr(core.Err_Plugin_Save_Fail)
 	}
+	lastID, err := rst.LastInsertId()
+	if err != nil {
+		return core.NewErr(core.Err_Plugin_Save_Fail)
+	}
+	plugin.ID = int(lastID)
 	return nil
 }

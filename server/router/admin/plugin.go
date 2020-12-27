@@ -19,5 +19,5 @@ func (my *Plugin) Mount(ctx *http.Context) *core.Err {
 	if err := ctx.Bind(&mount); err != nil {
 		return core.NewErr(core.Err_Sys_Server)
 	}
-	return my.PluginService.Mount(mount.PluginServer)
+	return my.PluginService.Mount(mount.PluginServer, false)
 }
