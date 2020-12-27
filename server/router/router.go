@@ -17,6 +17,7 @@ type Router struct {
 	RouterWeb    string         `val:"${props.router.web}"`
 	AdminAdmin   *admin.Admin   `ioc:"auto"`
 	AdminChannel *admin.Channel `ioc:"auto"`
+	AdminPlugin  *admin.Plugin  `ioc:"auto"`
 }
 
 func (router *Router) Register(group *echo.Group) {
@@ -60,6 +61,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.GET("/channels", router.AdminChannel.All)
 	// 修改频道排序
 	register.PUT("/channels/sort", router.AdminChannel.Sort)
+	// 挂载插件
+	register.POST("/plugin/mount", router.AdminPlugin.Mount)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]

@@ -16,6 +16,7 @@ type ORMFactory struct {
 	DBType  string       `val:"${props.orm.type}"`
 	Admin   trait.AdminORM
 	Channel trait.ChannelORM
+	Plugin  trait.PluginORM
 }
 
 func (factory *ORMFactory) Startup() error {
@@ -49,5 +50,6 @@ func (factory *ORMFactory) initSqlite() error {
 	}
 	factory.Admin = &sqlite.AdminORMImpl{DB: db}
 	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
+	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
 	return nil
 }
