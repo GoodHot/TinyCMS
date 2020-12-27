@@ -11,7 +11,9 @@ type ParamOperator struct {
 	orm *orm.ORMFactory
 }
 
-func (p *ParamOperator) Set(key string, value string, canEdit bool) {
+func (p *ParamOperator) Set(param *trait.PluginParam) {
+	param.PID = p.pid
+	p.orm.Plugin.SaveParam(param)
 }
 
 type IPlugin interface {
@@ -53,4 +55,28 @@ func (ps *PluginService) MountInternal(plugin *trait.Plugin, iplugin IPlugin) *c
 	param := &ParamOperator{orm: ps.ORM, pid: plugin.ID}
 	iplugin.Install(param)
 	return nil
+}
+
+type PluginInfo struct {
+	Plugin trait.Plugin        `json:"plugin"`
+	Param  *[]trait.PluginParam `json:"param"`
+}
+
+func (ps *PluginService) GetByType(pluginType string) ([]*PluginInfo, *core.Err) {
+	plugins, err := ps.ORM.Plugin.GetByType(pluginType)
+	if err != nil {
+		return nil, err
+	}
+	if len(*plugins) == 0 {
+		return nil, core.NewErr(core.Err_Plugin_Type_Not_Exists)
+	}
+	var result []*PluginInfo
+	for _, plugin := range *plugins {
+		params := ps.ORM.Plugin.GetParams(plugin.ID)
+		result = append(result, &PluginInfo{
+			Plugin: plugin,
+			Param:  params,
+		})
+	}
+	return result, nil
 }

@@ -63,6 +63,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.PUT("/channels/sort", router.AdminChannel.Sort)
 	// 挂载插件
 	register.POST("/plugin/mount", router.AdminPlugin.Mount)
+	// 根据类型获取插件列表
+	register.GET("/plugin/:type/all", router.AdminPlugin.GetByType)
 	// 获取当前用户
 	//register.POST("/user", router.AdminIndex.Index)
 	//// 获取文章列表 :status = [published(default), drafts, scheduled]

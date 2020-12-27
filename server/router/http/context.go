@@ -85,6 +85,10 @@ func (ctx *Context) CurrAdmin() *trait.Admin {
 	}
 }
 
+func (ctx *Context) Param(name string) string {
+	return ctx.Ctx.Param(name)
+}
+
 func (ctx *Context) QueryParam(name string) string {
 	return ctx.Ctx.QueryParam(name)
 }

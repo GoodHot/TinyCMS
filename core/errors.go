@@ -26,9 +26,11 @@ var (
 	Err_Channel_Path_Exists       = ErrType{Code: 0x3004, Msg: "channel path exists", RespStatus: http.StatusOK}
 	Err_Channel_Change_Sort_Fail  = ErrType{Code: 0x3005, Msg: "channel path exists", RespStatus: http.StatusOK}
 
-	Err_Plugin_Not_Exists = ErrType{Code: 0x4001, Msg: "plugin not exists", RespStatus: http.StatusOK}
-	Err_Plugin_Exists     = ErrType{Code: 0x4002, Msg: "plugin exists", RespStatus: http.StatusOK}
-	Err_Plugin_Save_Fail  = ErrType{Code: 0x4003, Msg: "save plugin fail", RespStatus: http.StatusOK}
+	Err_Plugin_Not_Exists      = ErrType{Code: 0x4001, Msg: "plugin not exists", RespStatus: http.StatusOK}
+	Err_Plugin_Exists          = ErrType{Code: 0x4002, Msg: "plugin exists", RespStatus: http.StatusOK}
+	Err_Plugin_Save_Fail       = ErrType{Code: 0x4003, Msg: "save plugin fail", RespStatus: http.StatusOK}
+	Err_Plugin_Save_Param_Fail = ErrType{Code: 0x4004, Msg: "save plugin param fail", RespStatus: http.StatusOK}
+	Err_Plugin_Type_Not_Exists = ErrType{Code: 0x4005, Msg: "plugin type not exists", RespStatus: http.StatusOK}
 )
 
 type Err struct {

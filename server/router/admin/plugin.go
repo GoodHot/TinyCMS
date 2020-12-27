@@ -21,3 +21,13 @@ func (my *Plugin) Mount(ctx *http.Context) *core.Err {
 	}
 	return my.PluginService.Mount(mount.PluginServer, false)
 }
+
+func (my *Plugin) GetByType(ctx *http.Context) *core.Err {
+	pluginType := ctx.Param("type")
+	plugins, err := my.PluginService.GetByType(pluginType)
+	if err != nil {
+		return err
+	}
+	ctx.Put("plugins", plugins)
+	return ctx.ResultOK("ok")
+}

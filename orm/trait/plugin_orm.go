@@ -18,17 +18,29 @@ type Plugin struct {
 	Internal    bool       `json:"internal"` // 是否为内部插件 true为内部，false为外部
 }
 
+type PluginParamType string
+
+const (
+	PluginParamType_Input    PluginParamType = "input"
+	PluginParamType_Textarea PluginParamType = "textarea"
+	PluginParamType_Select   PluginParamType = "select"
+)
+
 type PluginParam struct {
 	BaseORM
-	PID         int
-	Key         string
-	Value       string
-	Description string
-	CanEdit     bool
-	Visible     bool
+	PID         int             `json:"pid"`
+	Key         string          `json:"key"`
+	Value       string          `json:"value"`
+	Description string          `json:"description"`
+	CanEdit     bool            `json:"can_edit"`
+	Visible     bool            `json:"visible"`
+	ValueType   PluginParamType `json:"value_type"`
 }
 
 type PluginORM interface {
 	GetByInfo(name string, version string, pluginType PluginType) (*Plugin, *core.Err)
 	Save(plugin *Plugin) *core.Err
+	SaveParam(param *PluginParam) *core.Err
+	GetByType(pluginType string) (*[]Plugin, *core.Err)
+	GetParams(id int) *[]PluginParam
 }

@@ -22,5 +22,14 @@ func (pm *PluginManager) Mount() error {
 	if err != nil && err.ErrType == core.Err_Plugin_Exists {
 		fmt.Println("这个插件已经存在了")
 	}
+	err = pm.PluginService.MountInternal(&trait.Plugin{
+		Name:        "UpyunUpload",
+		Version:     "1.0.0",
+		Description: "upyun upload file by local",
+		Type:        trait.PluginTypeUpload,
+	}, &upload.UpyunUploadPlugin{})
+	if err != nil && err.ErrType == core.Err_Plugin_Exists {
+		fmt.Println("这个插件已经存在了")
+	}
 	return nil
 }
