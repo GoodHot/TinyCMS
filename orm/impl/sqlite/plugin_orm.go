@@ -11,7 +11,16 @@ type PluginORMImpl struct {
 	DB *sqlx.DB
 }
 
-const allPluginParamColumn = "pid, key, value, can_edit as canedit, description, value_type as valuetype, visible"
+func (orm *PluginORMImpl) UpdateParam(param trait.PluginParam) *core.Err {
+	sql := "update t_plugin_param set value = ? where id = ?"
+	_, err := orm.DB.Exec(sql, param.Value, param.ID)
+	if err != nil {
+		return core.NewErr(core.Err_Plugin_Save_Param_Fail)
+	}
+	return nil
+}
+
+const allPluginParamColumn = "id, pid, key, value, can_edit as canedit, description, value_type as valuetype, visible"
 
 func (orm *PluginORMImpl) SaveParam(param *trait.PluginParam) *core.Err {
 	sql := "insert into t_plugin_param(pid, key, value, description, can_edit, value_type, visible) values(?,?,?,?,?,?,?)"

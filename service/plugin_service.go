@@ -80,3 +80,9 @@ func (ps *PluginService) GetByType(pluginType string) ([]*PluginInfo, *core.Err)
 	}
 	return result, nil
 }
+
+func (ps *PluginService) UpdateParam(params []trait.PluginParam) {
+	for _, param := range params {
+		ps.ORM.Plugin.UpdateParam(param)
+	}
+}

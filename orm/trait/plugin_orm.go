@@ -18,23 +18,24 @@ type Plugin struct {
 	Internal    bool       `json:"internal"` // 是否为内部插件 true为内部，false为外部
 }
 
-type PluginParamType string
+type FormType string
 
 const (
-	PluginParamType_Input    PluginParamType = "input"
-	PluginParamType_Textarea PluginParamType = "textarea"
-	PluginParamType_Select   PluginParamType = "select"
+	FormType_Input    FormType = "input"
+	FormType_Textarea FormType = "textarea"
+	FormType_Select   FormType = "select"
+	FormType_Tags     FormType = "tags"
 )
 
 type PluginParam struct {
 	BaseORM
-	PID         int             `json:"pid"`
-	Key         string          `json:"key"`
-	Value       string          `json:"value"`
-	Description string          `json:"description"`
-	CanEdit     bool            `json:"can_edit"`
-	Visible     bool            `json:"visible"`
-	ValueType   PluginParamType `json:"value_type"`
+	PID         int      `json:"pid"`
+	Key         string   `json:"key"`
+	Value       string   `json:"value"`
+	Description string   `json:"description"`
+	CanEdit     bool     `json:"can_edit"`
+	Visible     bool     `json:"visible"`
+	ValueType   FormType `json:"value_type"`
 }
 
 type PluginORM interface {
@@ -43,4 +44,5 @@ type PluginORM interface {
 	SaveParam(param *PluginParam) *core.Err
 	GetByType(pluginType string) (*[]Plugin, *core.Err)
 	GetParams(id int) *[]PluginParam
+	UpdateParam(param PluginParam) *core.Err
 }

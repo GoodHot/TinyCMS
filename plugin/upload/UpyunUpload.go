@@ -15,7 +15,7 @@ func (*UpyunUploadPlugin) Install(param *service.ParamOperator) {
 		Description: "Upyun Bucket",
 		CanEdit:     true,
 		Visible:     true,
-		ValueType:   trait.PluginParamType_Input,
+		ValueType:   trait.FormType_Input,
 	})
 	param.Set(&trait.PluginParam{
 		Key:         "Operator",
@@ -23,7 +23,7 @@ func (*UpyunUploadPlugin) Install(param *service.ParamOperator) {
 		Description: "Upyun Operator",
 		CanEdit:     true,
 		Visible:     true,
-		ValueType:   trait.PluginParamType_Input,
+		ValueType:   trait.FormType_Input,
 	})
 	param.Set(&trait.PluginParam{
 		Key:         "Password",
@@ -31,7 +31,7 @@ func (*UpyunUploadPlugin) Install(param *service.ParamOperator) {
 		Description: "Upyun Password",
 		CanEdit:     true,
 		Visible:     true,
-		ValueType:   trait.PluginParamType_Input,
+		ValueType:   trait.FormType_Input,
 	})
 }
 

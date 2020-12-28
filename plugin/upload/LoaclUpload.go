@@ -15,6 +15,6 @@ func (*LocalUploadPlugin) Install(param *service.ParamOperator) {
 		Description: "文件上传前缀",
 		CanEdit:     true,
 		Visible:     true,
-		ValueType:   trait.PluginParamType_Input,
+		ValueType:   trait.FormType_Input,
 	})
 }

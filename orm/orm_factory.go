@@ -17,6 +17,7 @@ type ORMFactory struct {
 	Admin   trait.AdminORM
 	Channel trait.ChannelORM
 	Plugin  trait.PluginORM
+	Dict    trait.DictORM
 }
 
 func (factory *ORMFactory) Startup() error {
@@ -51,5 +52,6 @@ func (factory *ORMFactory) initSqlite() error {
 	factory.Admin = &sqlite.AdminORMImpl{DB: db}
 	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
+	factory.Dict = &sqlite.DictORMImpl{DB: db}
 	return nil
 }
