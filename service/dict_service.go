@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 )
@@ -30,4 +31,12 @@ func (ds *DictService) Startup() error {
 		Visible:     false,
 	})
 	return nil
+}
+
+func (ds *DictService) Update(key string, value string) *core.Err {
+	return ds.ORM.Dict.UpdateValue(key, value)
+}
+
+func (ds *DictService) Get(key string) (*trait.Dict, *core.Err) {
+	return ds.ORM.Dict.GetByKey(key)
 }

@@ -68,24 +68,10 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.GET("/plugin/:type/all", router.AdminPlugin.GetByType)
 	// 修改插件参数
 	register.PUT("/plugin/params", router.AdminPlugin.UpdateParam)
-	// 获取当前用户
-	//register.POST("/user", router.AdminIndex.Index)
-	//// 获取文章列表 :status = [published(default), drafts, scheduled]
-	//register.GET("/posts/:status", router.AdminIndex.List)
-	//// 获取频道
-	//register.GET("/channels", router.AdminIndex.List)
-	//// 获取标签
-	//register.GET("/tags", router.AdminIndex.List)
-	//// 获取页面
-	//register.GET("/pages", router.AdminIndex.List)
-	//// 站点设置
-	//register.GET("/general", router.AdminIndex.List)
-	//// 修改站点设置
-	//register.PUT("/general/:key", router.AdminIndex.List)
-	//// 页面设计
-	//register.GET("/design", router.AdminIndex.List)
-	//// 代码块注入
-	//register.GET("/code-injection", router.AdminIndex.List)
+	// 更新字典
+	register.PUT("/dict", router.AdminDict.Update)
+	// 查询字典
+	register.GET("/dict/:key/info", router.AdminDict.Get)
 
 }
 

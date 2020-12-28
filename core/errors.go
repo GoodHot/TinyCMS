@@ -32,7 +32,9 @@ var (
 	Err_Plugin_Save_Param_Fail = ErrType{Code: 0x4004, Msg: "save plugin param fail", RespStatus: http.StatusOK}
 	Err_Plugin_Type_Not_Exists = ErrType{Code: 0x4005, Msg: "plugin type not exists", RespStatus: http.StatusOK}
 
-	Err_Dict_Save_Fail = ErrType{Code: 0x5001, Msg: "dict not exists", RespStatus: http.StatusOK}
+	Err_Dict_Save_Fail     = ErrType{Code: 0x5001, Msg: "dict not exists", RespStatus: http.StatusOK}
+	Err_Dict_Not_Found_Key = ErrType{Code: 0x5001, Msg: "dict not found key", RespStatus: http.StatusOK}
+	Err_Dict_Update_Fail   = ErrType{Code: 0x5001, Msg: "dict update fail", RespStatus: http.StatusOK}
 )
 
 type Err struct {
