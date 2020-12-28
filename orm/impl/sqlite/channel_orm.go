@@ -13,7 +13,7 @@ type ChannelORMImpl struct {
 	DB *sqlx.DB
 }
 
-const allColumn = "id, avatar, avatar_svg as avatarsvg, name, path, visibility, meta_title as metatitle, meta_description as metadescription, sort, parent_id as parentid"
+const allColumn = "id, avatar, avatar_svg as avatarsvg, name, path, visible, meta_title as metatitle, meta_description as metadescription, sort, parent_id as parentid"
 
 func (orm ChannelORMImpl) UpdateSort(data []trait.Channel) *core.Err {
 	sql := "update t_channel set sort = case id "
