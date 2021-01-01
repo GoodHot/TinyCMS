@@ -15,7 +15,7 @@ type Router struct {
 	JWTSecret    string         `val:"${props.secret.jwt}"`
 	RouterAdmin  string         `val:"${props.router.admin}"`
 	RouterWeb    string         `val:"${props.router.web}"`
-	AdminAdmin   *admin.Admin   `ioc:"auto"`
+	AdminMember  *admin.Member  `ioc:"auto"`
 	AdminChannel *admin.Channel `ioc:"auto"`
 	AdminPlugin  *admin.Plugin  `ioc:"auto"`
 	AdminDict    *admin.Dict    `ioc:"auto"`
@@ -53,9 +53,9 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		AuthScheme:    "TinyCMS",
 	}))
 	// 登录
-	register.POST("/auth/signin", router.AdminAdmin.Signin)
+	register.POST("/auth/signin", router.AdminMember.Signin)
 	// 获取当前用户
-	register.GET("/auth/info", router.AdminAdmin.Info)
+	register.GET("/auth/info", router.AdminMember.Info)
 	// 保存频道
 	register.POST("/channel", router.AdminChannel.Save)
 	// 获取所有频道列表

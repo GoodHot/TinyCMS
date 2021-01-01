@@ -7,24 +7,24 @@ import (
 	"strings"
 )
 
-type AdminService struct {
+type MemberService struct {
 	ORM *orm.ORMFactory `ioc:"auto"`
 }
 
-func (*AdminService) GetByID(id int) {
+func (*MemberService) GetByID(id int) {
 
 }
 
-func (s *AdminService) GetByUsernameOrEmail(account string) (*trait.Admin, *core.Err) {
+func (s *MemberService) GetByUsernameOrEmail(account string) (*trait.Member, *core.Err) {
 	if strings.TrimSpace(account) == "" {
 		return nil, core.NewErr(core.Err_Auth_Account_Fail)
 	}
 	if strings.Contains(account, "@") {
-		return s.ORM.Admin.GetByEmail(account)
+		return s.ORM.Member.GetByEmail(account)
 	}
-	return s.ORM.Admin.GetByUsername(account)
+	return s.ORM.Member.GetByUsername(account)
 }
 
-func (*AdminService) CheckPwd(oldPwd, newPwd string) bool {
+func (*MemberService) CheckPwd(oldPwd, newPwd string) bool {
 	return oldPwd == newPwd
 }

@@ -11,7 +11,7 @@ const (
 	RoleTypeAuthor RoleType = 4
 )
 
-type Admin struct {
+type Member struct {
 	BaseORM
 	Nickname string   `json:"nickname"`
 	Username string   `json:"username"`
@@ -20,7 +20,7 @@ type Admin struct {
 	Role     RoleType `json:"role"`
 }
 
-type AdminORM interface {
-	GetByUsername(username string) (*Admin, *core.Err)
-	GetByEmail(email string) (*Admin, *core.Err)
+type MemberORM interface {
+	GetByUsername(username string) (*Member, *core.Err)
+	GetByEmail(email string) (*Member, *core.Err)
 }

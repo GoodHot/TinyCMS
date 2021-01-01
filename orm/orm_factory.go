@@ -14,7 +14,7 @@ import (
 type ORMFactory struct {
 	Config  *core.Config `ioc:"auto"`
 	DBType  string       `val:"${props.orm.type}"`
-	Admin   trait.AdminORM
+	Member   trait.MemberORM
 	Channel trait.ChannelORM
 	Plugin  trait.PluginORM
 	Dict    trait.DictORM
@@ -24,9 +24,9 @@ func (factory *ORMFactory) Startup() error {
 	if factory.DBType == "sqlite" {
 		return factory.initSqlite()
 	} else if factory.DBType == "mysql" {
-		factory.Admin = &mysql.AdminORMImpl{}
+		factory.Member = &mysql.MemberORMImpl{}
 	} else if factory.DBType == "mongodb" {
-		factory.Admin = &mongodb.AdminORMImpl{}
+		factory.Member = &mongodb.AdminORMImpl{}
 	} else {
 		return errors.New("can not found " + factory.DBType + " orm db type")
 	}
@@ -49,7 +49,7 @@ func (factory *ORMFactory) initSqlite() error {
 	if _, err := db.Exec(string(schema)); err != nil {
 		return err
 	}
-	factory.Admin = &sqlite.AdminORMImpl{DB: db}
+	factory.Member = &sqlite.MemberORMImpl{DB: db}
 	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
 	factory.Dict = &sqlite.DictORMImpl{DB: db}

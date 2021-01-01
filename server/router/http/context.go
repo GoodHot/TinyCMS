@@ -74,10 +74,10 @@ func (ctx *Context) ResultOK(html string) *core.Err {
 	return nil
 }
 
-func (ctx *Context) CurrAdmin() *trait.Admin {
+func (ctx *Context) CurrMember() *trait.Member {
 	user := ctx.Ctx.Get(config.JWTContextKey).(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
-	return &trait.Admin{
+	return &trait.Member{
 		BaseORM: trait.BaseORM{
 			ID: int(claims["id"].(float64)),
 		},

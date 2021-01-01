@@ -9,10 +9,10 @@ import (
 	"time"
 )
 
-type Admin struct {
+type Member struct {
 	JWTSecret    string                `val:"${props.secret.jwt}"`
 	Cache        *common.Cache         `ioc:"auto"`
-	AdminService *service.AdminService `ioc:"auto"`
+	MemberService *service.MemberService `ioc:"auto"`
 }
 
 type signinForm struct {
@@ -26,26 +26,26 @@ type jwtCustomClaims struct {
 	jwt.StandardClaims
 }
 
-func (my *Admin) Signin(ctx *http.Context) *core.Err {
+func (my *Member) Signin(ctx *http.Context) *core.Err {
 	var signin signinForm
 	if err := ctx.Bind(&signin); err != nil {
 		return core.NewErr(core.Err_Sys_Server)
 	}
-	admin, err := my.AdminService.GetByUsernameOrEmail(signin.Account)
+	member, err := my.MemberService.GetByUsernameOrEmail(signin.Account)
 	if err != nil {
 		return err
 	}
-	if admin.ID == 0 {
+	if member.ID == 0 {
 		return core.NewErr(core.Err_Auth_Account_Fail)
 	}
-	if !my.AdminService.CheckPwd(admin.Password, signin.Password) {
+	if !my.MemberService.CheckPwd(member.Password, signin.Password) {
 		return core.NewErr(core.Err_Auth_Account_Fail)
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["id"] = admin.ID
-	claims["username"] = admin.Username
+	claims["id"] = member.ID
+	claims["username"] = member.Username
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	t, e := token.SignedString([]byte(my.JWTSecret))
@@ -56,13 +56,13 @@ func (my *Admin) Signin(ctx *http.Context) *core.Err {
 	return ctx.JSON()
 }
 
-func (my *Admin) Info(ctx *http.Context) *core.Err {
+func (my *Member) Info(ctx *http.Context) *core.Err {
 	full := ctx.QueryParam("full")
 	if full != "" {
 		// TODO 查询Admin完整信息
 		ctx.Put("type", "full")
 	} else {
-		ctx.Put("info", ctx.CurrAdmin())
+		ctx.Put("info", ctx.CurrMember())
 		ctx.Put("type", "simple")
 	}
 	return ctx.ResultOK("ok")

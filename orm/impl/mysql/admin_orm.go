@@ -5,18 +5,18 @@ import (
 	"github.com/GoodHot/TinyCMS/orm/trait"
 )
 
-type AdminORMImpl struct {
+type MemberORMImpl struct {
 }
 
-func (a AdminORMImpl) Initial() error {
+func (a MemberORMImpl) Initial() error {
 	panic("implement me")
 }
 
-func (a AdminORMImpl) GetByUsername(username string) (*trait.Admin, *core.Err) {
+func (a MemberORMImpl) GetByUsername(username string) (*trait.Member, *core.Err) {
 	panic("implement me")
 }
 
-func (a AdminORMImpl) GetByEmail(email string) (*trait.Admin, *core.Err) {
+func (a MemberORMImpl) GetByEmail(email string) (*trait.Member, *core.Err) {
 	panic("implement me")
 }
 
