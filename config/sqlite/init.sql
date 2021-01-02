@@ -1,18 +1,117 @@
--- CREATE TABLE "t_admin" (
---   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
---   "username" TEXT,
---   "email" TEXT,
---   "password" TEXT
--- );
+-- /*
+--  Navicat Premium Data Transfer
 --
+--  Source Server         : tinycms
+--  Source Server Type    : SQLite
+--  Source Server Version : 3030001
+--  Source Schema         : main
+--
+--  Target Server Type    : SQLite
+--  Target Server Version : 3030001
+--  File Encoding         : 65001
+--
+--  Date: 02/01/2021 11:15:45
+-- */
+--
+-- PRAGMA foreign_keys = false;
+--
+-- -- ----------------------------
+-- -- Table structure for t_channel
+-- -- ----------------------------
+-- DROP TABLE IF EXISTS "t_channel";
 -- CREATE TABLE "t_channel" (
 --   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 --   "name" TEXT,
 --   "path" TEXT,
+--   "avatar_svg" TEXT,
 --   "avatar" TEXT,
---   "visibility" integer,
+--   "visible" integer,
 --   "meta_title" TEXT,
 --   "meta_description" TEXT,
 --   "sort" integer,
 --   "parent_id" INTEGER
 -- );
+--
+-- -- ----------------------------
+-- -- Table structure for t_dict
+-- -- ----------------------------
+-- DROP TABLE IF EXISTS "t_dict";
+-- CREATE TABLE "t_dict" (
+--   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+--   "name" TEXT,
+--   "description" TEXT,
+--   "form_type" TEXT,
+--   "type_value" TEXT,
+--   "key" TEXT,
+--   "value" TEXT,
+--   "visible" INTEGER(1)
+-- );
+--
+-- -- ----------------------------
+-- -- Table structure for t_member
+-- -- ----------------------------
+-- DROP TABLE IF EXISTS "t_member";
+-- CREATE TABLE "t_member" (
+--   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+--   "nickname" TEXT,
+--   "username" TEXT NOT NULL,
+--   "email" TEXT,
+--   "password" TEXT NOT NULL,
+--   "role" INTEGER
+-- );
+--
+-- -- ----------------------------
+-- -- Table structure for t_plugin
+-- -- ----------------------------
+-- DROP TABLE IF EXISTS "t_plugin";
+-- CREATE TABLE "t_plugin" (
+--   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+--   "name" TEXT,
+--   "version" TEXT,
+--   "description" TEXT,
+--   "type" TEXT,
+--   "internal" integer(1),
+--   "server" TEXT
+-- );
+--
+-- -- ----------------------------
+-- -- Table structure for t_plugin_param
+-- -- ----------------------------
+-- DROP TABLE IF EXISTS "t_plugin_param";
+-- CREATE TABLE "t_plugin_param" (
+--   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+--   "pid" INTEGER,
+--   "key" TEXT,
+--   "value" TEXT,
+--   "can_edit" INTEGER(1),
+--   "description" TEXT,
+--   "value_type" TEXT,
+--   "visible" INTEGER(1)
+-- );
+--
+-- -- ----------------------------
+-- -- Auto increment value for t_channel
+-- -- ----------------------------
+-- UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 't_channel';
+--
+-- -- ----------------------------
+-- -- Auto increment value for t_dict
+-- -- ----------------------------
+-- UPDATE "main"."sqlite_sequence" SET seq = 1 WHERE name = 't_dict';
+--
+-- -- ----------------------------
+-- -- Auto increment value for t_member
+-- -- ----------------------------
+-- UPDATE "main"."sqlite_sequence" SET seq = 1 WHERE name = 't_member';
+--
+-- -- ----------------------------
+-- -- Auto increment value for t_plugin
+-- -- ----------------------------
+-- UPDATE "main"."sqlite_sequence" SET seq = 9 WHERE name = 't_plugin';
+--
+-- -- ----------------------------
+-- -- Auto increment value for t_plugin_param
+-- -- ----------------------------
+-- UPDATE "main"."sqlite_sequence" SET seq = 5 WHERE name = 't_plugin_param';
+--
+-- PRAGMA foreign_keys = true;
