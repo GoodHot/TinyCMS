@@ -19,6 +19,7 @@ type Router struct {
 	AdminChannel *admin.Channel `ioc:"auto"`
 	AdminPlugin  *admin.Plugin  `ioc:"auto"`
 	AdminDict    *admin.Dict    `ioc:"auto"`
+	AdminPost    *admin.Post    `ioc:"auto"`
 }
 
 func (router *Router) Register(group *echo.Group) {
@@ -72,7 +73,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.PUT("/dict", router.AdminDict.Update)
 	// 查询字典
 	register.GET("/dict/:key/info", router.AdminDict.Get)
-
+	// 保存文章
+	register.POST("/post", router.AdminPost.Save)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {

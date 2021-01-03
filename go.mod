@@ -3,6 +3,7 @@ module github.com/GoodHot/TinyCMS
 go 1.13
 
 require (
+	github.com/davidscottmills/goeditorjs v1.0.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
 	github.com/jmoiron/sqlx v1.2.0

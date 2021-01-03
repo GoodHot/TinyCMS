@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"fmt"
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/jmoiron/sqlx"
@@ -11,14 +12,18 @@ type MemberORMImpl struct {
 	DB *sqlx.DB
 }
 
+const allMemberColumn = "id, nickname, email, password, role"
+
 func (orm *MemberORMImpl) GetByUsername(username string) (*trait.Member, *core.Err) {
-	row := orm.DB.QueryRowx("select * from t_member where username = ?", username)
+	row := orm.DB.QueryRowx(fmt.Sprintf("select %v from t_member where username = ?", allMemberColumn), username)
 	if row.Err() != nil {
 		return nil, core.NewErr(core.Err_Auth_Not_Username)
 	}
-	var admin trait.Member
-	row.StructScan(&admin)
-	return &admin, nil
+	var member trait.Member
+	if err := row.StructScan(&member); err != nil {
+		return nil, core.NewErr(core.Err_Auth_Not_Username)
+	}
+	return &member, nil
 }
 
 func (orm *MemberORMImpl) GetByEmail(email string) (*trait.Member, *core.Err) {

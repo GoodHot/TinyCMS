@@ -10,8 +10,8 @@ import (
 )
 
 type Member struct {
-	JWTSecret    string                `val:"${props.secret.jwt}"`
-	Cache        *common.Cache         `ioc:"auto"`
+	JWTSecret     string                 `val:"${props.secret.jwt}"`
+	Cache         *common.Cache          `ioc:"auto"`
 	MemberService *service.MemberService `ioc:"auto"`
 }
 

@@ -14,10 +14,11 @@ import (
 type ORMFactory struct {
 	Config  *core.Config `ioc:"auto"`
 	DBType  string       `val:"${props.orm.type}"`
-	Member   trait.MemberORM
+	Member  trait.MemberORM
 	Channel trait.ChannelORM
 	Plugin  trait.PluginORM
 	Dict    trait.DictORM
+	Post    trait.PostORM
 }
 
 func (factory *ORMFactory) Startup() error {
@@ -53,5 +54,6 @@ func (factory *ORMFactory) initSqlite() error {
 	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
 	factory.Dict = &sqlite.DictORMImpl{DB: db}
+	factory.Post = &sqlite.PostORMImpl{DB: db}
 	return nil
 }

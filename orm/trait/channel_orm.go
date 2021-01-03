@@ -11,6 +11,20 @@ const (
 	VisiblePublic  VisibleLevel = 3
 )
 
+func (VisibleLevel) GetByInt(t int) VisibleLevel {
+	switch t {
+	case 0:
+		return VisiblePrivate
+	case 1:
+		return VisiblePaid
+	case 2:
+		return VisibleMember
+	case 3:
+		return VisiblePublic
+	}
+	return VisiblePrivate
+}
+
 type Channel struct {
 	BaseORM
 	Avatar          string       `json:"avatar"`
