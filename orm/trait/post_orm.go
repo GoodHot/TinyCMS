@@ -10,8 +10,10 @@ type Post struct {
 	TagsID      string       `json:"tags_id"`
 	ChannelID   int          `json:"channel_id"`
 	Visible     VisibleLevel `json:"visible"`
+	Author      int          `json:"author"`
 }
 
 type PostORM interface {
 	Save(post *Post) *core.Err
+	Page(query *Query) (*Page, *core.Err)
 }

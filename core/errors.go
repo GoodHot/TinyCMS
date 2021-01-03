@@ -38,6 +38,7 @@ var (
 
 	Err_Post_Save_Fail            = ErrType{Code: 0x6001, Msg: "post save fail", RespStatus: http.StatusOK}
 	Err_Post_Content_Format_Error = ErrType{Code: 0x6002, Msg: "post content format err", RespStatus: http.StatusOK}
+	Err_Post_Get_Page_Fail        = ErrType{Code: 0x6003, Msg: "post content format err", RespStatus: http.StatusOK}
 )
 
 type Err struct {

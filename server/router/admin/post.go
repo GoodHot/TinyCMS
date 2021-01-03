@@ -46,8 +46,41 @@ func (my *Post) Save(ctx *http.Context) *core.Err {
 		Content:   string(content),
 		TagsID:    strings.Join(form.Tags, ","),
 		ChannelID: cid,
-		Visible: trait.VisiblePublic.GetByInt(visible),
+		Visible:   trait.VisiblePublic.GetByInt(visible),
+		Author:    ctx.CurrMember().ID,
 	}
 	my.PostService.Save(post)
+	return ctx.ResultOK("ok")
+}
+
+func (my *Post) Page(ctx *http.Context) *core.Err {
+	var page, size, lastID int
+	if rst, err := strconv.Atoi(ctx.Param("page")); err != nil {
+		page = 0
+	} else {
+		page = rst
+	}
+	if rst, err := strconv.Atoi(ctx.Param("size")); err != nil {
+		size = 20
+	} else {
+		size = rst
+	}
+	if rst, err := strconv.Atoi(ctx.QueryParam("lastID")); err != nil {
+		lastID = 0
+	} else {
+		lastID = rst
+	}
+	query := &trait.Query{
+		Page:   page,
+		Size:   size,
+		LastID: lastID,
+		Param:  nil,
+		Order:  nil,
+	}
+	result, err := my.PostService.Page(query)
+	if err != nil {
+		return core.NewErr(core.Err_Post_Get_Page_Fail)
+	}
+	ctx.Put("page", result)
 	return ctx.ResultOK("ok")
 }

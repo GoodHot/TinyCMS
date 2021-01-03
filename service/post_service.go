@@ -26,3 +26,7 @@ func (ps *PostService) Save(post *trait.Post) *core.Err {
 	post.ContentHTML = html
 	return ps.ORM.Post.Save(post)
 }
+
+func (ps *PostService) Page(query *trait.Query) (*trait.Page, *core.Err) {
+	return ps.ORM.Post.Page(query)
+}

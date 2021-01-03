@@ -75,6 +75,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.GET("/dict/:key/info", router.AdminDict.Get)
 	// 保存文章
 	register.POST("/post", router.AdminPost.Save)
+	// 文章列表
+	register.GET("/post/:page/:size/list", router.AdminPost.Page)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {
