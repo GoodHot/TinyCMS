@@ -1,6 +1,9 @@
 package sqlite
 
-import "github.com/GoodHot/TinyCMS/orm/trait"
+import (
+	"github.com/GoodHot/TinyCMS/orm/trait"
+	"strings"
+)
 
 func ToSQLiteQuery(query *trait.Query) *SQLiteQuery {
 	return &SQLiteQuery{
@@ -19,6 +22,17 @@ func (query *SQLiteQuery) BuildLimit() (string, []interface{}) {
 
 func (*SQLiteQuery) BuildWhere() {
 
+}
+
+func (query *SQLiteQuery) BuildOrder() string {
+	if query.Order == nil {
+		return ""
+	}
+	var order []string
+	for key, val := range query.Order {
+		order = append(order, key+" "+val)
+	}
+	return "ORDER BY " + strings.Join(order, ",")
 }
 
 func (query *SQLiteQuery) BuildLastID() (string, []interface{}) {

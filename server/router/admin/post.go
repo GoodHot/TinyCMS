@@ -75,7 +75,9 @@ func (my *Post) Page(ctx *http.Context) *core.Err {
 		Size:   size,
 		LastID: lastID,
 		Param:  nil,
-		Order:  nil,
+		Order: map[string]string{
+			"id": "desc",
+		},
 	}
 	result, err := my.PostService.Page(query)
 	if err != nil {

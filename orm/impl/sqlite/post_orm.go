@@ -11,12 +11,12 @@ type PostORMImpl struct {
 	DB *sqlx.DB
 }
 
-const allPostColumn = "id, title, content, content_html as contenthtml, tags_id as tagsid, channel_id as channelid, visible, author"
-const allPostColumnNoLarge = "id, title, tags_id as tagsid, channel_id as channelid, visible, author"
+const allPostColumn = "id, title, content, content_html as contenthtml, tags_id as tagsid, channel_id as channelid, visible, author, created, modified"
+const allPostColumnNoLarge = "id, title, tags_id as tagsid, channel_id as channelid, visible, author, created, modified"
 
 func (orm *PostORMImpl) Save(post *trait.Post) *core.Err {
-	sql := "insert into t_post(title, content, content_html, tags_id, channel_id, visible, author) values(?,?,?,?,?,?,?)"
-	rst, err := orm.DB.Exec(sql, post.Title, post.Content, post.ContentHTML, post.TagsID, post.ChannelID, post.Visible, post.Author)
+	sql := "insert into t_post(title, content, content_html, tags_id, channel_id, visible, author, created, modified) values(?,?,?,?,?,?,?,?,?)"
+	rst, err := orm.DB.Exec(sql, post.Title, post.Content, post.ContentHTML, post.TagsID, post.ChannelID, post.Visible, post.Author, post.Created, post.Modified)
 	if err != nil {
 		return core.NewErr(core.Err_Post_Save_Fail)
 	}
@@ -33,17 +33,18 @@ func (orm *PostORMImpl) Page(baseQuery *trait.Query) (*trait.Page, *core.Err) {
 	var page trait.Page
 	var list []trait.Post
 	var param []interface{}
-	sql := "select %v from t_post where 1 = 1 %v %v %v"
+	sql := "select %v from t_post where 1 = 1 %v %v %v %v"
 	lastIDSQL, lastIDParam := query.BuildLastID()
 	limitSQL, limitParam := query.BuildLimit()
+	orderSQL := query.BuildOrder()
 	param = append(param, lastIDParam...)
 	param = append(param, limitParam...)
-	err := orm.DB.Select(&list, fmt.Sprintf(sql, allPostColumnNoLarge, lastIDSQL, "", limitSQL), param...)
+	err := orm.DB.Select(&list, fmt.Sprintf(sql, allPostColumnNoLarge, lastIDSQL, "", orderSQL, limitSQL), param...)
 	if err != nil {
 		return nil, core.NewErr(core.Err_Post_Get_Page_Fail)
 	}
 	var count int
-	err = orm.DB.Get(&count, fmt.Sprintf(sql, "count(1)", "", "", ""))
+	err = orm.DB.Get(&count, fmt.Sprintf(sql, "count(1)", "", "", "", ""))
 	if err != nil {
 		return nil, core.NewErr(core.Err_Post_Get_Page_Fail)
 	}

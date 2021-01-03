@@ -5,6 +5,7 @@ import (
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/davidscottmills/goeditorjs"
+	"time"
 )
 
 type PostService struct {
@@ -23,7 +24,10 @@ func (ps *PostService) Save(post *trait.Post) *core.Err {
 	if err != nil {
 		return core.NewErr(core.Err_Post_Content_Format_Error)
 	}
+	now := time.Now()
 	post.ContentHTML = html
+	post.Created = &now
+	post.Modified = &now
 	return ps.ORM.Post.Save(post)
 }
 
