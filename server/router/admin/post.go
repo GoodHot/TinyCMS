@@ -17,25 +17,26 @@ type Post struct {
 type saveForm struct {
 	Title       string                 `json:"title"`
 	Content     map[string]interface{} `json:"content"`
+	AutoImage   bool                   `json:"autoImage"`
+	Image       string                 `json:"image"`
+	AutoExcerpt bool                   `json:"auto_excerpt"`
+	Excerpt     string                 `json:"excerpt"`
+	URL         string                 `json:"url"`
+	Channel     int                    `json:"channel"`
 	Tags        []string               `json:"tags"`
-	Channel     string                 `json:"channel"`
-	Visible     string                 `json:"visible"`
+	Visible     int                    `json:"visible"`
 	PublishDate string                 `json:"publishDate"`
 	PublishTime string                 `json:"publishTime"`
+	Meta        struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	} `json:"meta"`
 }
 
 func (my *Post) Save(ctx *http.Context) *core.Err {
 	var form saveForm
 	if err := ctx.Bind(&form); err != nil {
 		return core.NewErr(core.Err_Sys_Server)
-	}
-	cid, err := strconv.Atoi(form.Channel)
-	if err != nil {
-		cid = 0
-	}
-	visible, err := strconv.Atoi(form.Visible)
-	if err != nil {
-		visible = 0
 	}
 	content, err := json.Marshal(form.Content)
 	if err != nil {
@@ -45,8 +46,8 @@ func (my *Post) Save(ctx *http.Context) *core.Err {
 		Title:     form.Title,
 		Content:   string(content),
 		TagsID:    strings.Join(form.Tags, ","),
-		ChannelID: cid,
-		Visible:   trait.VisiblePublic.GetByInt(visible),
+		ChannelID: form.Channel,
+		Visible:   trait.VisiblePublic.GetByInt(form.Visible),
 		Author:    ctx.CurrMember().ID,
 	}
 	my.PostService.Save(post)

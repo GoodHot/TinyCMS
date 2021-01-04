@@ -11,12 +11,12 @@ type PostORMImpl struct {
 	DB *sqlx.DB
 }
 
-const allPostColumn = "id, title, content, content_html as contenthtml, tags_id as tagsid, channel_id as channelid, visible, author, created, modified"
-const allPostColumnNoLarge = "id, title, tags_id as tagsid, channel_id as channelid, visible, author, created, modified"
+const allPostColumn = "id, title, content, content_html as contenthtml, excerpt, image, url, channel_id as channelid, tags_id as tagsid, visible, author, meta_title metatitle, meta_description metadescription, created, modified"
+const allPostColumnNoLarge = "id, title, excerpt, image, url, channel_id as channelid, tags_id as tagsid, visible, author, meta_title metatitle, meta_description metadescription, created, modified"
 
 func (orm *PostORMImpl) Save(post *trait.Post) *core.Err {
-	sql := "insert into t_post(title, content, content_html, tags_id, channel_id, visible, author, created, modified) values(?,?,?,?,?,?,?,?,?)"
-	rst, err := orm.DB.Exec(sql, post.Title, post.Content, post.ContentHTML, post.TagsID, post.ChannelID, post.Visible, post.Author, post.Created, post.Modified)
+	sql := "insert into t_post(title, content, content_html, excerpt, image, url, channel_id,  tags_id, visible, author, meta_title, meta_description, created, modified) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	rst, err := orm.DB.Exec(sql, post.Title, post.Content, post.ContentHTML, post.Excerpt, post.Image, post.URL, post.ChannelID, post.TagsID, post.Visible, post.Author, post.MetaTitle, post.MetaDescription, post.Created, post.Modified)
 	if err != nil {
 		return core.NewErr(core.Err_Post_Save_Fail)
 	}
