@@ -1,56 +1,23 @@
 package admin
 
 import (
-	"encoding/json"
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/GoodHot/TinyCMS/server/router/http"
 	"github.com/GoodHot/TinyCMS/service"
 	"strconv"
-	"strings"
 )
 
 type Post struct {
 	PostService *service.PostService `ioc:"auto"`
 }
 
-type saveForm struct {
-	Title       string                 `json:"title"`
-	Content     map[string]interface{} `json:"content"`
-	AutoImage   bool                   `json:"autoImage"`
-	Image       string                 `json:"image"`
-	AutoExcerpt bool                   `json:"auto_excerpt"`
-	Excerpt     string                 `json:"excerpt"`
-	URL         string                 `json:"url"`
-	Channel     int                    `json:"channel"`
-	Tags        []string               `json:"tags"`
-	Visible     int                    `json:"visible"`
-	PublishDate string                 `json:"publishDate"`
-	PublishTime string                 `json:"publishTime"`
-	Meta        struct {
-		Title       string `json:"title"`
-		Description string `json:"description"`
-	} `json:"meta"`
-}
-
 func (my *Post) Save(ctx *http.Context) *core.Err {
-	var form saveForm
+	var form service.SavePostForm
 	if err := ctx.Bind(&form); err != nil {
 		return core.NewErr(core.Err_Sys_Server)
 	}
-	content, err := json.Marshal(form.Content)
-	if err != nil {
-		content = []byte("")
-	}
-	post := &trait.Post{
-		Title:     form.Title,
-		Content:   string(content),
-		TagsID:    strings.Join(form.Tags, ","),
-		ChannelID: form.Channel,
-		Visible:   trait.VisiblePublic.GetByInt(form.Visible),
-		Author:    ctx.CurrMember().ID,
-	}
-	my.PostService.Save(post)
+	my.PostService.Save(&form, ctx.CurrMember().ID)
 	return ctx.ResultOK("ok")
 }
 

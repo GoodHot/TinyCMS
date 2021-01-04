@@ -1,10 +1,12 @@
 package service
 
 import (
+	"encoding/json"
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/davidscottmills/goeditorjs"
+	"strings"
 	"time"
 )
 
@@ -12,7 +14,30 @@ type PostService struct {
 	ORM *orm.ORMFactory `ioc:"auto"`
 }
 
-func (ps *PostService) Save(post *trait.Post) *core.Err {
+type SavePostForm struct {
+	Title       string                 `json:"title"`
+	Content     map[string]interface{} `json:"content"`
+	AutoImage   bool                   `json:"autoImage"`
+	Image       string                 `json:"image"`
+	AutoExcerpt bool                   `json:"auto_excerpt"`
+	Excerpt     string                 `json:"excerpt"`
+	URL         string                 `json:"url"`
+	Channel     int                    `json:"channel"`
+	Tags        []string               `json:"tags"`
+	Visible     int                    `json:"visible"`
+	PublishDate string                 `json:"publishDate"`
+	PublishTime string                 `json:"publishTime"`
+	Meta        struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	} `json:"meta"`
+}
+
+func (ps *PostService) Save(form *SavePostForm, author int) *core.Err {
+	content, err := json.Marshal(form.Content)
+	if err != nil {
+		content = []byte("")
+	}
 	htmlEngine := goeditorjs.NewHTMLEngine()
 	htmlEngine.RegisterBlockHandlers(
 		&goeditorjs.HeaderHandler{},
@@ -20,14 +45,30 @@ func (ps *PostService) Save(post *trait.Post) *core.Err {
 		&goeditorjs.ListHandler{},
 		&goeditorjs.CodeBoxHandler{},
 	)
-	html, err := htmlEngine.GenerateHTML(post.Content)
+	html, err := htmlEngine.GenerateHTML(string(content))
 	if err != nil {
 		return core.NewErr(core.Err_Post_Content_Format_Error)
 	}
 	now := time.Now()
-	post.ContentHTML = html
-	post.Created = &now
-	post.Modified = &now
+	post := &trait.Post{
+		BaseORM: trait.BaseORM{
+			Created:  &now,
+			Modified: &now,
+		},
+		Title:           form.Title,
+		Content:         string(content),
+		ContentHTML:     html,
+		Excerpt:         form.Excerpt,
+		Image:           form.Image,
+		URL:             form.URL,
+		ChannelID:       form.Channel,
+		TagsID:          strings.Join(form.Tags, ","),
+		Visible:         trait.VisiblePublic.GetByInt(form.Visible),
+		PublishTime:     nil,
+		MetaTitle:       form.Meta.Title,
+		MetaDescription: form.Meta.Description,
+		Author:          author,
+	}
 	return ps.ORM.Post.Save(post)
 }
 
