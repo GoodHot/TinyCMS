@@ -15,7 +15,7 @@ const allPostColumn = "id, title, content, content_html as contenthtml, excerpt,
 const allPostColumnNoLarge = "id, title, excerpt, image, url, channel_id as channelid, tags_id as tagsid, visible, author, meta_title metatitle, meta_description metadescription, created, modified, publish_time as publishtime"
 
 func (orm *PostORMImpl) Save(post *trait.Post) *core.Err {
-	sql := "insert into t_post(title, content, content_html, excerpt, image, url, channel_id,  tags_id, visible, author, meta_title, meta_description, created, modified) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	sql := "insert into t_post(title, content, content_html, excerpt, image, url, channel_id,  tags_id, visible, author, meta_title, meta_description, created, modified) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 	rst, err := orm.DB.Exec(sql, post.Title, post.Content, post.ContentHTML, post.Excerpt, post.Image, post.URL, post.ChannelID, post.TagsID, post.Visible, post.Author, post.MetaTitle, post.MetaDescription, post.Created, post.Modified, post.PublishTime)
 	if err != nil {
 		return core.NewErr(core.Err_Post_Save_Fail)

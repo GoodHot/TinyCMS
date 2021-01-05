@@ -49,6 +49,9 @@ func (ps *PostService) Save(form *SavePostForm, author int) *core.Err {
 	if err != nil {
 		return core.NewErr(core.Err_Post_Content_Format_Error)
 	}
+	if strings.TrimSpace(form.Title) == "" {
+		form.Title = "Untitle"
+	}
 	now := time.Now()
 	post := &trait.Post{
 		BaseORM: trait.BaseORM{
