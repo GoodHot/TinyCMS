@@ -5,6 +5,14 @@ import (
 	"time"
 )
 
+type PostStatus int
+
+const (
+	PostStatus_Publish   PostStatus = 0
+	PostStatus_Drafts    PostStatus = 1
+	PostStatus_Scheduled PostStatus = 2
+)
+
 type Post struct {
 	BaseORM
 	Title           string       `json:"title"`
@@ -20,6 +28,7 @@ type Post struct {
 	MetaTitle       string       `json:"meta_title"`
 	MetaDescription string       `json:"meta_description"`
 	Author          int          `json:"author"`
+	Status          PostStatus   `json:"status"`
 }
 
 type PostORM interface {

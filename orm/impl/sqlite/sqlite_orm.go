@@ -17,7 +17,7 @@ type SQLiteQuery struct {
 
 func (query *SQLiteQuery) BuildLimit() (string, []interface{}) {
 	//row := query.Page * query.Size
-	return " LIMIT ? OFFSET ?", []interface{}{query.Size, 0}
+	return " LIMIT ? OFFSET ?", []interface{}{query.Size, (query.Page - 1) * query.Size}
 }
 
 func (*SQLiteQuery) BuildWhere() {
@@ -36,5 +36,6 @@ func (query *SQLiteQuery) BuildOrder() string {
 }
 
 func (query *SQLiteQuery) BuildLastID() (string, []interface{}) {
-	return " AND id > ?", []interface{}{query.LastID}
+	//return " AND id > ?", []interface{}{query.LastID}
+	return "", nil
 }

@@ -71,6 +71,7 @@ func (ps *PostService) Save(form *SavePostForm, author int) *core.Err {
 		MetaTitle:       form.Meta.Title,
 		MetaDescription: form.Meta.Description,
 		Author:          author,
+		Status:          trait.PostStatus_Publish,
 	}
 	return ps.ORM.Post.Save(post)
 }
