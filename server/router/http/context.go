@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"net/http"
+	"strconv"
 )
 
 const (
@@ -89,8 +90,20 @@ func (ctx *Context) Param(name string) string {
 	return ctx.Ctx.Param(name)
 }
 
+func (ctx *Context) ParamInt(name string) int {
+	rst := ctx.Param(name)
+	val, _ := strconv.Atoi(rst)
+	return val
+}
+
 func (ctx *Context) QueryParam(name string) string {
 	return ctx.Ctx.QueryParam(name)
+}
+
+func (ctx *Context) QueryParamInt(name string) int {
+	rst := ctx.Ctx.QueryParam(name)
+	val, _ := strconv.Atoi(rst)
+	return val
 }
 
 type HandlerFunc func(ctx *Context) *core.Err

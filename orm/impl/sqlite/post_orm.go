@@ -33,18 +33,20 @@ func (orm *PostORMImpl) Page(baseQuery *trait.Query) (*trait.Page, *core.Err) {
 	var page trait.Page
 	var list []trait.Post
 	var param []interface{}
-	sql := "select %v from t_post where 1 = 1 %v %v %v %v"
+	sql := "select %v from t_post where 1 = 1 %v %v %v %v %v"
+	whereSQL, whereParam := query.BuildWhere()
 	lastIDSQL, lastIDParam := query.BuildLastID()
 	limitSQL, limitParam := query.BuildLimit()
 	orderSQL := query.BuildOrder()
+	param = append(param, whereParam...)
 	param = append(param, lastIDParam...)
 	param = append(param, limitParam...)
-	err := orm.DB.Select(&list, fmt.Sprintf(sql, allPostColumnNoLarge, lastIDSQL, "", orderSQL, limitSQL), param...)
+	err := orm.DB.Select(&list, fmt.Sprintf(sql, allPostColumnNoLarge, lastIDSQL, whereSQL, "", orderSQL, limitSQL), param...)
 	if err != nil {
 		return nil, core.NewErr(core.Err_Post_Get_Page_Fail)
 	}
 	var count int
-	err = orm.DB.Get(&count, fmt.Sprintf(sql, "count(1)", "", "", "", ""))
+	err = orm.DB.Get(&count, fmt.Sprintf(sql, "count(1)", "", whereSQL, "", "", ""), param...)
 	if err != nil {
 		return nil, core.NewErr(core.Err_Post_Get_Page_Fail)
 	}

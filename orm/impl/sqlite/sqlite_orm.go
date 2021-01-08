@@ -20,8 +20,15 @@ func (query *SQLiteQuery) BuildLimit() (string, []interface{}) {
 	return " LIMIT ? OFFSET ?", []interface{}{query.Size, (query.Page - 1) * query.Size}
 }
 
-func (*SQLiteQuery) BuildWhere() {
-
+func (query *SQLiteQuery) BuildWhere() (where string, param []interface{}) {
+	if query.Param == nil {
+		return
+	}
+	for field, value := range query.Param {
+		where += " and " + field + " = ?"
+		param = append(param, value)
+	}
+	return
 }
 
 func (query *SQLiteQuery) BuildOrder() string {
