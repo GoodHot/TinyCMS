@@ -58,7 +58,12 @@ func (factory *ORMFactory) initSqlite() error {
 			DB:      db,
 		},
 	}
-	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
+	factory.Channel = &sqlite.ChannelORMImpl{
+		DB: &datasource.DBChannelORM{
+			ShowSQL: factory.ShowSQL,
+			DB:      db,
+		},
+	}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
 	factory.Dict = &sqlite.DictORMImpl{DB: db}
 	factory.Post = &sqlite.PostORMImpl{DB: db}
