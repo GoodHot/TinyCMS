@@ -18,7 +18,7 @@ type Cache struct {
 	Redis *struct {
 		Addr     string `json:"addr"`
 		Password string `json:"password"`
-		DB       int    `json:"db"`
+		DB       int    `json:"datasource"`
 	} `val:"${props.cache.redis}"`
 	instance ICache
 }

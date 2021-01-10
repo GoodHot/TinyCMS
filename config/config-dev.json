@@ -19,6 +19,7 @@
   },
   "orm": {
     "type": "sqlite",
+    "showSQL": true,
     "sqlite": {
       "db": "./data.db"
     }

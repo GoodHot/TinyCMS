@@ -6,6 +6,7 @@ import (
 	"github.com/GoodHot/TinyCMS/orm/impl/mongodb"
 	"github.com/GoodHot/TinyCMS/orm/impl/mysql"
 	"github.com/GoodHot/TinyCMS/orm/impl/sqlite"
+	"github.com/GoodHot/TinyCMS/orm/impl/sqlite/datasource"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/jmoiron/sqlx"
 	"io/ioutil"
@@ -14,6 +15,7 @@ import (
 type ORMFactory struct {
 	Config  *core.Config `ioc:"auto"`
 	DBType  string       `val:"${props.orm.type}"`
+	ShowSQL bool         `val:"${props.orm.showSQL}"`
 	Member  trait.MemberORM
 	Channel trait.ChannelORM
 	Plugin  trait.PluginORM
@@ -29,7 +31,7 @@ func (factory *ORMFactory) Startup() error {
 	} else if factory.DBType == "mongodb" {
 		factory.Member = &mongodb.AdminORMImpl{}
 	} else {
-		return errors.New("can not found " + factory.DBType + " orm db type")
+		return errors.New("can not found " + factory.DBType + " orm datasource type")
 	}
 	return errors.New("not found database adapter")
 }
@@ -50,7 +52,12 @@ func (factory *ORMFactory) initSqlite() error {
 	if _, err := db.Exec(string(schema)); err != nil {
 		return err
 	}
-	factory.Member = &sqlite.MemberORMImpl{DB: db}
+	factory.Member = &sqlite.MemberORMImpl{
+		DB: &datasource.DBMemberORM{
+			ShowSQL: factory.ShowSQL,
+			DB:      db,
+		},
+	}
 	factory.Channel = &sqlite.ChannelORMImpl{DB: db}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
 	factory.Dict = &sqlite.DictORMImpl{DB: db}
