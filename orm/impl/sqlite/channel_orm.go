@@ -43,6 +43,9 @@ func (orm *ChannelORMImpl) GetByPath(path string) (*trait.Channel, *core.Err) {
 	if err != nil {
 		return nil, core.NewErr(core.Err_Channel_Not_Found_By_Path)
 	}
+	if model == nil {
+		return nil, core.NewErr(core.Err_Channel_Not_Found_By_Path)
+	}
 	return &orm.convert(model)[0], nil
 }
 

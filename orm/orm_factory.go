@@ -42,7 +42,6 @@ func (factory *ORMFactory) initSqlite() error {
 		return err
 	}
 	db, err := sqlx.Open("sqlite3", dbName)
-	db.SetMaxOpenConns(1)
 	if err != nil {
 		return err
 	}

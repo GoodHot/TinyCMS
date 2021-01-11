@@ -80,6 +80,8 @@ func (*PostORMImpl) convert(model ...*datasource.DBPostModel) []trait.Post {
 		rst = append(rst, trait.Post{
 			BaseORM: trait.BaseORM{
 				ID: item.ID,
+				Created: item.Created,
+				Modified: item.Modified,
 			},
 			Title:           item.Title,
 			Content:         item.Content,
