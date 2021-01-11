@@ -22,6 +22,7 @@ func (orm *ChannelORMImpl) UpdateSort(data []trait.Channel) *core.Err {
 		sql += fmt.Sprintf("when %v then %v ", channel.ID, index)
 	}
 	sql += " end where id in (" + strings.Join(ids, ",") + ")"
+	fmt.Println(sql)
 	_, err := orm.DB.DB.Exec(sql)
 	if err != nil {
 		return core.NewErr(core.Err_Channel_Change_Sort_Fail)

@@ -42,6 +42,7 @@ func (factory *ORMFactory) initSqlite() error {
 		return err
 	}
 	db, err := sqlx.Open("sqlite3", dbName)
+	db.SetMaxOpenConns(1)
 	if err != nil {
 		return err
 	}
@@ -66,6 +67,9 @@ func (factory *ORMFactory) initSqlite() error {
 	}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
 	factory.Dict = &sqlite.DictORMImpl{DB: db}
-	factory.Post = &sqlite.PostORMImpl{DB: db}
+	factory.Post = &sqlite.PostORMImpl{DB: &datasource.DBPostORM{
+		ShowSQL: factory.ShowSQL,
+		DB:      db,
+	}}
 	return nil
 }

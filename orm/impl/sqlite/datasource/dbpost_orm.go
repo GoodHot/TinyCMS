@@ -35,7 +35,9 @@ func (exp *DBPostORMExample) Exec(handler ...func(result sql.Result)) error {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
@@ -52,6 +54,29 @@ func (exp *DBPostORMExample) Exec(handler ...func(result sql.Result)) error {
     }
 	return nil
 }
+func (exp *DBPostORMExample) ExecQueryCount() (int, error) {
+	sql := "SELECT COUNT(1) FROM t_post "
+	if exp.where != "" {
+        sql += " where " + exp.where
+    }
+    if exp.showSQL {
+        fmt.Println("sql: " + sql)
+        fmt.Println("param: ", exp.param)
+    }
+    rows, err := exp.db.Query(sql, exp.param...)
+    defer rows.Close()
+    if err != nil {
+        return 0, err
+    }
+    if rows.Next() {
+	    var count int
+	    if err := rows.Scan(&count); err != nil {
+            return 0, err
+        }
+        return count, nil
+	}
+	return 0, nil
+}
 func (exp *DBPostORMExample) ExecQuery() ([]*DBPostModel, error) {
 	
     sql := exp.sql
@@ -61,20 +86,23 @@ func (exp *DBPostORMExample) ExecQuery() ([]*DBPostModel, error) {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
     }
 
-	rows, err := exp.db.Query(sql, exp.param...)
+	rows, err := exp.db.Queryx(sql, exp.param...)
+	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
 	var result []*DBPostModel
 	for rows.Next() {
 		var model DBPostModel
-        if err := rows.Scan( &model.ID, &model.Title, &model.Content, &model.ContentHTML, &model.Excerpt, &model.Image, &model.URL, &model.ChannelID, &model.TagsID, &model.Visible, &model.Author, &model.MetaTitle, &model.MetaDescription, &model.Created, &model.Modified, &model.PublishTime, &model.Status); err != nil {
+        if err := rows.StructScan(&model); err != nil {
             return result, err
         }
         result = append(result, &model)
@@ -90,19 +118,22 @@ func (exp *DBPostORMExample) ExecQueryOne() (*DBPostModel, error) {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
     }
 
-	rows, err := exp.db.Query(sql, exp.param...)
+	rows, err := exp.db.Queryx(sql, exp.param...)
+	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
 	if rows.Next() {
 	    var model DBPostModel
-	    if err := rows.Scan( &model.ID, &model.Title, &model.Content, &model.ContentHTML, &model.Excerpt, &model.Image, &model.URL, &model.ChannelID, &model.TagsID, &model.Visible, &model.Author, &model.MetaTitle, &model.MetaDescription, &model.Created, &model.Modified, &model.PublishTime, &model.Status); err != nil {
+	    if err := rows.StructScan(&model); err != nil {
             return nil, err
         }
         return &model, nil
@@ -1023,15 +1054,14 @@ type DBPostModel struct {
 type DBPostORM struct {
 	ShowSQL bool
 	DB      *sqlx.DB
-	sql     string
 }
 
 func (orm *DBPostORM) Insert(model *DBPostModel) *DBPostORMExample {
-	orm.sql = "INSERT INTO t_post"
-	orm.sql += "(title,content,content_html,excerpt,image,url,channel_id,tags_id,visible,author,meta_title,meta_description,created,modified,publish_time,status)"
-	orm.sql += "VALUES"
-	orm.sql += "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-	example := &DBPostORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+	sql := "INSERT INTO t_post"
+	sql += "(title,content,content_html,excerpt,image,url,channel_id,tags_id,visible,author,meta_title,meta_description,created,modified,publish_time,status)"
+	sql += "VALUES"
+	sql += "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	example := &DBPostORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 	
 	
 	
@@ -1102,9 +1132,9 @@ func (orm *DBPostORM) Insert(model *DBPostModel) *DBPostORMExample {
 	return example
 }
 func (orm *DBPostORM) Update(model *DBPostModel) *DBPostORMExample {
-    orm.sql = "UPDATE t_post SET "
-    orm.sql += "title = ?,content = ?,content_html = ?,excerpt = ?,image = ?,url = ?,channel_id = ?,tags_id = ?,visible = ?,author = ?,meta_title = ?,meta_description = ?,created = ?,modified = ?,publish_time = ?,status = ?"
-    example := &DBPostORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "UPDATE t_post SET "
+    sql += "title = ?,content = ?,content_html = ?,excerpt = ?,image = ?,url = ?,channel_id = ?,tags_id = ?,visible = ?,author = ?,meta_title = ?,meta_description = ?,created = ?,modified = ?,publish_time = ?,status = ?"
+    example := &DBPostORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
     
     
     
@@ -1175,27 +1205,27 @@ func (orm *DBPostORM) Update(model *DBPostModel) *DBPostORMExample {
     return example
 }
 func (orm *DBPostORM) UpdateField() *DBPostUpdater {
-	orm.sql = "UPDATE t_post SET "
+	sql := "UPDATE t_post SET "
 	return &DBPostUpdater{
-		sql:     orm.sql,
+		sql:     sql,
 		param:   nil,
 		showSQL: orm.ShowSQL,
 		db:      orm.DB,
 	}
 }
 func (orm *DBPostORM) Delete() *DBPostORMExample {
-    orm.sql = "DELETE FROM t_post"
-    return &DBPostORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "DELETE FROM t_post"
+    return &DBPostORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
 func (orm *DBPostORM) Query() *DBPostORMExample {
-    orm.sql = "SELECT id,title,content,content_html,excerpt,image,url,channel_id,tags_id,visible,author,meta_title,meta_description,created,modified,publish_time,status FROM t_post"
-    return &DBPostORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "SELECT id as id,title as title,content as content,content_html as contenthtml,excerpt as excerpt,image as image,url as url,channel_id as channelid,tags_id as tagsid,visible as visible,author as author,meta_title as metatitle,meta_description as metadescription,created as created,modified as modified,publish_time as publishtime,status as status FROM t_post"
+    return &DBPostORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
 
 
 
 func (orm *DBPostORM) QueryNoLarge() *DBPostORMExample {
-    orm.sql = "SELECT status,excerpt,url,tags_id,visible,modified,created,publish_time,id,title,image,channel_id,author FROM t_post"
-    return &DBPostORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "SELECT id as id,title as title,excerpt as excerpt,image as image,url as url,channel_id as channelid,tags_id as tagsid,visible as visible,author as author,created as created,modified as modified,publish_time as publishtime,status as status FROM t_post"
+    return &DBPostORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
 
