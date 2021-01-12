@@ -30,6 +30,24 @@ func (ds *DictService) Startup() error {
 		Value:       "0",
 		Visible:     false,
 	})
+	ds.saveDict(&trait.Dict{
+		Name:        "上传文件类型",
+		Description: "网站支持的文件上传类型",
+		FormType:    trait.FormType_Input,
+		TypeValue:   "",
+		Key:         "upload:file_type",
+		Value:       "*",
+		Visible:     false,
+	})
+	ds.saveDict(&trait.Dict{
+		Name:        "上传文件最大大小",
+		Description: "网站上传文件支持的最大大小",
+		FormType:    trait.FormType_Input,
+		TypeValue:   "",
+		Key:         "upload:file_max_size",
+		Value:       "10",
+		Visible:     false,
+	})
 	return nil
 }
 

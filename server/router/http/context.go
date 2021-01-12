@@ -5,7 +5,8 @@ import (
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 )
@@ -104,6 +105,10 @@ func (ctx *Context) QueryParamInt(name string) int {
 	rst := ctx.Ctx.QueryParam(name)
 	val, _ := strconv.Atoi(rst)
 	return val
+}
+
+func (ctx *Context) MultipartForm() (*multipart.Form, error) {
+	return ctx.Ctx.MultipartForm()
 }
 
 type HandlerFunc func(ctx *Context) *core.Err

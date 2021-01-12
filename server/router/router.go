@@ -5,8 +5,8 @@ import (
 	"github.com/GoodHot/TinyCMS/server/router/admin"
 	"github.com/GoodHot/TinyCMS/server/router/http"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	http2 "net/http"
 	"strings"
 )
@@ -20,6 +20,7 @@ type Router struct {
 	AdminPlugin  *admin.Plugin  `ioc:"auto"`
 	AdminDict    *admin.Dict    `ioc:"auto"`
 	AdminPost    *admin.Post    `ioc:"auto"`
+	AdminUpload  *admin.Upload  `ioc:"auto"`
 }
 
 func (router *Router) Register(group *echo.Group) {
@@ -77,6 +78,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.POST("/post", router.AdminPost.Save)
 	// 文章列表
 	register.GET("/post/:page/:size/list", router.AdminPost.Page)
+	// 文件上传
+	register.POST("/upload", router.AdminUpload.Update)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {
