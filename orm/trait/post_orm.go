@@ -8,9 +8,9 @@ import (
 type PostStatus int
 
 const (
-	PostStatus_Publish   PostStatus = 0
-	PostStatus_Drafts    PostStatus = 1
-	PostStatus_Scheduled PostStatus = 2
+	PostStatus_Publish   PostStatus = 1
+	PostStatus_Drafts    PostStatus = 2
+	PostStatus_Scheduled PostStatus = 3
 )
 
 type Post struct {

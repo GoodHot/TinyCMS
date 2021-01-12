@@ -65,7 +65,11 @@ func (factory *ORMFactory) initSqlite() error {
 		},
 	}
 	factory.Plugin = &sqlite.PluginORMImpl{DB: db}
-	factory.Dict = &sqlite.DictORMImpl{DB: db}
+	factory.Dict = &sqlite.DictORMImpl{
+		DB: &datasource.DBDictORM{
+			ShowSQL: factory.ShowSQL,
+			DB:      db,
+		}}
 	factory.Post = &sqlite.PostORMImpl{DB: &datasource.DBPostORM{
 		ShowSQL: factory.ShowSQL,
 		DB:      db,

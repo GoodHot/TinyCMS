@@ -44,7 +44,11 @@ func (orm *PostORMImpl) Page(query *trait.Query) (*trait.Page, *core.Err) {
 	if query.Param != nil {
 		cid := query.Param["channel_id"].(int)
 		if cid != 0 {
-			exp.ChannelIDEq(query.Param["channel_id"].(int))
+			exp.ChannelIDEq(cid)
+		}
+		status := query.Param["status"].(int)
+		if status != 0 {
+			exp.StatusEq(status)
 		}
 	}
 	page := &trait.Page{}

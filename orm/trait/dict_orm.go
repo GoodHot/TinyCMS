@@ -14,7 +14,7 @@ type Dict struct {
 }
 
 type DictORM interface {
-	GetAll() (*[]Dict, *core.Err)
+	GetAll() ([]Dict, *core.Err)
 	GetByKey(key string) (*Dict, *core.Err)
 	UpdateValue(key string, value string) *core.Err
 	Save(dict *Dict) *core.Err

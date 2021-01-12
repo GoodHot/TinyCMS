@@ -33,8 +33,9 @@ var (
 	Err_Plugin_Type_Not_Exists = ErrType{Code: 0x4005, Msg: "plugin type not exists", RespStatus: http.StatusOK}
 
 	Err_Dict_Save_Fail     = ErrType{Code: 0x5001, Msg: "dict not exists", RespStatus: http.StatusOK}
-	Err_Dict_Not_Found_Key = ErrType{Code: 0x5001, Msg: "dict not found key", RespStatus: http.StatusOK}
-	Err_Dict_Update_Fail   = ErrType{Code: 0x5001, Msg: "dict update fail", RespStatus: http.StatusOK}
+	Err_Dict_Not_Found     = ErrType{Code: 0x5002, Msg: "dict not found", RespStatus: http.StatusOK}
+	Err_Dict_Not_Found_Key = ErrType{Code: 0x5003, Msg: "dict not found key", RespStatus: http.StatusOK}
+	Err_Dict_Update_Fail   = ErrType{Code: 0x5004, Msg: "dict update fail", RespStatus: http.StatusOK}
 
 	Err_Post_Save_Fail            = ErrType{Code: 0x6001, Msg: "post save fail", RespStatus: http.StatusOK}
 	Err_Post_Content_Format_Error = ErrType{Code: 0x6002, Msg: "post content format err", RespStatus: http.StatusOK}

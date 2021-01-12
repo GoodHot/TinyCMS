@@ -25,12 +25,14 @@ func (my *Post) Page(ctx *http.Context) *core.Err {
 	size := ctx.ParamInt("size")
 	lastID := ctx.QueryParamInt("lastID")
 	channelID := ctx.QueryParamInt("channelID")
+	status := ctx.QueryParamInt("status")
 	query := &trait.Query{
 		Page:   page,
 		Size:   size,
 		LastID: lastID,
 		Param: map[string]interface{}{
 			"channel_id": channelID,
+			"status":     status,
 		},
 		Order: map[string]string{
 			"id": "desc",

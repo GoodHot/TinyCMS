@@ -1,50 +1,74 @@
 package sqlite
 
 import (
-	"fmt"
+	"database/sql"
 	"github.com/GoodHot/TinyCMS/core"
+	"github.com/GoodHot/TinyCMS/orm/impl/sqlite/datasource"
 	"github.com/GoodHot/TinyCMS/orm/trait"
-	"github.com/jmoiron/sqlx"
 )
 
 type DictORMImpl struct {
-	DB *sqlx.DB
+	DB *datasource.DBDictORM
 }
 
 func (orm *DictORMImpl) Save(dict *trait.Dict) *core.Err {
-	sql := "insert into t_dict(name, description, form_type, type_value, key, value, visible) values(?,?,?,?,?,?,?)"
-	rst, err := orm.DB.Exec(sql, dict.Name, dict.Description, dict.FormType, dict.TypeValue, dict.Key, dict.Value, dict.Visible)
+	err := orm.DB.Insert(&datasource.DBDictModel{
+		Name:        dict.Name,
+		Description: dict.Description,
+		FormType:    string(dict.FormType),
+		TypeValue:   dict.TypeValue,
+		Key:         dict.Key,
+		Value:       dict.Value,
+		Visible:     dict.Visible,
+	}).Exec(func(result sql.Result) {
+		last, _ := result.LastInsertId()
+		dict.ID = int(last)
+	})
 	if err != nil {
 		return core.NewErr(core.Err_Dict_Save_Fail)
 	}
-	lastID, err := rst.LastInsertId()
-	if err != nil {
-		return core.NewErr(core.Err_Dict_Save_Fail)
-	}
-	dict.ID = int(lastID)
 	return nil
 }
 
-const allDictColumn = "id, name, description, form_type as formtype, type_value as typevalue, key, value, visible"
-
-func (d *DictORMImpl) GetAll() (*[]trait.Dict, *core.Err) {
-	panic("implement me")
+func (orm *DictORMImpl) GetAll() ([]trait.Dict, *core.Err) {
+	result, err := orm.DB.Query().ExecQuery()
+	if err == nil {
+		return nil, core.NewErr(core.Err_Dict_Not_Found)
+	}
+	return orm.convert(result...), nil
 }
 
 func (orm *DictORMImpl) GetByKey(key string) (*trait.Dict, *core.Err) {
-	sql := "select %v from t_dict where key = ?"
-	var dict trait.Dict
-	if err := orm.DB.Get(&dict, fmt.Sprintf(sql, allDictColumn), key); err != nil {
+	result, err := orm.DB.Query().KeyEq(key).ExecQueryOne()
+	if err != nil || result == nil {
 		return nil, core.NewErr(core.Err_Dict_Not_Found_Key)
 	}
-	return &dict, nil
+	return &orm.convert(result)[0], nil
 }
 
 func (orm *DictORMImpl) UpdateValue(key string, value string) *core.Err {
-	sql := "update t_dict set value = ? where key = ?"
-	if _, err := orm.DB.Exec(sql, value, key); err != nil {
+	err := orm.DB.UpdateField().SetValue(value).Done().KeyEq(key).Exec()
+	if err != nil {
 		return core.NewErr(core.Err_Dict_Update_Fail)
 	}
 	return nil
+}
 
+func (orm *DictORMImpl) convert(model ...*datasource.DBDictModel) []trait.Dict {
+	var rst []trait.Dict
+	for _, item := range model {
+		rst = append(rst, trait.Dict{
+			BaseORM: trait.BaseORM{
+				ID: item.ID,
+			},
+			Name:        item.Name,
+			Description: item.Description,
+			FormType:    trait.FormType(item.FormType),
+			TypeValue:   item.TypeValue,
+			Key:         item.Key,
+			Value:       item.Value,
+			Visible:     item.Visible,
+		})
+	}
+	return rst
 }
