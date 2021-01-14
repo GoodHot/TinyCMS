@@ -40,11 +40,11 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 			uri := url.Path[:strings.LastIndex(url.Path, ".")]
 			return uri == prefix+"/auth/signin"
 		},
-		ErrorHandler: func(err error) error {
+		ErrorHandlerWithContext: func(err error, context echo.Context) error {
 			return &echo.HTTPError{
 				Code:     http2.StatusUnauthorized,
 				Message:  "please login",
-				Internal: err,
+				Internal: nil,
 			}
 		},
 		ContextKey:    config.JWTContextKey,

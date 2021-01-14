@@ -2,7 +2,7 @@
 package datasource
 
 import (
-    "database/sql"
+	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 )
@@ -34,7 +34,9 @@ func (exp *DBMemberORMExample) Exec(handler ...func(result sql.Result)) error {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
@@ -51,6 +53,29 @@ func (exp *DBMemberORMExample) Exec(handler ...func(result sql.Result)) error {
     }
 	return nil
 }
+func (exp *DBMemberORMExample) ExecQueryCount() (int, error) {
+	sql := "SELECT COUNT(1) FROM t_member "
+	if exp.where != "" {
+        sql += " where " + exp.where
+    }
+    if exp.showSQL {
+        fmt.Println("sql: " + sql)
+        fmt.Println("param: ", exp.param)
+    }
+    rows, err := exp.db.Query(sql, exp.param...)
+    if err != nil {
+        return 0, err
+    }
+    defer rows.Close()
+    if rows.Next() {
+	    var count int
+	    if err := rows.Scan(&count); err != nil {
+            return 0, err
+        }
+        return count, nil
+	}
+	return 0, nil
+}
 func (exp *DBMemberORMExample) ExecQuery() ([]*DBMemberModel, error) {
 	
     sql := exp.sql
@@ -60,20 +85,23 @@ func (exp *DBMemberORMExample) ExecQuery() ([]*DBMemberModel, error) {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
     }
 
-	rows, err := exp.db.Query(sql, exp.param...)
+	rows, err := exp.db.Queryx(sql, exp.param...)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	var result []*DBMemberModel
 	for rows.Next() {
 		var model DBMemberModel
-        if err := rows.Scan( &model.ID, &model.Nickname, &model.Username, &model.Password, &model.Email, &model.Role); err != nil {
+        if err := rows.StructScan(&model); err != nil {
             return result, err
         }
         result = append(result, &model)
@@ -89,19 +117,22 @@ func (exp *DBMemberORMExample) ExecQueryOne() (*DBMemberModel, error) {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
     }
 
-	rows, err := exp.db.Query(sql, exp.param...)
+	rows, err := exp.db.Queryx(sql, exp.param...)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	if rows.Next() {
 	    var model DBMemberModel
-	    if err := rows.Scan( &model.ID, &model.Nickname, &model.Username, &model.Password, &model.Email, &model.Role); err != nil {
+	    if err := rows.StructScan(&model); err != nil {
             return nil, err
         }
         return &model, nil
@@ -136,6 +167,11 @@ func (exp *DBMemberORMExample) IDEq(ID int) *DBMemberORMExample {
 	exp.param = append(exp.param, ID)
 	return exp
 }
+func (exp *DBMemberORMExample) IDNotEq(ID int) *DBMemberORMExample {
+	exp.where += "id = ?"
+	exp.param = append(exp.param, ID)
+	return exp
+}
 func (exp *DBMemberORMExample) IDGt(ID int) *DBMemberORMExample {
 	exp.where += "id > ?"
 	exp.param = append(exp.param, ID)
@@ -163,8 +199,15 @@ func (exp *DBMemberORMExample) IDEqLt(ID int) *DBMemberORMExample {
 
 
 
+
 func (exp *DBMemberORMExample) NicknameEq(Nickname string) *DBMemberORMExample {
 	exp.where += "nickname = ?"
+	exp.param = append(exp.param, Nickname)
+	return exp
+}
+
+func (exp *DBMemberORMExample) NicknameNotEq(Nickname string) *DBMemberORMExample {
+	exp.where += "nickname != ?"
 	exp.param = append(exp.param, Nickname)
 	return exp
 }
@@ -191,8 +234,15 @@ func (exp *DBMemberORMExample) NicknameLikeBefore(Nickname string) *DBMemberORME
 
 
 
+
 func (exp *DBMemberORMExample) UsernameEq(Username string) *DBMemberORMExample {
 	exp.where += "username = ?"
+	exp.param = append(exp.param, Username)
+	return exp
+}
+
+func (exp *DBMemberORMExample) UsernameNotEq(Username string) *DBMemberORMExample {
+	exp.where += "username != ?"
 	exp.param = append(exp.param, Username)
 	return exp
 }
@@ -219,8 +269,15 @@ func (exp *DBMemberORMExample) UsernameLikeBefore(Username string) *DBMemberORME
 
 
 
+
 func (exp *DBMemberORMExample) PasswordEq(Password string) *DBMemberORMExample {
 	exp.where += "password = ?"
+	exp.param = append(exp.param, Password)
+	return exp
+}
+
+func (exp *DBMemberORMExample) PasswordNotEq(Password string) *DBMemberORMExample {
+	exp.where += "password != ?"
 	exp.param = append(exp.param, Password)
 	return exp
 }
@@ -247,8 +304,15 @@ func (exp *DBMemberORMExample) PasswordLikeBefore(Password string) *DBMemberORME
 
 
 
+
 func (exp *DBMemberORMExample) EmailEq(Email string) *DBMemberORMExample {
 	exp.where += "email = ?"
+	exp.param = append(exp.param, Email)
+	return exp
+}
+
+func (exp *DBMemberORMExample) EmailNotEq(Email string) *DBMemberORMExample {
+	exp.where += "email != ?"
 	exp.param = append(exp.param, Email)
 	return exp
 }
@@ -273,7 +337,13 @@ func (exp *DBMemberORMExample) EmailLikeBefore(Email string) *DBMemberORMExample
 
 
 
+
 func (exp *DBMemberORMExample) RoleEq(Role int) *DBMemberORMExample {
+	exp.where += "role = ?"
+	exp.param = append(exp.param, Role)
+	return exp
+}
+func (exp *DBMemberORMExample) RoleNotEq(Role int) *DBMemberORMExample {
 	exp.where += "role = ?"
 	exp.param = append(exp.param, Role)
 	return exp
@@ -299,6 +369,42 @@ func (exp *DBMemberORMExample) RoleEqLt(Role int) *DBMemberORMExample {
 	return exp
 }
 
+
+
+
+
+
+
+
+func (exp *DBMemberORMExample) AvatarEq(Avatar string) *DBMemberORMExample {
+	exp.where += "avatar = ?"
+	exp.param = append(exp.param, Avatar)
+	return exp
+}
+
+func (exp *DBMemberORMExample) AvatarNotEq(Avatar string) *DBMemberORMExample {
+	exp.where += "avatar != ?"
+	exp.param = append(exp.param, Avatar)
+	return exp
+}
+
+func (exp *DBMemberORMExample) AvatarLike(Avatar string) *DBMemberORMExample {
+	exp.where += "avatar like '%' || ? || '%'"
+	exp.param = append(exp.param, Avatar)
+	return exp
+}
+
+func (exp *DBMemberORMExample) AvatarLikeAfter(Avatar string) *DBMemberORMExample {
+	exp.where += "avatar like ? || '%'"
+	exp.param = append(exp.param, Avatar)
+	return exp
+}
+
+func (exp *DBMemberORMExample) AvatarLikeBefore(Avatar string) *DBMemberORMExample {
+	exp.where += "avatar like  '%' || ?"
+	exp.param = append(exp.param, Avatar)
+	return exp
+}
 
 
 
@@ -393,6 +499,21 @@ func (exp *DBMemberORMExample) OrderByRoleAsc() *DBMemberORMExample {
     return exp
 }
 
+func (exp *DBMemberORMExample) OrderByAvatarDesc() *DBMemberORMExample {
+	if exp.orderBy != "" {
+        exp.orderBy += " ,"
+    }
+    exp.orderBy += " avatar desc"
+    return exp
+}
+func (exp *DBMemberORMExample) OrderByAvatarAsc() *DBMemberORMExample {
+	if exp.orderBy != "" {
+        exp.orderBy += " ,"
+    }
+    exp.orderBy += " avatar asc"
+    return exp
+}
+
 
 type DBMemberUpdater struct {
     setSQL  string
@@ -439,6 +560,12 @@ func (updater *DBMemberUpdater) SetRole(Role int) *DBMemberUpdater {
 	return updater
 }
 
+func (updater *DBMemberUpdater) SetAvatar(Avatar string) *DBMemberUpdater {
+	updater.setSQL += ", avatar = ?"
+	updater.param = append(updater.param, Avatar)
+	return updater
+}
+
 func (updater *DBMemberUpdater) Done() *DBMemberORMExample {
     example := &DBMemberORMExample{sql: updater.sql + updater.setSQL[1:], db: updater.db, showSQL: updater.showSQL}
     for _, p := range updater.param {
@@ -454,21 +581,21 @@ type DBMemberModel struct {
 	Password string
 	Email string
 	Role int
+	Avatar string
 	
 }
 
 type DBMemberORM struct {
 	ShowSQL bool
 	DB      *sqlx.DB
-	sql     string
 }
 
 func (orm *DBMemberORM) Insert(model *DBMemberModel) *DBMemberORMExample {
-	orm.sql = "INSERT INTO t_member"
-	orm.sql += "(nickname,username,password,email,role)"
-	orm.sql += "VALUES"
-	orm.sql += "(?,?,?,?,?)"
-	example := &DBMemberORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+	sql := "INSERT INTO t_member"
+	sql += "(nickname,username,password,email,role,avatar)"
+	sql += "VALUES"
+	sql += "(?,?,?,?,?,?)"
+	example := &DBMemberORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 	
 	
 	
@@ -492,12 +619,16 @@ func (orm *DBMemberORM) Insert(model *DBMemberModel) *DBMemberORMExample {
 	example.AddParam(model.Role)
 	
 	
+	
+	example.AddParam(model.Avatar)
+	
+	
 	return example
 }
 func (orm *DBMemberORM) Update(model *DBMemberModel) *DBMemberORMExample {
-    orm.sql = "UPDATE t_member SET "
-    orm.sql += "nickname = ?,username = ?,password = ?,email = ?,role = ?"
-    example := &DBMemberORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "UPDATE t_member SET "
+    sql += "nickname = ?,username = ?,password = ?,email = ?,role = ?,avatar = ?"
+    example := &DBMemberORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
     
     
     
@@ -521,22 +652,29 @@ func (orm *DBMemberORM) Update(model *DBMemberModel) *DBMemberORMExample {
     example.AddParam(model.Role)
     
     
+    
+    example.AddParam(model.Avatar)
+    
+    
     return example
 }
 func (orm *DBMemberORM) UpdateField() *DBMemberUpdater {
-	orm.sql = "UPDATE t_member SET "
+	sql := "UPDATE t_member SET "
 	return &DBMemberUpdater{
-		sql:     orm.sql,
+		sql:     sql,
 		param:   nil,
 		showSQL: orm.ShowSQL,
 		db:      orm.DB,
 	}
 }
 func (orm *DBMemberORM) Delete() *DBMemberORMExample {
-    orm.sql = "DELETE FROM t_member"
-    return &DBMemberORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "DELETE FROM t_member"
+    return &DBMemberORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
 func (orm *DBMemberORM) Query() *DBMemberORMExample {
-    orm.sql = "SELECT id,nickname,username,password,email,role FROM t_member"
-    return &DBMemberORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "SELECT id as id,nickname as nickname,username as username,password as password,email as email,role as role,avatar as avatar FROM t_member"
+    return &DBMemberORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
+
+
+

@@ -84,6 +84,7 @@ func (ctx *Context) CurrMember() *trait.Member {
 			ID: int(claims["id"].(float64)),
 		},
 		Username: claims["username"].(string),
+		Role:     trait.RoleType(claims["role"].(float64)),
 	}
 }
 

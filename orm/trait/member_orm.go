@@ -18,6 +18,7 @@ type Member struct {
 	Email    string   `json:"email"`
 	Password string   `json:"-"`
 	Role     RoleType `json:"role"`
+	Avatar   string   `json:"avatar"`
 }
 
 type MemberORM interface {

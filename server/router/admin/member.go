@@ -20,12 +20,6 @@ type signinForm struct {
 	Password string `json:"password"`
 }
 
-type jwtCustomClaims struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
-
 func (my *Member) Signin(ctx *http.Context) *core.Err {
 	var signin signinForm
 	if err := ctx.Bind(&signin); err != nil {
@@ -46,6 +40,7 @@ func (my *Member) Signin(ctx *http.Context) *core.Err {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["id"] = member.ID
 	claims["username"] = member.Username
+	claims["role"] = member.Role
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	t, e := token.SignedString([]byte(my.JWTSecret))

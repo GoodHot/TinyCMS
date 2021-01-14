@@ -2,7 +2,7 @@
 package datasource
 
 import (
-    "database/sql"
+	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 )
@@ -34,7 +34,9 @@ func (exp *DBChannelORMExample) Exec(handler ...func(result sql.Result)) error {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
@@ -51,6 +53,29 @@ func (exp *DBChannelORMExample) Exec(handler ...func(result sql.Result)) error {
     }
 	return nil
 }
+func (exp *DBChannelORMExample) ExecQueryCount() (int, error) {
+	sql := "SELECT COUNT(1) FROM t_channel "
+	if exp.where != "" {
+        sql += " where " + exp.where
+    }
+    if exp.showSQL {
+        fmt.Println("sql: " + sql)
+        fmt.Println("param: ", exp.param)
+    }
+    rows, err := exp.db.Query(sql, exp.param...)
+    if err != nil {
+        return 0, err
+    }
+    defer rows.Close()
+    if rows.Next() {
+	    var count int
+	    if err := rows.Scan(&count); err != nil {
+            return 0, err
+        }
+        return count, nil
+	}
+	return 0, nil
+}
 func (exp *DBChannelORMExample) ExecQuery() ([]*DBChannelModel, error) {
 	
     sql := exp.sql
@@ -60,20 +85,23 @@ func (exp *DBChannelORMExample) ExecQuery() ([]*DBChannelModel, error) {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
     }
 
-	rows, err := exp.db.Query(sql, exp.param...)
+	rows, err := exp.db.Queryx(sql, exp.param...)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	var result []*DBChannelModel
 	for rows.Next() {
 		var model DBChannelModel
-        if err := rows.Scan( &model.ID, &model.Name, &model.Path, &model.AvatarSVG, &model.Avatar, &model.Visible, &model.MetaTitle, &model.MetaDescription, &model.Sort, &model.ParentID); err != nil {
+        if err := rows.StructScan(&model); err != nil {
             return result, err
         }
         result = append(result, &model)
@@ -89,19 +117,22 @@ func (exp *DBChannelORMExample) ExecQueryOne() (*DBChannelModel, error) {
     if exp.orderBy != "" {
         sql += " order by " + exp.orderBy
     }
-
+    if exp.limit != "" {
+        sql += " limit ? offset ?"
+    }
     if exp.showSQL {
         fmt.Println("sql: " + sql)
         fmt.Println("param: ", exp.param)
     }
 
-	rows, err := exp.db.Query(sql, exp.param...)
+	rows, err := exp.db.Queryx(sql, exp.param...)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	if rows.Next() {
 	    var model DBChannelModel
-	    if err := rows.Scan( &model.ID, &model.Name, &model.Path, &model.AvatarSVG, &model.Avatar, &model.Visible, &model.MetaTitle, &model.MetaDescription, &model.Sort, &model.ParentID); err != nil {
+	    if err := rows.StructScan(&model); err != nil {
             return nil, err
         }
         return &model, nil
@@ -136,6 +167,11 @@ func (exp *DBChannelORMExample) IDEq(ID int) *DBChannelORMExample {
 	exp.param = append(exp.param, ID)
 	return exp
 }
+func (exp *DBChannelORMExample) IDNotEq(ID int) *DBChannelORMExample {
+	exp.where += "id = ?"
+	exp.param = append(exp.param, ID)
+	return exp
+}
 func (exp *DBChannelORMExample) IDGt(ID int) *DBChannelORMExample {
 	exp.where += "id > ?"
 	exp.param = append(exp.param, ID)
@@ -163,8 +199,15 @@ func (exp *DBChannelORMExample) IDEqLt(ID int) *DBChannelORMExample {
 
 
 
+
 func (exp *DBChannelORMExample) NameEq(Name string) *DBChannelORMExample {
 	exp.where += "name = ?"
+	exp.param = append(exp.param, Name)
+	return exp
+}
+
+func (exp *DBChannelORMExample) NameNotEq(Name string) *DBChannelORMExample {
+	exp.where += "name != ?"
 	exp.param = append(exp.param, Name)
 	return exp
 }
@@ -191,8 +234,15 @@ func (exp *DBChannelORMExample) NameLikeBefore(Name string) *DBChannelORMExample
 
 
 
+
 func (exp *DBChannelORMExample) PathEq(Path string) *DBChannelORMExample {
 	exp.where += "path = ?"
+	exp.param = append(exp.param, Path)
+	return exp
+}
+
+func (exp *DBChannelORMExample) PathNotEq(Path string) *DBChannelORMExample {
+	exp.where += "path != ?"
 	exp.param = append(exp.param, Path)
 	return exp
 }
@@ -219,8 +269,15 @@ func (exp *DBChannelORMExample) PathLikeBefore(Path string) *DBChannelORMExample
 
 
 
+
 func (exp *DBChannelORMExample) AvatarSVGEq(AvatarSVG string) *DBChannelORMExample {
 	exp.where += "avatar_svg = ?"
+	exp.param = append(exp.param, AvatarSVG)
+	return exp
+}
+
+func (exp *DBChannelORMExample) AvatarSVGNotEq(AvatarSVG string) *DBChannelORMExample {
+	exp.where += "avatar_svg != ?"
 	exp.param = append(exp.param, AvatarSVG)
 	return exp
 }
@@ -247,8 +304,15 @@ func (exp *DBChannelORMExample) AvatarSVGLikeBefore(AvatarSVG string) *DBChannel
 
 
 
+
 func (exp *DBChannelORMExample) AvatarEq(Avatar string) *DBChannelORMExample {
 	exp.where += "avatar = ?"
+	exp.param = append(exp.param, Avatar)
+	return exp
+}
+
+func (exp *DBChannelORMExample) AvatarNotEq(Avatar string) *DBChannelORMExample {
+	exp.where += "avatar != ?"
 	exp.param = append(exp.param, Avatar)
 	return exp
 }
@@ -273,7 +337,13 @@ func (exp *DBChannelORMExample) AvatarLikeBefore(Avatar string) *DBChannelORMExa
 
 
 
+
 func (exp *DBChannelORMExample) VisibleEq(Visible int) *DBChannelORMExample {
+	exp.where += "visible = ?"
+	exp.param = append(exp.param, Visible)
+	return exp
+}
+func (exp *DBChannelORMExample) VisibleNotEq(Visible int) *DBChannelORMExample {
 	exp.where += "visible = ?"
 	exp.param = append(exp.param, Visible)
 	return exp
@@ -305,8 +375,15 @@ func (exp *DBChannelORMExample) VisibleEqLt(Visible int) *DBChannelORMExample {
 
 
 
+
 func (exp *DBChannelORMExample) MetaTitleEq(MetaTitle string) *DBChannelORMExample {
 	exp.where += "meta_title = ?"
+	exp.param = append(exp.param, MetaTitle)
+	return exp
+}
+
+func (exp *DBChannelORMExample) MetaTitleNotEq(MetaTitle string) *DBChannelORMExample {
+	exp.where += "meta_title != ?"
 	exp.param = append(exp.param, MetaTitle)
 	return exp
 }
@@ -333,8 +410,15 @@ func (exp *DBChannelORMExample) MetaTitleLikeBefore(MetaTitle string) *DBChannel
 
 
 
+
 func (exp *DBChannelORMExample) MetaDescriptionEq(MetaDescription string) *DBChannelORMExample {
 	exp.where += "meta_description = ?"
+	exp.param = append(exp.param, MetaDescription)
+	return exp
+}
+
+func (exp *DBChannelORMExample) MetaDescriptionNotEq(MetaDescription string) *DBChannelORMExample {
+	exp.where += "meta_description != ?"
 	exp.param = append(exp.param, MetaDescription)
 	return exp
 }
@@ -359,7 +443,13 @@ func (exp *DBChannelORMExample) MetaDescriptionLikeBefore(MetaDescription string
 
 
 
+
 func (exp *DBChannelORMExample) SortEq(Sort int) *DBChannelORMExample {
+	exp.where += "sort = ?"
+	exp.param = append(exp.param, Sort)
+	return exp
+}
+func (exp *DBChannelORMExample) SortNotEq(Sort int) *DBChannelORMExample {
 	exp.where += "sort = ?"
 	exp.param = append(exp.param, Sort)
 	return exp
@@ -389,7 +479,13 @@ func (exp *DBChannelORMExample) SortEqLt(Sort int) *DBChannelORMExample {
 
 
 
+
 func (exp *DBChannelORMExample) ParentIDEq(ParentID int) *DBChannelORMExample {
+	exp.where += "parent_id = ?"
+	exp.param = append(exp.param, ParentID)
+	return exp
+}
+func (exp *DBChannelORMExample) ParentIDNotEq(ParentID int) *DBChannelORMExample {
 	exp.where += "parent_id = ?"
 	exp.param = append(exp.param, ParentID)
 	return exp
@@ -414,6 +510,7 @@ func (exp *DBChannelORMExample) ParentIDEqLt(ParentID int) *DBChannelORMExample 
 	exp.param = append(exp.param, ParentID)
 	return exp
 }
+
 
 
 
@@ -664,15 +761,14 @@ type DBChannelModel struct {
 type DBChannelORM struct {
 	ShowSQL bool
 	DB      *sqlx.DB
-	sql     string
 }
 
 func (orm *DBChannelORM) Insert(model *DBChannelModel) *DBChannelORMExample {
-	orm.sql = "INSERT INTO t_channel"
-	orm.sql += "(name,path,avatar_svg,avatar,visible,meta_title,meta_description,sort,parent_id)"
-	orm.sql += "VALUES"
-	orm.sql += "(?,?,?,?,?,?,?,?,?)"
-	example := &DBChannelORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+	sql := "INSERT INTO t_channel"
+	sql += "(name,path,avatar_svg,avatar,visible,meta_title,meta_description,sort,parent_id)"
+	sql += "VALUES"
+	sql += "(?,?,?,?,?,?,?,?,?)"
+	example := &DBChannelORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 	
 	
 	
@@ -715,9 +811,9 @@ func (orm *DBChannelORM) Insert(model *DBChannelModel) *DBChannelORMExample {
 	return example
 }
 func (orm *DBChannelORM) Update(model *DBChannelModel) *DBChannelORMExample {
-    orm.sql = "UPDATE t_channel SET "
-    orm.sql += "name = ?,path = ?,avatar_svg = ?,avatar = ?,visible = ?,meta_title = ?,meta_description = ?,sort = ?,parent_id = ?"
-    example := &DBChannelORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "UPDATE t_channel SET "
+    sql += "name = ?,path = ?,avatar_svg = ?,avatar = ?,visible = ?,meta_title = ?,meta_description = ?,sort = ?,parent_id = ?"
+    example := &DBChannelORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
     
     
     
@@ -760,19 +856,22 @@ func (orm *DBChannelORM) Update(model *DBChannelModel) *DBChannelORMExample {
     return example
 }
 func (orm *DBChannelORM) UpdateField() *DBChannelUpdater {
-	orm.sql = "UPDATE t_channel SET "
+	sql := "UPDATE t_channel SET "
 	return &DBChannelUpdater{
-		sql:     orm.sql,
+		sql:     sql,
 		param:   nil,
 		showSQL: orm.ShowSQL,
 		db:      orm.DB,
 	}
 }
 func (orm *DBChannelORM) Delete() *DBChannelORMExample {
-    orm.sql = "DELETE FROM t_channel"
-    return &DBChannelORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "DELETE FROM t_channel"
+    return &DBChannelORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
 func (orm *DBChannelORM) Query() *DBChannelORMExample {
-    orm.sql = "SELECT id,name,path,avatar_svg,avatar,visible,meta_title,meta_description,sort,parent_id FROM t_channel"
-    return &DBChannelORMExample{sql: orm.sql, db: orm.DB, showSQL: orm.ShowSQL}
+    sql := "SELECT id as id,name as name,path as path,avatar_svg as avatarsvg,avatar as avatar,visible as visible,meta_title as metatitle,meta_description as metadescription,sort as sort,parent_id as parentid FROM t_channel"
+    return &DBChannelORMExample{sql: sql, db: orm.DB, showSQL: orm.ShowSQL}
 }
+
+
+

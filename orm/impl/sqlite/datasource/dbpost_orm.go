@@ -64,10 +64,10 @@ func (exp *DBPostORMExample) ExecQueryCount() (int, error) {
         fmt.Println("param: ", exp.param)
     }
     rows, err := exp.db.Query(sql, exp.param...)
-    defer rows.Close()
     if err != nil {
         return 0, err
     }
+    defer rows.Close()
     if rows.Next() {
 	    var count int
 	    if err := rows.Scan(&count); err != nil {
@@ -95,10 +95,10 @@ func (exp *DBPostORMExample) ExecQuery() ([]*DBPostModel, error) {
     }
 
 	rows, err := exp.db.Queryx(sql, exp.param...)
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	var result []*DBPostModel
 	for rows.Next() {
 		var model DBPostModel
@@ -127,10 +127,10 @@ func (exp *DBPostORMExample) ExecQueryOne() (*DBPostModel, error) {
     }
 
 	rows, err := exp.db.Queryx(sql, exp.param...)
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	if rows.Next() {
 	    var model DBPostModel
 	    if err := rows.StructScan(&model); err != nil {
@@ -168,6 +168,11 @@ func (exp *DBPostORMExample) IDEq(ID int) *DBPostORMExample {
 	exp.param = append(exp.param, ID)
 	return exp
 }
+func (exp *DBPostORMExample) IDNotEq(ID int) *DBPostORMExample {
+	exp.where += "id = ?"
+	exp.param = append(exp.param, ID)
+	return exp
+}
 func (exp *DBPostORMExample) IDGt(ID int) *DBPostORMExample {
 	exp.where += "id > ?"
 	exp.param = append(exp.param, ID)
@@ -195,8 +200,15 @@ func (exp *DBPostORMExample) IDEqLt(ID int) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) TitleEq(Title string) *DBPostORMExample {
 	exp.where += "title = ?"
+	exp.param = append(exp.param, Title)
+	return exp
+}
+
+func (exp *DBPostORMExample) TitleNotEq(Title string) *DBPostORMExample {
+	exp.where += "title != ?"
 	exp.param = append(exp.param, Title)
 	return exp
 }
@@ -223,8 +235,15 @@ func (exp *DBPostORMExample) TitleLikeBefore(Title string) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) ContentEq(Content string) *DBPostORMExample {
 	exp.where += "content = ?"
+	exp.param = append(exp.param, Content)
+	return exp
+}
+
+func (exp *DBPostORMExample) ContentNotEq(Content string) *DBPostORMExample {
+	exp.where += "content != ?"
 	exp.param = append(exp.param, Content)
 	return exp
 }
@@ -251,8 +270,15 @@ func (exp *DBPostORMExample) ContentLikeBefore(Content string) *DBPostORMExample
 
 
 
+
 func (exp *DBPostORMExample) ContentHTMLEq(ContentHTML string) *DBPostORMExample {
 	exp.where += "content_html = ?"
+	exp.param = append(exp.param, ContentHTML)
+	return exp
+}
+
+func (exp *DBPostORMExample) ContentHTMLNotEq(ContentHTML string) *DBPostORMExample {
+	exp.where += "content_html != ?"
 	exp.param = append(exp.param, ContentHTML)
 	return exp
 }
@@ -279,8 +305,15 @@ func (exp *DBPostORMExample) ContentHTMLLikeBefore(ContentHTML string) *DBPostOR
 
 
 
+
 func (exp *DBPostORMExample) ExcerptEq(Excerpt string) *DBPostORMExample {
 	exp.where += "excerpt = ?"
+	exp.param = append(exp.param, Excerpt)
+	return exp
+}
+
+func (exp *DBPostORMExample) ExcerptNotEq(Excerpt string) *DBPostORMExample {
+	exp.where += "excerpt != ?"
 	exp.param = append(exp.param, Excerpt)
 	return exp
 }
@@ -307,8 +340,15 @@ func (exp *DBPostORMExample) ExcerptLikeBefore(Excerpt string) *DBPostORMExample
 
 
 
+
 func (exp *DBPostORMExample) ImageEq(Image string) *DBPostORMExample {
 	exp.where += "image = ?"
+	exp.param = append(exp.param, Image)
+	return exp
+}
+
+func (exp *DBPostORMExample) ImageNotEq(Image string) *DBPostORMExample {
+	exp.where += "image != ?"
 	exp.param = append(exp.param, Image)
 	return exp
 }
@@ -335,8 +375,15 @@ func (exp *DBPostORMExample) ImageLikeBefore(Image string) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) URLEq(URL string) *DBPostORMExample {
 	exp.where += "url = ?"
+	exp.param = append(exp.param, URL)
+	return exp
+}
+
+func (exp *DBPostORMExample) URLNotEq(URL string) *DBPostORMExample {
+	exp.where += "url != ?"
 	exp.param = append(exp.param, URL)
 	return exp
 }
@@ -361,7 +408,13 @@ func (exp *DBPostORMExample) URLLikeBefore(URL string) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) ChannelIDEq(ChannelID int) *DBPostORMExample {
+	exp.where += "channel_id = ?"
+	exp.param = append(exp.param, ChannelID)
+	return exp
+}
+func (exp *DBPostORMExample) ChannelIDNotEq(ChannelID int) *DBPostORMExample {
 	exp.where += "channel_id = ?"
 	exp.param = append(exp.param, ChannelID)
 	return exp
@@ -393,8 +446,15 @@ func (exp *DBPostORMExample) ChannelIDEqLt(ChannelID int) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) TagsIDEq(TagsID string) *DBPostORMExample {
 	exp.where += "tags_id = ?"
+	exp.param = append(exp.param, TagsID)
+	return exp
+}
+
+func (exp *DBPostORMExample) TagsIDNotEq(TagsID string) *DBPostORMExample {
+	exp.where += "tags_id != ?"
 	exp.param = append(exp.param, TagsID)
 	return exp
 }
@@ -419,7 +479,13 @@ func (exp *DBPostORMExample) TagsIDLikeBefore(TagsID string) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) VisibleEq(Visible int) *DBPostORMExample {
+	exp.where += "visible = ?"
+	exp.param = append(exp.param, Visible)
+	return exp
+}
+func (exp *DBPostORMExample) VisibleNotEq(Visible int) *DBPostORMExample {
 	exp.where += "visible = ?"
 	exp.param = append(exp.param, Visible)
 	return exp
@@ -449,7 +515,13 @@ func (exp *DBPostORMExample) VisibleEqLt(Visible int) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) AuthorEq(Author int) *DBPostORMExample {
+	exp.where += "author = ?"
+	exp.param = append(exp.param, Author)
+	return exp
+}
+func (exp *DBPostORMExample) AuthorNotEq(Author int) *DBPostORMExample {
 	exp.where += "author = ?"
 	exp.param = append(exp.param, Author)
 	return exp
@@ -481,8 +553,15 @@ func (exp *DBPostORMExample) AuthorEqLt(Author int) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) MetaTitleEq(MetaTitle string) *DBPostORMExample {
 	exp.where += "meta_title = ?"
+	exp.param = append(exp.param, MetaTitle)
+	return exp
+}
+
+func (exp *DBPostORMExample) MetaTitleNotEq(MetaTitle string) *DBPostORMExample {
+	exp.where += "meta_title != ?"
 	exp.param = append(exp.param, MetaTitle)
 	return exp
 }
@@ -509,8 +588,15 @@ func (exp *DBPostORMExample) MetaTitleLikeBefore(MetaTitle string) *DBPostORMExa
 
 
 
+
 func (exp *DBPostORMExample) MetaDescriptionEq(MetaDescription string) *DBPostORMExample {
 	exp.where += "meta_description = ?"
+	exp.param = append(exp.param, MetaDescription)
+	return exp
+}
+
+func (exp *DBPostORMExample) MetaDescriptionNotEq(MetaDescription string) *DBPostORMExample {
+	exp.where += "meta_description != ?"
 	exp.param = append(exp.param, MetaDescription)
 	return exp
 }
@@ -536,7 +622,13 @@ func (exp *DBPostORMExample) MetaDescriptionLikeBefore(MetaDescription string) *
 
 
 
+
 func (exp *DBPostORMExample) CreatedEq(Created time.Time) *DBPostORMExample {
+	exp.where += "created = ?"
+	exp.param = append(exp.param, Created)
+	return exp
+}
+func (exp *DBPostORMExample) CreatedNotEq(Created time.Time) *DBPostORMExample {
 	exp.where += "created = ?"
 	exp.param = append(exp.param, Created)
 	return exp
@@ -566,7 +658,13 @@ func (exp *DBPostORMExample) CreatedEqLt(Created time.Time) *DBPostORMExample {
 
 
 
+
 func (exp *DBPostORMExample) ModifiedEq(Modified time.Time) *DBPostORMExample {
+	exp.where += "modified = ?"
+	exp.param = append(exp.param, Modified)
+	return exp
+}
+func (exp *DBPostORMExample) ModifiedNotEq(Modified time.Time) *DBPostORMExample {
 	exp.where += "modified = ?"
 	exp.param = append(exp.param, Modified)
 	return exp
@@ -596,7 +694,13 @@ func (exp *DBPostORMExample) ModifiedEqLt(Modified time.Time) *DBPostORMExample 
 
 
 
+
 func (exp *DBPostORMExample) PublishTimeEq(PublishTime time.Time) *DBPostORMExample {
+	exp.where += "publish_time = ?"
+	exp.param = append(exp.param, PublishTime)
+	return exp
+}
+func (exp *DBPostORMExample) PublishTimeNotEq(PublishTime time.Time) *DBPostORMExample {
 	exp.where += "publish_time = ?"
 	exp.param = append(exp.param, PublishTime)
 	return exp
@@ -625,7 +729,13 @@ func (exp *DBPostORMExample) PublishTimeEqLt(PublishTime time.Time) *DBPostORMEx
 
 
 
+
 func (exp *DBPostORMExample) StatusEq(Status int) *DBPostORMExample {
+	exp.where += "status = ?"
+	exp.param = append(exp.param, Status)
+	return exp
+}
+func (exp *DBPostORMExample) StatusNotEq(Status int) *DBPostORMExample {
 	exp.where += "status = ?"
 	exp.param = append(exp.param, Status)
 	return exp
@@ -650,6 +760,7 @@ func (exp *DBPostORMExample) StatusEqLt(Status int) *DBPostORMExample {
 	exp.param = append(exp.param, Status)
 	return exp
 }
+
 
 
 

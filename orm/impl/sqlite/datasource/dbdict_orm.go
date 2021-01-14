@@ -63,10 +63,10 @@ func (exp *DBDictORMExample) ExecQueryCount() (int, error) {
         fmt.Println("param: ", exp.param)
     }
     rows, err := exp.db.Query(sql, exp.param...)
-    defer rows.Close()
     if err != nil {
         return 0, err
     }
+    defer rows.Close()
     if rows.Next() {
 	    var count int
 	    if err := rows.Scan(&count); err != nil {
@@ -94,10 +94,10 @@ func (exp *DBDictORMExample) ExecQuery() ([]*DBDictModel, error) {
     }
 
 	rows, err := exp.db.Queryx(sql, exp.param...)
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	var result []*DBDictModel
 	for rows.Next() {
 		var model DBDictModel
@@ -126,10 +126,10 @@ func (exp *DBDictORMExample) ExecQueryOne() (*DBDictModel, error) {
     }
 
 	rows, err := exp.db.Queryx(sql, exp.param...)
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	if rows.Next() {
 	    var model DBDictModel
 	    if err := rows.StructScan(&model); err != nil {
