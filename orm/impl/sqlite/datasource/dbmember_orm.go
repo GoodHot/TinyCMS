@@ -18,11 +18,11 @@ type DBMemberORMExample struct {
 }
 
 func (exp *DBMemberORMExample) And() *DBMemberORMExample {
-	exp.where += " and"
+	exp.where += " and "
 	return exp
 }
 func (exp *DBMemberORMExample) Or() *DBMemberORMExample {
-	exp.where += " or"
+	exp.where += " or "
 	return exp
 }
 func (exp *DBMemberORMExample) Exec(handler ...func(result sql.Result)) error {

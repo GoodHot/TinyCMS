@@ -10,6 +10,7 @@ import (
 type RouterRegister struct {
 	Group  *echo.Group
 	Prefix string
+	Index  string
 }
 
 func (reg *RouterRegister) Middleware(middleware echo.MiddlewareFunc) {
@@ -68,6 +69,16 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 	fmt.Printf("register:%v%v\n", relativePath, suffix)
 	relativePath = relativePath + suffix
 	if method == http.MethodGet {
+		if reg.Index+SuffixHTML == relativePath && suffix == SuffixHTML {
+			fmt.Printf("register index \\")
+			reg.Group.GET("/", func(context echo.Context) error {
+				ctx := &Context{
+					Ctx:    context,
+					Suffix: SuffixHTML,
+				}
+				return reg.errorHandler(ctx, handlerFunc(ctx))
+			})
+		}
 		reg.Group.GET(relativePath, func(context echo.Context) error {
 			ctx := &Context{
 				Ctx:    context,

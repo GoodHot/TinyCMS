@@ -14,8 +14,13 @@ type MemberORMImpl struct {
 func (orm *MemberORMImpl) Page(query *trait.Query) (*trait.Page, *core.Err) {
 	exp := orm.DB.Query()
 	if query.Param != nil {
-		if query.Param["staff"].(bool) {
+		if query.Param["staff"] != nil && query.Param["staff"].(bool) {
 			exp.RoleLt(int(trait.RoleTypeMember))
+		} else {
+			exp.RoleEqGt(int(trait.RoleTypeMember))
+		}
+		if query.Param["role"] != nil && query.Param["role"].(int) > 0 {
+			exp.And().RoleEq(query.Param["role"].(int))
 		}
 	}
 	count, err := exp.ExecQueryCount()

@@ -67,11 +67,34 @@ func (ctx *Context) JSON() *core.Err {
 }
 
 func (ctx *Context) ResultOK(html string) *core.Err {
-	// TODO 判断返回类型，如果是JSON返回JSON，如果是HTML返回HTML
-	result := NewRespResult(int(core.ErrTypeOK.Code), core.ErrTypeOK.Msg, ctx.data)
-	err := ctx.Ctx.JSON(http.StatusOK, result)
-	if err != nil {
-		return core.NewErr(core.Err_Sys_Server)
+	if ctx.Suffix == SuffixJSON {
+		result := NewRespResult(int(core.ErrTypeOK.Code), core.ErrTypeOK.Msg, ctx.data)
+		err := ctx.Ctx.JSON(http.StatusOK, result)
+		if err != nil {
+			return core.NewErr(core.Err_Sys_Server)
+		}
+	} else {
+		err := ctx.Ctx.Render(http.StatusOK, html, ctx.data)
+		if err != nil {
+			return core.NewErr(core.Err_Render_Fail)
+		}
+	}
+	return nil
+}
+
+func (ctx *Context) ResultOKLayout(html string, layout string) *core.Err {
+	if ctx.Suffix == SuffixJSON {
+		result := NewRespResult(int(core.ErrTypeOK.Code), core.ErrTypeOK.Msg, ctx.data)
+		err := ctx.Ctx.JSON(http.StatusOK, result)
+		if err != nil {
+			return core.NewErr(core.Err_Sys_Server)
+		}
+	} else {
+		ctx.data["template::layout"] = layout
+		err := ctx.Ctx.Render(http.StatusOK, html, ctx.data)
+		if err != nil {
+			return core.NewErr(core.Err_Render_Fail)
+		}
 	}
 	return nil
 }

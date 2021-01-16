@@ -4,6 +4,8 @@ import (
 	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/server/router/admin"
 	"github.com/GoodHot/TinyCMS/server/router/http"
+	"github.com/GoodHot/TinyCMS/server/router/web"
+	"github.com/GoodHot/TinyCMS/service"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -12,18 +14,22 @@ import (
 )
 
 type Router struct {
-	JWTSecret    string         `val:"${props.secret.jwt}"`
-	RouterAdmin  string         `val:"${props.router.admin}"`
-	RouterWeb    string         `val:"${props.router.web}"`
-	AdminMember  *admin.Member  `ioc:"auto"`
-	AdminChannel *admin.Channel `ioc:"auto"`
-	AdminPlugin  *admin.Plugin  `ioc:"auto"`
-	AdminDict    *admin.Dict    `ioc:"auto"`
-	AdminPost    *admin.Post    `ioc:"auto"`
-	AdminUpload  *admin.Upload  `ioc:"auto"`
+	JWTSecret       string                   `val:"${props.secret.jwt}"`
+	RouterAdmin     string                   `val:"${props.router.admin}"`
+	RouterWeb       string                   `val:"${props.router.web}"`
+	RouterIndex     string                   `val:"${props.router.index}"`
+	TemplateService *service.TemplateService `ioc:"auto"`
+	AdminMember     *admin.Member            `ioc:"auto"`
+	AdminChannel    *admin.Channel           `ioc:"auto"`
+	AdminPlugin     *admin.Plugin            `ioc:"auto"`
+	AdminDict       *admin.Dict              `ioc:"auto"`
+	AdminPost       *admin.Post              `ioc:"auto"`
+	AdminUpload     *admin.Upload            `ioc:"auto"`
+	WebIndex        *web.Index               `ioc:"auto"`
 }
 
-func (router *Router) Register(group *echo.Group) {
+func (router *Router) Register(echo *echo.Echo, group *echo.Group) {
+	echo.Renderer = router.TemplateService
 	// 注册admin路由
 	adminRouter := group.Group(router.RouterAdmin)
 	router.registerAdmin(adminRouter, router.RouterAdmin)
@@ -55,7 +61,7 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 		AuthScheme:    "TinyCMS",
 	}))
 	// 登录
-	register.POST("/auth/signin", router.AdminMember.Signin)
+	register.POST("/auth/signin", router.AdminMember.SignIn)
 	// 获取当前用户
 	register.GET("/auth/info", router.AdminMember.Info)
 	// 保存频道
@@ -85,20 +91,7 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 }
 
 func (router *Router) registerWeb(group *echo.Group) {
-	//register := http.RouterRegister{Group: group}
-	//// 首页
-	//register.GET("/", router.AdminIndex.List)
-	//// 查询文章列表
-	//register.GET("/posts/:page", router.AdminIndex.List)
-	//// 查询文章详情
-	//register.GET("/post/:name", router.AdminIndex.List)
-	//// 查询所有页面
-	//register.GET("/pages", router.AdminIndex.List)
-	//// 查询页面详情
-	//register.GET("/page/:name", router.AdminIndex.List)
-	//// 查询所有标签
-	//register.GET("/tags", router.AdminIndex.List)
-	//// 查询某个标签下所有文章
-	//register.GET("/tag/:name", router.AdminIndex.List)
-
+	register := http.RouterRegister{Group: group, Index: router.RouterIndex}
+	// 首页
+	register.GET("/index", router.WebIndex.Index)
 }

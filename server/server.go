@@ -28,6 +28,6 @@ func (server *HTTPServer) Startup() {
 		})
 	}
 	server.PluginManager.Mount()
-	server.Router.Register(engine.Group(""))
+	server.Router.Register(engine, engine.Group(""))
 	engine.Logger.Fatal(engine.Start(server.ServerAddr))
 }

@@ -7,4 +7,6 @@ const (
 const (
 	DictKeyUploadFileType    = "upload:file_type"
 	DictKeyUploadFileMaxSize = "upload:file_max_size"
+
+	DictKeySkinTemplate = "skin:template"
 )

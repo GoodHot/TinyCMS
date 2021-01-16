@@ -21,7 +21,7 @@ type signinForm struct {
 	Password string `json:"password"`
 }
 
-func (my *Member) Signin(ctx *http.Context) *core.Err {
+func (my *Member) SignIn(ctx *http.Context) *core.Err {
 	var signin signinForm
 	if err := ctx.Bind(&signin); err != nil {
 		return core.NewErr(core.Err_Sys_Server)
@@ -71,6 +71,7 @@ func (my *Member) StaffList(ctx *http.Context) *core.Err {
 		LastID: ctx.ParamInt("lastID"),
 		Param: map[string]interface{}{
 			"staff": true,
+			"role":  ctx.QueryParamInt("role"),
 		},
 		Order: map[string]string{
 			"id": "asc",

@@ -4,7 +4,9 @@
   },
   "router": {
     "admin": "/admin",
-    "web": "/"
+    "web": "",
+    "index": "/index",
+    "templateDir": "template"
   },
   "cache": {
     "type": "mem",

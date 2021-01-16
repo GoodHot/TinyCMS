@@ -14,7 +14,8 @@ type ErrType struct {
 var (
 	ErrTypeOK = ErrType{Code: 0, Msg: "ok", RespStatus: http.StatusOK}
 
-	Err_Sys_Server = ErrType{Code: 0x1001, Msg: "Param Bind Error", RespStatus: http.StatusInternalServerError}
+	Err_Sys_Server  = ErrType{Code: 0x1001, Msg: "Param Bind Error", RespStatus: http.StatusInternalServerError}
+	Err_Render_Fail = ErrType{Code: 0x1002, Msg: "Render Template Fail", RespStatus: http.StatusInternalServerError}
 
 	Err_Auth_Account_Fail = ErrType{Code: 0x2001, Msg: "Account Fail", RespStatus: http.StatusOK}
 	Err_Auth_Not_Username = ErrType{Code: 0x2002, Msg: "Not Username", RespStatus: http.StatusOK}

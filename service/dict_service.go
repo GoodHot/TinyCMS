@@ -48,6 +48,15 @@ func (ds *DictService) Startup() error {
 		Value:       "10",
 		Visible:     false,
 	})
+	ds.saveDict(&trait.Dict{
+		Name:        "皮肤模板",
+		Description: "当前系统使用的皮肤模板",
+		FormType:    trait.FormType_Input,
+		TypeValue:   "",
+		Key:         "skin:template",
+		Value:       "default",
+		Visible:     false,
+	})
 	return nil
 }
 
