@@ -9,6 +9,7 @@ const (
 	RoleTypeAdmin  RoleType = 2
 	RoleTypeEditor RoleType = 3
 	RoleTypeAuthor RoleType = 4
+	RoleTypeMember RoleType = 5
 )
 
 type Member struct {
@@ -24,4 +25,5 @@ type Member struct {
 type MemberORM interface {
 	GetByUsername(username string) (*Member, *core.Err)
 	GetByEmail(email string) (*Member, *core.Err)
+	Page(query *Query) (*Page, *core.Err)
 }

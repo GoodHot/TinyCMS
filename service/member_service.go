@@ -28,3 +28,7 @@ func (s *MemberService) GetByUsernameOrEmail(account string) (*trait.Member, *co
 func (*MemberService) CheckPwd(oldPwd, newPwd string) bool {
 	return oldPwd == newPwd
 }
+
+func (s *MemberService) Page(query *trait.Query) (*trait.Page, *core.Err) {
+	return s.ORM.Member.Page(query)
+}

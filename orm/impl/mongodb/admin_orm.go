@@ -8,6 +8,10 @@ import (
 type AdminORMImpl struct {
 }
 
+func (a AdminORMImpl) Page(query *trait.Query) (*trait.Page, *core.Err) {
+	panic("implement me")
+}
+
 func (a AdminORMImpl) Initial() error {
 	panic("implement me")
 }

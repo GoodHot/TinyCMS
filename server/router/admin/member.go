@@ -3,6 +3,7 @@ package admin
 import (
 	"github.com/GoodHot/TinyCMS/common"
 	"github.com/GoodHot/TinyCMS/core"
+	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/GoodHot/TinyCMS/server/router/http"
 	"github.com/GoodHot/TinyCMS/service"
 	"github.com/dgrijalva/jwt-go"
@@ -60,5 +61,25 @@ func (my *Member) Info(ctx *http.Context) *core.Err {
 		ctx.Put("info", ctx.CurrMember())
 		ctx.Put("type", "simple")
 	}
+	return ctx.ResultOK("ok")
+}
+
+func (my *Member) StaffList(ctx *http.Context) *core.Err {
+	query := &trait.Query{
+		Page:   ctx.ParamInt("page"),
+		Size:   ctx.ParamInt("size"),
+		LastID: ctx.ParamInt("lastID"),
+		Param: map[string]interface{}{
+			"staff": true,
+		},
+		Order: map[string]string{
+			"id": "asc",
+		},
+	}
+	page, err := my.MemberService.Page(query)
+	if err != nil {
+		return core.NewErr(core.Err_Member_Get_Page_Fail)
+	}
+	ctx.Put("page", page)
 	return ctx.ResultOK("ok")
 }

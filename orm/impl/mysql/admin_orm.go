@@ -8,6 +8,11 @@ import (
 type MemberORMImpl struct {
 }
 
+func (a MemberORMImpl) Page(query *trait.Query) (*trait.Page, *core.Err) {
+
+	panic("implement me")
+}
+
 func (a MemberORMImpl) Initial() error {
 	panic("implement me")
 }

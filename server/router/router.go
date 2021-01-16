@@ -77,9 +77,11 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	// 保存文章
 	register.POST("/post", router.AdminPost.Save)
 	// 文章列表
-	register.GET("/post/:page/:size/list", router.AdminPost.Page)
+	register.GET("/post/:page/:size/page", router.AdminPost.Page)
 	// 文件上传
 	register.POST("/upload", router.AdminUpload.Update)
+	// 获取管理员列表
+	register.GET("/staff/:page/:size/page", router.AdminMember.StaffList)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {
