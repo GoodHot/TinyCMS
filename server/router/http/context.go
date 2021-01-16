@@ -82,23 +82,6 @@ func (ctx *Context) ResultOK(html string) *core.Err {
 	return nil
 }
 
-func (ctx *Context) ResultOKLayout(html string, layout string) *core.Err {
-	if ctx.Suffix == SuffixJSON {
-		result := NewRespResult(int(core.ErrTypeOK.Code), core.ErrTypeOK.Msg, ctx.data)
-		err := ctx.Ctx.JSON(http.StatusOK, result)
-		if err != nil {
-			return core.NewErr(core.Err_Sys_Server)
-		}
-	} else {
-		ctx.data["template::layout"] = layout
-		err := ctx.Ctx.Render(http.StatusOK, html, ctx.data)
-		if err != nil {
-			return core.NewErr(core.Err_Render_Fail)
-		}
-	}
-	return nil
-}
-
 func (ctx *Context) CurrMember() *trait.Member {
 	user := ctx.Ctx.Get(config.JWTContextKey).(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
