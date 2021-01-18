@@ -1,7 +1,7 @@
 {{$page := page 1 20}}
 {{range $page.List}}
 <section class="list-item">
-    <h1 class="title"><a href="/post/{{.ID}}.html">{{.Title}}</a></h1>
+    <h1 class="title"><a href="/post/{{.ID}}">{{.Title}}</a></h1>
     <time datetime="2020-11-24">Nov 24, 2020</time>
     <div class="description">
         {{.Excerpt}}

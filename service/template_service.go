@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"github.com/GoodHot/TinyCMS/common"
 	"github.com/GoodHot/TinyCMS/config"
@@ -33,7 +34,12 @@ func (ts *TemplateService) Render(w io.Writer, name string, data interface{}, c 
 	tmplID := ts.tmplID(name)
 	tmpl := ts.templates.Lookup(tmplID)
 	if tmpl == nil {
-		tmpl, _ = ts.LoadTemplate(name)
+		return errors.New("not found template " + name)
+		//if tmp, err := ts.LoadTemplate(name); err != nil {
+		//	return err
+		//} else {
+		//	tmpl = tmp
+		//}
 	}
 	err := tmpl.ExecuteTemplate(w, tmplID, data)
 	if err != nil {
@@ -108,8 +114,32 @@ func (ts *TemplateService) Startup() error {
 	funcMap := ts.buildFuncMap()
 	ts.templates = template.New(ts.tmplName)
 	ts.templates.Funcs(funcMap)
+	root := fmt.Sprintf("%v/%v", ts.TmplDir, ts.tmplName)
+	if dirs, err := ioutil.ReadDir(root); err != nil {
+		return err
+	} else {
+		for _, file := range dirs {
+			if file.IsDir() {
+				continue
+			}
+			name := file.Name()
+			split := strings.LastIndex(name, ".")
+			if split < 0 {
+				continue
+			}
+			suffix := name[split:]
+			if suffix != ts.DefSuffix {
+				continue
+			}
+			name = name[:split]
+			ts.LoadTemplate(name)
+		}
+	}
 	// 查找并移动模板目录中的assets
-	return ts.copyAssets()
+	if err := ts.copyAssets(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (ts *TemplateService) copyAssets() error {

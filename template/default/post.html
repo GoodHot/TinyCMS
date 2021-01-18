@@ -1,1 +1,9 @@
-post
+<article>
+    <div class="title">
+        <h1>{{.post.Title}}</h1>
+        <time datetime="2020-12-28">Dec 28, 2020</time>
+    </div>
+    <section class="body">
+        {{.post.ContentHTML}}
+    </section>
+</article>

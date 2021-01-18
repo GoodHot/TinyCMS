@@ -11,6 +11,14 @@ type PostORMImpl struct {
 	DB *datasource.DBPostORM
 }
 
+func (orm *PostORMImpl) Get(id int) (*trait.Post, *core.Err) {
+	post, err := orm.DB.Query().IDEq(id).ExecQueryOne()
+	if err != nil || post == nil {
+		return nil, core.NewErr(core.Err_Post_Not_Exists)
+	}
+	return &orm.convert(post)[0], nil
+}
+
 func (orm *PostORMImpl) Save(post *trait.Post) *core.Err {
 	err := orm.DB.Insert(&datasource.DBPostModel{
 		Title:           post.Title,
@@ -58,7 +66,7 @@ func (orm *PostORMImpl) Page(query *trait.Query) (*trait.Page, *core.Err) {
 	if err != nil {
 		return nil, core.NewErr(core.Err_Post_Get_Page_Fail)
 	}
-	exp.Limit(query.Size, (query.Page - 1)*query.Size)
+	exp.Limit(query.Size, (query.Page-1)*query.Size)
 	if query.Order != nil {
 		if query.Order["id"] == "desc" {
 			exp.OrderByIDDesc()
@@ -83,8 +91,8 @@ func (*PostORMImpl) convert(model ...*datasource.DBPostModel) []trait.Post {
 	for _, item := range model {
 		rst = append(rst, trait.Post{
 			BaseORM: trait.BaseORM{
-				ID: item.ID,
-				Created: item.Created,
+				ID:       item.ID,
+				Created:  item.Created,
 				Modified: item.Modified,
 			},
 			Title:           item.Title,

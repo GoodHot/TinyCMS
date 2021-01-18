@@ -34,4 +34,5 @@ type Post struct {
 type PostORM interface {
 	Save(post *Post) *core.Err
 	Page(query *Query) (*Page, *core.Err)
+	Get(id int) (*Post, *core.Err)
 }

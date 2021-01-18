@@ -79,3 +79,7 @@ func (ps *PostService) Save(form *SavePostForm, author int) *core.Err {
 func (ps *PostService) Page(query *trait.Query) (*trait.Page, *core.Err) {
 	return ps.ORM.Post.Page(query)
 }
+
+func (ps *PostService) Get(id int) (*trait.Post, *core.Err) {
+	return ps.ORM.Post.Get(id)
+}
