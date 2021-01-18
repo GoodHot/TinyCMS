@@ -3,8 +3,8 @@ package server
 import (
 	"github.com/GoodHot/TinyCMS/plugin"
 	"github.com/GoodHot/TinyCMS/server/router"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type HTTPServer struct {

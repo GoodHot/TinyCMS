@@ -5,15 +5,15 @@ import (
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"mime/multipart"
 	"net/http"
 	"strconv"
 )
 
 const (
-	SuffixJSON = ".json"
-	SuffixHTML = ".html"
+	SuffixJSON = "/json"
+	SuffixHTML = ""
 )
 
 type RespResult struct {
