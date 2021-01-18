@@ -3,7 +3,7 @@ package http
 import (
 	"fmt"
 	"github.com/GoodHot/TinyCMS/core"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"net/http"
 )
 
@@ -70,7 +70,7 @@ func (reg *RouterRegister) register(method string, relativePath, suffix string, 
 	relativePath = relativePath + suffix
 	if method == http.MethodGet {
 		if reg.Index+SuffixHTML == relativePath && suffix == SuffixHTML {
-			fmt.Printf("register index \\")
+			fmt.Printf("register index / \n")
 			reg.Group.GET("/", func(context echo.Context) error {
 				ctx := &Context{
 					Ctx:    context,

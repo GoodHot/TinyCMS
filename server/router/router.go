@@ -7,8 +7,8 @@ import (
 	"github.com/GoodHot/TinyCMS/server/router/web"
 	"github.com/GoodHot/TinyCMS/service"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	http2 "net/http"
 	"strings"
 )
@@ -26,6 +26,8 @@ type Router struct {
 	AdminPost       *admin.Post              `ioc:"auto"`
 	AdminUpload     *admin.Upload            `ioc:"auto"`
 	WebIndex        *web.Index               `ioc:"auto"`
+	WebChannel      *web.Channel             `ioc:"auto"`
+	WebPost         *web.Post                `ioc:"auto"`
 }
 
 func (router *Router) Register(echo *echo.Echo, group *echo.Group) {
@@ -46,7 +48,7 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 			uri := url.Path[:strings.LastIndex(url.Path, ".")]
 			return uri == prefix+"/auth/signin"
 		},
-		ErrorHandlerWithContext: func(err error, context echo.Context) error {
+		ErrorHandler: func(err error) error {
 			return &echo.HTTPError{
 				Code:     http2.StatusUnauthorized,
 				Message:  "please login",
@@ -94,4 +96,10 @@ func (router *Router) registerWeb(group *echo.Group) {
 	register := http.RouterRegister{Group: group, Index: router.RouterIndex}
 	// 首页
 	register.GET("/index", router.WebIndex.Index)
+	// channel列表
+	register.GET("/channel", router.WebChannel.Channel)
+	// channel列表详情
+	register.GET("/channel/:id", router.WebChannel.Channel)
+	// post
+	register.GET("/post/:id", router.WebPost.Post)
 }

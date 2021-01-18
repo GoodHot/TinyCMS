@@ -5,7 +5,7 @@ import (
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/trait"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"mime/multipart"
 	"net/http"
 	"strconv"
