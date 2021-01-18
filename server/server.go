@@ -10,6 +10,7 @@ import (
 type HTTPServer struct {
 	Env           string                `val:"${env}"`
 	ServerAddr    string                `val:"${server.addr}"`
+	Static        string                `val:"${server.static}"`
 	Router        *router.Router        `ioc:"auto"`
 	PluginManager *plugin.PluginManager `ioc:"auto"`
 }
@@ -17,6 +18,7 @@ type HTTPServer struct {
 // 启动服务
 func (server *HTTPServer) Startup() {
 	engine := echo.New()
+	engine.Static(server.Static, server.Static)
 	if server.Env == "dev" || server.Env == "test" {
 		engine.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 			AllowOrigins: []string{"*"},

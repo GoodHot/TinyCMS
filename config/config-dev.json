@@ -5,8 +5,11 @@
   "router": {
     "admin": "/admin",
     "web": "",
-    "index": "/index",
-    "templateDir": "template"
+    "index": "/index"
+  },
+  "template": {
+    "dir": "template",
+    "assetsDir": "assets"
   },
   "cache": {
     "type": "mem",

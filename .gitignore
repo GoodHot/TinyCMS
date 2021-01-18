@@ -12,4 +12,5 @@
 vendor/
 .idea/
 static/upload/
+static/assets/
 temp*
