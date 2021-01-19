@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/server/router/admin"
 	"github.com/GoodHot/TinyCMS/server/router/http"
@@ -10,7 +11,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	http2 "net/http"
-	"strings"
 )
 
 type Router struct {
@@ -44,9 +44,9 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register := http.RouterRegister{Group: group, Prefix: prefix}
 	register.Middleware(middleware.JWTWithConfig(middleware.JWTConfig{
 		Skipper: func(context echo.Context) bool {
-			url := context.Request().URL
-			uri := url.Path[:strings.LastIndex(url.Path, ".")]
-			return uri == prefix+"/auth/signin"
+			uri := context.Request().RequestURI
+			fmt.Println(uri)
+			return uri == prefix+"/auth/signin/json"
 		},
 		ErrorHandler: func(err error) error {
 			return &echo.HTTPError{

@@ -22,6 +22,7 @@ type FormType string
 
 const (
 	FormType_Input    FormType = "input"
+	FormType_Switch   FormType = "switch"
 	FormType_Number   FormType = "number"
 	FormType_Textarea FormType = "textarea"
 	FormType_Select   FormType = "select"

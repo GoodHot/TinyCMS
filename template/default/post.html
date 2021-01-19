@@ -4,6 +4,6 @@
         <time datetime="2020-12-28">Dec 28, 2020</time>
     </div>
     <section class="body">
-        {{.post.ContentHTML}}
+        {{unescaped .post.ContentHTML}}
     </section>
 </article>

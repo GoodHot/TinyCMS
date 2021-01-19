@@ -19,7 +19,7 @@ func (my *Upload) Update(ctx *http.Context) *core.Err {
 		return core.NewErr(core.Err_Upload_Fail)
 	}
 	dict, err1 := my.DictService.Get(config.DictKeyUploadFileMaxSize)
-	if err != nil {
+	if err1 != nil {
 		return err1
 	}
 	maxSize, err := strconv.Atoi(dict.Value)

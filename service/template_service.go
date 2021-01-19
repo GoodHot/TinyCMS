@@ -101,6 +101,9 @@ func (ts *TemplateService) buildFuncMap() template.FuncMap {
 		}
 		return result
 	}
+	funcMap["unescaped"] = func(html string) template.HTML {
+		return template.HTML(html)
+	}
 	ts.funcMap = &funcMap
 	return *ts.funcMap
 }

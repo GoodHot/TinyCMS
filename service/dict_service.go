@@ -57,6 +57,33 @@ func (ds *DictService) Startup() error {
 		Value:       "default",
 		Visible:     false,
 	})
+	ds.saveDict(&trait.Dict{
+		Name:        "站点名称",
+		Description: "网站站点的名称",
+		FormType:    trait.FormType_Input,
+		TypeValue:   "",
+		Key:         "website:name",
+		Value:       "TinyCMS",
+		Visible:     false,
+	})
+	ds.saveDict(&trait.Dict{
+		Name:        "站点域名",
+		Description: "网站站点的域名",
+		FormType:    trait.FormType_Input,
+		TypeValue:   "",
+		Key:         "website:domain",
+		Value:       "http://localhost",
+		Visible:     false,
+	})
+	ds.saveDict(&trait.Dict{
+		Name:        "网络图片",
+		Description: "自动下载网络图片",
+		FormType:    trait.FormType_Switch,
+		TypeValue:   "",
+		Key:         "website:internet_image",
+		Value:       "1",
+		Visible:     false,
+	})
 	return nil
 }
 
