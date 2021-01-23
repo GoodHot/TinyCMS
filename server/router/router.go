@@ -87,7 +87,9 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	// 文章列表
 	register.GET("/post/:page/:size/page", router.AdminPost.Page)
 	// 文件上传
-	register.POST("/upload", router.AdminUpload.Update)
+	register.POST("/upload", router.AdminUpload.Upload)
+	// 编辑器的图片上传
+	register.POST("/upload/editor", router.AdminUpload.EditorUpload)
 	// 获取管理员列表
 	register.GET("/staff/:page/:size/page", router.AdminMember.StaffList)
 }

@@ -13,7 +13,7 @@ type Upload struct {
 	DictService *service.DictService `ioc:"auto"`
 }
 
-func (my *Upload) Update(ctx *http.Context) *core.Err {
+func (my *Upload) Upload(ctx *http.Context) *core.Err {
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return core.NewErr(core.Err_Upload_Fail)
@@ -34,5 +34,10 @@ func (my *Upload) Update(ctx *http.Context) *core.Err {
 		fmt.Println(file.Size)
 		fmt.Println(file.Header)
 	}
+	return ctx.ResultOK("ok")
+}
+
+func (my *Upload) EditorUpload(ctx *http.Context) *core.Err {
+	ctx.Put("url", "http://wx2.sinaimg.cn/mw600/00893JKXgy1gmwz73ad31j30g40rctgy.jpg")
 	return ctx.ResultOK("ok")
 }

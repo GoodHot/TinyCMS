@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm"
 	"github.com/GoodHot/TinyCMS/orm/trait"
@@ -12,6 +13,16 @@ import (
 
 type PostService struct {
 	ORM *orm.ORMFactory `ioc:"auto"`
+}
+
+type DelimiterHandler struct{}
+
+func (*DelimiterHandler) Type() string {
+	return "delimiter"
+}
+
+func (*DelimiterHandler) GenerateHTML(editorJSBlock goeditorjs.EditorJSBlock) (string, error) {
+	return "", nil
 }
 
 type SavePostForm struct {
@@ -37,13 +48,18 @@ func (ps *PostService) Save(form *SavePostForm, author int) *core.Err {
 	content, err := json.Marshal(form.Content)
 	if err != nil {
 		content = []byte("")
+		// TODO 处理错误
+		return core.NewErr(core.Err_Post_Content_Format_Error)
 	}
+	fmt.Println(string(content))
 	htmlEngine := goeditorjs.NewHTMLEngine()
 	htmlEngine.RegisterBlockHandlers(
 		&goeditorjs.HeaderHandler{},
 		&goeditorjs.ParagraphHandler{},
 		&goeditorjs.ListHandler{},
+		&goeditorjs.ImageHandler{},
 		&goeditorjs.CodeBoxHandler{},
+		&DelimiterHandler{},
 	)
 	html, err := htmlEngine.GenerateHTML(string(content))
 	if err != nil {
