@@ -25,6 +25,7 @@ type Router struct {
 	AdminDict       *admin.Dict              `ioc:"auto"`
 	AdminPost       *admin.Post              `ioc:"auto"`
 	AdminUpload     *admin.Upload            `ioc:"auto"`
+	AdminCode       *admin.CodeInject        `ioc:"auto"`
 	WebIndex        *web.Index               `ioc:"auto"`
 	WebChannel      *web.Channel             `ioc:"auto"`
 	WebPost         *web.Post                `ioc:"auto"`
@@ -92,6 +93,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.POST("/upload/editor", router.AdminUpload.EditorUpload)
 	// 获取管理员列表
 	register.GET("/staff/:page/:size/page", router.AdminMember.StaffList)
+	// 代码注入列表
+	register.GET("/code", router.AdminCode.All)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {

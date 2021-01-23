@@ -21,6 +21,7 @@ type ORMFactory struct {
 	Plugin  trait.PluginORM
 	Dict    trait.DictORM
 	Post    trait.PostORM
+	Code    trait.CodeORM
 }
 
 func (factory *ORMFactory) Startup() error {
@@ -71,6 +72,10 @@ func (factory *ORMFactory) initSqlite() error {
 			DB:      db,
 		}}
 	factory.Post = &sqlite.PostORMImpl{DB: &datasource.DBPostORM{
+		ShowSQL: factory.ShowSQL,
+		DB:      db,
+	}}
+	factory.Code = &sqlite.CodeORMImpl{DB: &datasource.DBCodeInjectORM{
 		ShowSQL: factory.ShowSQL,
 		DB:      db,
 	}}

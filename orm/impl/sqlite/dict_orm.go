@@ -32,7 +32,7 @@ func (orm *DictORMImpl) Save(dict *trait.Dict) *core.Err {
 
 func (orm *DictORMImpl) GetAll() ([]trait.Dict, *core.Err) {
 	result, err := orm.DB.Query().ExecQuery()
-	if err == nil {
+	if err != nil {
 		return nil, core.NewErr(core.Err_Dict_Not_Found)
 	}
 	return orm.convert(result...), nil

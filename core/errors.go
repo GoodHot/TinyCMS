@@ -46,6 +46,8 @@ var (
 	Err_Upload_Fail = ErrType{Code: 0x7001, Msg: "upload fail", RespStatus: http.StatusOK}
 
 	Err_Member_Get_Page_Fail = ErrType{Code: 0x8001, Msg: "member page fail", RespStatus: http.StatusOK}
+
+	Err_Code_Not_Found = ErrType{Code: 0x9001, Msg: "code not found", RespStatus: http.StatusOK}
 )
 
 type Err struct {

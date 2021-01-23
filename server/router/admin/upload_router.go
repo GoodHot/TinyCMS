@@ -27,7 +27,6 @@ func (my *Upload) Upload(ctx *http.Context) *core.Err {
 		return core.NewErr(core.Err_Upload_Fail)
 	}
 	maxSize = maxSize * 1024 * 1024
-	fmt.Println(maxSize)
 	files := form.File["files"]
 	for _, file := range files {
 		fmt.Println(file.Filename)
