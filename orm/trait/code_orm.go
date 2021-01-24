@@ -15,4 +15,5 @@ type CodeORM interface {
 	Insert(t *Code) *core.Err
 	Update(t *Code) *core.Err
 	DeleteByID(id int) *core.Err
+	GetByKey(key string) (*Code, *core.Err)
 }

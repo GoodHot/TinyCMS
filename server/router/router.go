@@ -76,13 +76,13 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	// 挂载插件
 	register.POST("/plugin/mount", router.AdminPlugin.Mount)
 	// 根据类型获取插件列表
-	register.GET("/plugin/:type/all", router.AdminPlugin.GetByType)
+	register.GET("/plugin/:type", router.AdminPlugin.GetByType)
 	// 修改插件参数
 	register.PUT("/plugin/params", router.AdminPlugin.UpdateParam)
 	// 更新字典
 	register.PUT("/dict", router.AdminDict.Update)
 	// 查询字典
-	register.GET("/dict/:key/info", router.AdminDict.Get)
+	register.GET("/dict/:key", router.AdminDict.Get)
 	// 保存文章
 	register.POST("/post", router.AdminPost.Save)
 	// 文章列表

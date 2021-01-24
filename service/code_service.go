@@ -25,3 +25,7 @@ func (cs *CodeService) Save(t *trait.Code) *core.Err {
 func (cs *CodeService) DeleteByID(id int) *core.Err {
 	return cs.ORM.Code.DeleteByID(id)
 }
+
+func (cs *CodeService) GetByKey(key string) (*trait.Code, *core.Err) {
+	return cs.ORM.Code.GetByKey(key)
+}

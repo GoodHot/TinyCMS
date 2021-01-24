@@ -19,6 +19,7 @@ type TemplateService struct {
 	templates     *template.Template
 	DictService   *DictService `ioc:"auto"`
 	PostService   *PostService `ioc:"auto"`
+	CodeService   *CodeService `ioc:"auto"`
 	DefLayoutFile string       `val:"default"`
 	DefLayout     string       `val:"layout"`
 	DefSuffix     string       `val:".html"`
@@ -101,7 +102,14 @@ func (ts *TemplateService) buildFuncMap() template.FuncMap {
 		}
 		return result
 	}
-	funcMap["unescaped"] = func(html string) template.HTML {
+	funcMap["code"] = func(key string) *trait.Code {
+		code, _ := ts.CodeService.GetByKey(key)
+		if code == nil {
+			return &trait.Code{}
+		}
+		return code
+	}
+	funcMap["html"] = func(html string) template.HTML {
 		return template.HTML(html)
 	}
 	ts.funcMap = &funcMap

@@ -11,6 +11,14 @@ type CodeORMImpl struct {
 	DB *datasource.DBCodeInjectORM
 }
 
+func (orm *CodeORMImpl) GetByKey(key string) (*trait.Code, *core.Err) {
+	code, err := orm.DB.Query().KeyEq(key).ExecQueryOne()
+	if err != nil || code == nil {
+		return nil, core.NewErr(core.Err_Code_Key_Not_Exists)
+	}
+	return &orm.convert(code)[0], nil
+}
+
 func (orm *CodeORMImpl) DeleteByID(id int) *core.Err {
 	if err := orm.DB.Delete().IDEq(id).Exec(); err != nil {
 		return core.NewErr(core.Err_Code_Delete_Fail)
