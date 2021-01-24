@@ -26,6 +26,7 @@ type Router struct {
 	AdminPost       *admin.Post              `ioc:"auto"`
 	AdminUpload     *admin.Upload            `ioc:"auto"`
 	AdminCode       *admin.CodeInject        `ioc:"auto"`
+	AdminTemplate   *admin.Template          `ioc:"auto"`
 	WebIndex        *web.Index               `ioc:"auto"`
 	WebChannel      *web.Channel             `ioc:"auto"`
 	WebPost         *web.Post                `ioc:"auto"`
@@ -99,6 +100,8 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.POST("/code", router.AdminCode.Save)
 	// 删除代码
 	register.DELETE("/code/:id", router.AdminCode.Delete)
+	// 模板列表
+	register.GET("/template", router.AdminTemplate.All)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {

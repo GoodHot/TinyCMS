@@ -13,4 +13,6 @@ vendor/
 .idea/
 static/upload/
 static/assets/
+static/preview/
+test/
 

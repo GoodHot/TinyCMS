@@ -27,6 +27,7 @@ type TemplateService struct {
 	TmplDir       string       `val:"${props.template.dir}"`
 	AssetsDir     string       `val:"${props.template.assetsDir}"`
 	StaticDir     string       `val:"${server.static}"`
+	PreviewDir    string       `val:"preview"`
 	funcMap       *template.FuncMap
 	tmplName      string
 }
@@ -36,11 +37,6 @@ func (ts *TemplateService) Render(w io.Writer, name string, data interface{}, c 
 	tmpl := ts.templates.Lookup(tmplID)
 	if tmpl == nil {
 		return errors.New("not found template " + name)
-		//if tmp, err := ts.LoadTemplate(name); err != nil {
-		//	return err
-		//} else {
-		//	tmpl = tmp
-		//}
 	}
 	err := tmpl.ExecuteTemplate(w, tmplID, data)
 	if err != nil {
@@ -150,6 +146,10 @@ func (ts *TemplateService) Startup() error {
 	if err := ts.copyAssets(); err != nil {
 		return err
 	}
+	// 复制预览图片
+	if err := ts.copyPreview(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -167,6 +167,20 @@ func (ts *TemplateService) copyAssets() error {
 	return common.CopyDir(assetsDir, desPath)
 }
 
+func (ts *TemplateService) copyPreview() error {
+	previewDir := fmt.Sprintf("%v/%v/%v", ts.TmplDir, ts.tmplName, ts.PreviewDir)
+	if !common.FileExists(previewDir) || !common.IsDir(previewDir) {
+		return nil
+	}
+	desPath := fmt.Sprintf("%v/%v/%v", ts.StaticDir, ts.PreviewDir, ts.tmplName)
+	if !common.FileExists(desPath) || !common.IsDir(desPath) {
+		if err := common.MakeDir(desPath); err != nil {
+			return err
+		}
+	}
+	return common.CopyDir(previewDir, desPath)
+}
+
 func (ts *TemplateService) getLayout(data string) string {
 	line := strings.Split(data, "\n")
 	firstLine := line[0]
@@ -176,4 +190,36 @@ func (ts *TemplateService) getLayout(data string) string {
 		return rst[0][1]
 	}
 	return ts.DefLayoutFile
+}
+
+type TemplateModel struct {
+	Name       string   `json:"name"`
+	PreviewImg []string `json:"preview_img"`
+}
+
+func (ts *TemplateService) AllTemplate() []TemplateModel {
+	//filepath.Walk(ts.TmplDir, func(path string, info os.FileInfo, err error) error {
+	//	fmt.Println(path)
+	//	return nil
+	//})
+	var templs []TemplateModel
+	fileInfo, _ := ioutil.ReadDir(ts.TmplDir)
+	for _, file := range fileInfo {
+		if !file.IsDir() {
+			continue
+		}
+		t := TemplateModel{}
+		t.Name = file.Name()
+		previewPath := fmt.Sprintf("%v/%v/%v", ts.TmplDir, file.Name(), ts.PreviewDir)
+		previewImg, err := ioutil.ReadDir(previewPath)
+		if err != nil {
+			continue
+		}
+		for _, img := range previewImg {
+			imgPath := fmt.Sprintf("/%v/%v/%v/%v", ts.StaticDir, ts.PreviewDir, file.Name(), img.Name())
+			t.PreviewImg = append(t.PreviewImg, imgPath)
+		}
+		templs = append(templs, t)
+	}
+	return templs
 }
