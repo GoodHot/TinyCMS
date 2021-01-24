@@ -12,4 +12,7 @@ type Code struct {
 
 type CodeORM interface {
 	GetAll() ([]Code, *core.Err)
+	Insert(t *Code) *core.Err
+	Update(t *Code) *core.Err
+	DeleteByID(id int) *core.Err
 }

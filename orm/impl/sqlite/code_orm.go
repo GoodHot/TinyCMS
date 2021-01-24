@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"database/sql"
 	"github.com/GoodHot/TinyCMS/core"
 	"github.com/GoodHot/TinyCMS/orm/impl/sqlite/datasource"
 	"github.com/GoodHot/TinyCMS/orm/trait"
@@ -8,6 +9,42 @@ import (
 
 type CodeORMImpl struct {
 	DB *datasource.DBCodeInjectORM
+}
+
+func (orm *CodeORMImpl) DeleteByID(id int) *core.Err {
+	if err := orm.DB.Delete().IDEq(id).Exec(); err != nil {
+		return core.NewErr(core.Err_Code_Delete_Fail)
+	}
+	return nil
+}
+
+func (orm *CodeORMImpl) Insert(t *trait.Code) *core.Err {
+	err := orm.DB.Insert(&datasource.DBCodeInjectModel{
+		Key:         t.Key,
+		Description: t.Description,
+		Language:    t.Language,
+		Code:        t.Code,
+	}).Exec(func(result sql.Result) {
+		last, _ := result.LastInsertId()
+		t.ID = int(last)
+	})
+	if err != nil {
+		return core.NewErr(core.Err_Code_Save_Fail)
+	}
+	return nil
+}
+
+func (orm *CodeORMImpl) Update(t *trait.Code) *core.Err {
+	err := orm.DB.Update(&datasource.DBCodeInjectModel{
+		Key:         t.Key,
+		Description: t.Description,
+		Language:    t.Language,
+		Code:        t.Code,
+	}).IDEq(t.ID).Exec()
+	if err != nil {
+		return core.NewErr(core.Err_Code_Update_Fail)
+	}
+	return nil
 }
 
 func (orm *CodeORMImpl) GetAll() ([]trait.Code, *core.Err) {

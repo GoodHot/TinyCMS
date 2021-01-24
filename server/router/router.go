@@ -95,6 +95,10 @@ func (router *Router) registerAdmin(group *echo.Group, prefix string) {
 	register.GET("/staff/:page/:size/page", router.AdminMember.StaffList)
 	// 代码注入列表
 	register.GET("/code", router.AdminCode.All)
+	// 保存代码
+	register.POST("/code", router.AdminCode.Save)
+	// 删除代码
+	register.DELETE("/code/:id", router.AdminCode.Delete)
 }
 
 func (router *Router) registerWeb(group *echo.Group) {

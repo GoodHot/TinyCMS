@@ -47,7 +47,10 @@ var (
 
 	Err_Member_Get_Page_Fail = ErrType{Code: 0x8001, Msg: "member page fail", RespStatus: http.StatusOK}
 
-	Err_Code_Not_Found = ErrType{Code: 0x9001, Msg: "code not found", RespStatus: http.StatusOK}
+	Err_Code_Not_Found   = ErrType{Code: 0x9001, Msg: "code not found", RespStatus: http.StatusOK}
+	Err_Code_Save_Fail   = ErrType{Code: 0x9002, Msg: "code save fail", RespStatus: http.StatusOK}
+	Err_Code_Update_Fail = ErrType{Code: 0x9003, Msg: "code update fail", RespStatus: http.StatusOK}
+	Err_Code_Delete_Fail = ErrType{Code: 0x9004, Msg: "code delete fail", RespStatus: http.StatusOK}
 )
 
 type Err struct {
