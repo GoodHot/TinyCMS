@@ -6,27 +6,5 @@
     "admin": "/admin",
     "web": "",
     "index": "/index"
-  },
-  "template": {
-    "dir": "template",
-    "assetsDir": "assets"
-  },
-  "cache": {
-    "type": "mem",
-    "freecache": {
-      "cacheSize": 10485760
-    },
-    "redis": {
-      "addr": "localhost:6379",
-      "password": "",
-      "db": 0
-    }
-  },
-  "orm": {
-    "type": "sqlite",
-    "showSQL": true,
-    "sqlite": {
-      "db": "./data.db"
-    }
   }
 }

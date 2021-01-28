@@ -1,11 +1,8 @@
 package http
 
 import (
-	"github.com/GoodHot/TinyCMS/config"
 	"github.com/GoodHot/TinyCMS/core"
-	"github.com/GoodHot/TinyCMS/orm/trait"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"mime/multipart"
 	"net/http"
 	"strconv"
@@ -82,17 +79,17 @@ func (ctx *Context) ResultOK(html string) *core.Err {
 	return nil
 }
 
-func (ctx *Context) CurrMember() *trait.Member {
-	user := ctx.Ctx.Get(config.JWTContextKey).(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	return &trait.Member{
-		BaseORM: trait.BaseORM{
-			ID: int(claims["id"].(float64)),
-		},
-		Username: claims["username"].(string),
-		Role:     trait.RoleType(claims["role"].(float64)),
-	}
-}
+//func (ctx *Context) CurrMember() *trait.Member {
+//	user := ctx.Ctx.Get(config.JWTContextKey).(*jwt.Token)
+//	claims := user.Claims.(jwt.MapClaims)
+//	return &trait.Member{
+//		BaseORM: trait.BaseORM{
+//			ID: int(claims["id"].(float64)),
+//		},
+//		Username: claims["username"].(string),
+//		Role:     trait.RoleType(claims["role"].(float64)),
+//	}
+//}
 
 func (ctx *Context) Param(name string) string {
 	return ctx.Ctx.Param(name)
